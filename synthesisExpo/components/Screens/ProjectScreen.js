@@ -23,10 +23,13 @@ import {
 import { MaterialIcons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useNavigation } from '@react-navigation/native'
+
 
 
 const ProjectScreen = () => {
 
+  const navigation = useNavigation();
   const [designSystemData, setDesignSystemData] = useState([]);
 
   const getDesignSystem = async () => {
@@ -72,8 +75,9 @@ const ProjectScreen = () => {
   }
   
   
-  const editDesignSystem = () => {
-  
+  const editDesignSystem = (item) => {
+    console.log('edit design system btn pressed ')
+    navigation.navigate('MyDesignScreen', {data: item})
   }
   
   
@@ -98,10 +102,10 @@ const ProjectScreen = () => {
 
       {designSystemData.length > 0 ? (
           designSystemData.map((element, index) => (
-            <View key={index} style={{margin: 10, }}>
+            <View key={index} style={{margin: 10, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
               <Pressable
+               onPress={() => editDesignSystem(element)}
                 style={{
-                 
                   borderRadius: 5,
                   flexDirection: 'column',
                   width: 300,
@@ -139,7 +143,11 @@ const ProjectScreen = () => {
                     <Text style={{ color: 'black' }}>{element.createdAt}</Text>
                   </View>
                 </LinearGradient>
+             
               </Pressable>
+
+                 <MaterialIcons name='arrow-forward'size={32} color="white" />
+    
             </View>
   ))
 ) : (

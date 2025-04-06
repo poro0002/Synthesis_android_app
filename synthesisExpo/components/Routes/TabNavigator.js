@@ -11,6 +11,7 @@ import ProjectScreen from '../Screens/ProjectScreen';
 import SettingScreen from '../Screens/SettingScreen';
 import TopicScreen from '../Screens/subScreens/TopicScreen';
 import ElementScreen from '../Screens/subScreens/ElementScreen';
+import MyDesignScreen from '../Screens/subScreens/MyDesignScreen';
 
 
 const Tab = createBottomTabNavigator();
@@ -113,6 +114,10 @@ const StackNavigator = ({ username, logout }) => {
         />
            <Stack.Screen name="Element" 
         component={ElementScreen} 
+         
+        />
+             <Stack.Screen name="MyDesignScreen" 
+        component={MyDesignScreen} 
          
         />
       </Stack.Navigator>

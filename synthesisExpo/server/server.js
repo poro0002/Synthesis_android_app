@@ -1611,3 +1611,54 @@ app.get('/saved', async (req, res) => {
 
 
 })
+
+// ----------------------------< Delete Saved Design System >---------------------------------------
+
+app.delete('/deleteElement', async (req, res) => {
+    let {type, id, username} = req.query;
+
+    try{
+      const userRef = await firestore.collection('users').where('username', '==', username).get(); 
+
+      if (userRef.empty) {
+        return res.status(404).json({ message: 'Could not find a user with that username in the database.' });
+      }
+
+
+        const userDoc = userRef.docs[0];  // snap shot of what you want to look at
+        const savedSystemsRef = await userDoc.ref.collection('savedSystems').where('id', '==', id).get(); // filter the to find the corro ID
+
+        if (savedSystemsRef.empty) {
+          return res.status(404).json({ message: 'No system found with the specified ID.' });
+        }
+
+        const systemDoc = savedSystemsRef.docs[0]; // snap shot of what you want to look at again a directory deeper
+        const systemData = systemDoc.data(); // returns the data for that first index of savedSystems
+
+        if (!systemData[type]) {
+          return res.status(404).json({ message: `The specified type (${type}) does not exist in the system.` }); // if that corro system does not have to corro type
+        }
+    
+        // Filter out the element to delete
+        let updatedElements = systemData[type].filter((item) => item.name !== elementName); // Match by 'name'
+    
+        // Update the specific Firestore property value with the new filtered array
+          await systemDoc.ref.update({ [type]: updatedElements });
+    
+        return res.status(200).json({ message: 'Element successfully deleted from the system.' });
+
+      
+      
+
+
+
+    }catch(err){
+      console.error('Error deleting element:', err);
+      res.status(500).json({message: 'Error deleting elemt from corro system. Please try again later.'})
+    }
+
+
+
+     
+  
+})

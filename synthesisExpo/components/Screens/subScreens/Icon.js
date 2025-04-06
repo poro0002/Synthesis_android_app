@@ -13,6 +13,9 @@ import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import Octicons from 'react-native-vector-icons/Octicons';
 import { MaterialIcons } from '@expo/vector-icons';
 
+import { useRoute } from '@react-navigation/native';
+import { useNavigationState } from '@react-navigation/native';
+
 const iconData = {
   feather: {
     title: 'Feather Icons',
@@ -93,7 +96,10 @@ const iconData = {
 };
 
 const Icon = ({ type }) => {
-  const iconComponents = {
+
+  const route = useRoute(); 
+
+  const iconComponents = {  // these here just hold the imported react-native-vector-icons in a object with corro names
     feather: Feather,
     Fontawesome: FontAwesome5,
     ionicons: Ionicons,
@@ -103,7 +109,14 @@ const Icon = ({ type }) => {
     material: MaterialIcons,
   };
 
-  const IconComponent = iconComponents[type];
+  // const obj = { evil: 'EvilIcons' };
+ //  console.log(obj['evil']); 
+  // JavaScript objects behave like key-value stores (or dictionaries), and they allow two ways to access properties:
+  // This works only for fixed property names—you must know the property name in advance.
+
+// ^^^^^^^^
+  const IconComponent = iconComponents[type]; // type is the universal parameter and this becomes the universal component that renders the icon
+  // ^^^ this variable pretty much goes from an obj into a component
   const data = iconData[type];
 
   if (!data) {
@@ -111,19 +124,27 @@ const Icon = ({ type }) => {
   }
 
   return (
-    <View style={{ alignItems: 'center' }}>
-      <Image source={data.image} style={styles.logo} />
-      <Text style={styles.title}>{data.title}</Text>
-      <Text style={styles.subtitle}>Why use them?{"\n"}</Text>
-      {data.description.map((line, index) => (
-        <Text key={index} style={styles.description}>{line}</Text>
-      ))}
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.iconContainer}>
-        {['search', 'home', 'folder', 'settings', 'user'].map((icon, index) => (
-          <IconComponent key={index} name={icon} size={50} style={styles.icon} color="orange" />
+  <View style={{ alignItems: 'center' }}>
+    {route.name === 'MyDesignScreen' ? (
+      // Render this if coming from "MyDesignScreen"
+        <IconComponent size={30} name='folder' style={styles.icon} color="orange" />
+    ) : (
+      // Else render this
+      <View>
+        <Image source={data.image} style={styles.logo} />
+        <Text style={styles.title}>{data.title}</Text>
+        <Text style={styles.subtitle}>Why use them?{"\n"}</Text>
+        {data.description.map((bullet, index) => (
+          <Text key={index} style={styles.description}>{bullet}</Text>
         ))}
-      </ScrollView>
-    </View>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.iconContainer}>
+          {['search', 'home', 'folder', 'settings', 'user'].map((icon, index) => ( 
+            <IconComponent key={index} name={icon} size={50} style={styles.icon} color="orange" />
+          ))}
+        </ScrollView>
+      </View>
+    )}
+  </View>
   );
 };
 
@@ -133,7 +154,7 @@ const styles = StyleSheet.create({
   subtitle: { color: 'white', fontSize: 20, marginTop: 20 },
   description: { color: 'white', fontSize: 13, textAlign: 'center', marginTop: 10 },
   iconContainer: { justifyContent: 'center', alignItems: 'center', padding: 20 },
-  icon: { margin: 40 },
+  icon: { margin: 20 },
 });
 
 export default Icon;

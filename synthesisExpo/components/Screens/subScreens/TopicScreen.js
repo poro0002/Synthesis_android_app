@@ -57,9 +57,9 @@ const TopicScreen = ({route}) => {
 
   console.log('username: ', username)
 
-useEffect(() => {
-  console.log(selectedElements)
-}, [selectedElements])
+// useEffect(() => {
+//   console.log(selectedElements)
+// }, [selectedElements])
 
 
 
@@ -87,7 +87,22 @@ useEffect(() => {
   // ------------------------------< Toggle Selection >------------------------------------------
 
   const toggleSelection = (type, element) => {
-    setSelectedElements((prevState) => {
+    setSelectedElements((prevState) => { // using the set use state as an arrow function ( functional update form)
+      // this is built into the use states correct as the are a function that usually 
+      // just takes a value but you can extent its syntax to choose specific things to sent depending on functionality
+  
+      // Handle 'name' and 'about' as strings instead of an object (selectedElements({}))
+      if (type === 'name' || type === 'about') {
+        return {
+
+          //the "prevstate" param is the pre-existing state of the use state variable correct which is then spread so you can add onto without having to completely redo it 
+          ...prevState,
+          [type]: [element], 
+          // and to add it to this object you have to address it the same way as the others, the type example "comp" :  [new element]
+        };
+      }
+  
+      // Handle other types as arrays of objects
       const currentSelections = prevState[type] || [];
       const isSelected = currentSelections.find((item) => item.name === element.name);
   
@@ -146,6 +161,14 @@ useEffect(() => {
 
 const createSystem = async () =>{
 
+  console.log('Checking Fields:');
+  console.log('comp:', selectedElements.comp.length);
+  console.log('fonts:', selectedElements.fonts.length);
+  console.log('gradients:', selectedElements.gradients.length);
+  console.log('icons:', selectedElements.icons.length);
+  console.log('typography:', selectedElements.typography.length);
+  console.log('name:', selectedElements.name.length);
+
   if(selectedElements.comp.length >= 1 && selectedElements.fonts.length >= 1 && selectedElements.gradients.length >= 1 && selectedElements.icons.length >= 1 && selectedElements.typography.length >= 1 && selectedElements.name.length >= 1){
     
     const type = 'designSystem';
@@ -170,6 +193,9 @@ const createSystem = async () =>{
        const data = await response.json();
 
        setErrorMessage(data.message); 
+       setTimeout(() => {
+        navigation.navigate("Project");
+       }, 1000);
       //  navigation.navigate('Home'); 
     } catch (err) {
       console.error('Error saving design system:', err);

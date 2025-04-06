@@ -40,7 +40,7 @@ const HomeScreen = ({username}) => {
          navigation.navigate('Topic', { topic: selectedTopic, username: storedUsername });
      }
 
-  
+  // this code makes it so when the navigation stack says that you are currently on this screen it rerenders the getUsername function 
      useFocusEffect(
           useCallback(() => {
             getUsername();
