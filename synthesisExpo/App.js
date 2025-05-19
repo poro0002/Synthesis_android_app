@@ -16,12 +16,18 @@ import {
   Switch // A toggle component for binary options (on/off)
 } from 'react-native';
 
+import Constants from 'expo-constants';
+const apiUrl = Constants.expoConfig.extra.API_URL; 
+
 import * as Font from 'expo-font';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import StackNavigator from './components/Routes/TabNavigator';
+
+import ErrorBoundary from './ErrorBoundary';
+import { LogProvider } from './LogContext'; 
 
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -303,7 +309,7 @@ function testEmail(data) {
 
   if(testUsername(regData) && testPassword(regData) && testEmail(regData)){
 
-      const registerURL = 'http://10.0.2.2:4500/register'; //
+      const registerURL = `${apiUrl}/register`; 
       const regHeaders = new Headers({'Content-Type': 'application/json'});
 
       const regOptions = {
@@ -358,7 +364,7 @@ const logSubmit = async () => {
 
  // do a fetch to the server side log route that includes a body with the log input values
 
-      const logURL = 'http://10.0.2.2:4500/login'
+      const logURL = `${apiUrl}/login`
       const logHeaders = new Headers({'Content-Type': 'application/json'});
 
       const logOptions = {
@@ -398,7 +404,7 @@ const logSubmit = async () => {
 
           }
       catch(error){
-          console.error('Error during registration:', error);
+        console.error('Error during login:', error);
          }
 
  // the log server route will test those values in the mongo database
@@ -434,8 +440,11 @@ const logout = async () => {
 // ----------------------------< Returned JSX >--------------------------------------
 return (
  <>
+
+<LogProvider>
+ <ErrorBoundary>
     {isLoggedIn ? (
-      <StackNavigator logout={logout} username={username} />
+      <StackNavigator/>
     ) : (
       <View style={styles.container}>
         {!logClicked && !regClicked ? (
@@ -513,6 +522,8 @@ return (
         )}
       </View>
     )}
+    </ErrorBoundary>
+  </LogProvider>
   </>
 );
 };

@@ -14,7 +14,8 @@ import Octicons from 'react-native-vector-icons/Octicons';
 
 
 
-
+import Constants from 'expo-constants';
+const apiUrl = Constants.expoConfig.extra.API_URL; 
 
 
 import {
@@ -29,7 +30,9 @@ import {
   Picker, // A dropdown component for selecting options <select> <option>
   ActivityIndicator, // For showing loading indicators during asynchronous tasks
   Switch, // A toggle component for binary options (on/off)
-  Pressable // Import Pressable for user interactions
+  Pressable, // Import Pressable for user interactions
+  SafeAreaView,
+
 } from 'react-native';
 
 import { MaterialIcons } from '@expo/vector-icons'; // Import Expo vector icons
@@ -54,11 +57,13 @@ const TopicScreen = ({route}) => {
     about: [],
   });
 
+  // console.log("working ? hello ?", selectedElements)
+  // console.log('typography:', data.typography);
 
-  console.log('username: ', username)
+  // console.log('username: ', username)
 
 // useEffect(() => {
-//   console.log(selectedElements)
+//   console.log("working ? hello ?", selectedElements)
 // }, [selectedElements])
 
 
@@ -87,43 +92,41 @@ const TopicScreen = ({route}) => {
   // ------------------------------< Toggle Selection >------------------------------------------
 
   const toggleSelection = (type, element) => {
-    setSelectedElements((prevState) => { // using the set use state as an arrow function ( functional update form)
-      // this is built into the use states correct as the are a function that usually 
-      // just takes a value but you can extent its syntax to choose specific things to sent depending on functionality
-  
-      // Handle 'name' and 'about' as strings instead of an object (selectedElements({}))
+    setSelectedElements((prevState) => {
+      // For name & about (always string)
       if (type === 'name' || type === 'about') {
+        return { ...prevState, [type]: [element] };
+      }
+  
+      // If adding full scale (array), set it cleanly
+      if (Array.isArray(element)) {
+        const isSameAsCurrent =
+          prevState[type].length === element.length &&
+          prevState[type].every((item, index) => item.label === element[index].label);
+  
         return {
-
-          //the "prevstate" param is the pre-existing state of the use state variable correct which is then spread so you can add onto without having to completely redo it 
           ...prevState,
-          [type]: [element], 
-          // and to add it to this object you have to address it the same way as the others, the type example "comp" :  [new element]
+          [type]: isSameAsCurrent ? [] : [...element],
         };
       }
   
-      // Handle other types as arrays of objects
-      const currentSelections = prevState[type] || [];
-      const isSelected = currentSelections.find((item) => item.name === element.name);
+      // For single element toggle
+      const isSelected = prevState[type].some((item) =>
+        (item.label && element.label && item.label === element.label) ||
+        (item.name && element.name && item.name === element.name)
+      );
   
-      if (isSelected) {
-        // Remove the element from the list
-        return {
-          ...prevState,
-          [type]: currentSelections.filter((item) => item.name !== element.name),
-        };
-      } else {
-        // Add the element to the list
-        return {
-          ...prevState,
-          [type]: [...currentSelections, element],
-        };
-      }
+      return {
+        ...prevState,
+        [type]: isSelected
+          ? prevState[type].filter((item) => item.label !== element.label)
+          : [...prevState[type], element],
+      };
     });
   };
    
 
-  const fetchUrl = `http://10.0.2.2:4500/elements?type=${topic}`; //
+  const fetchUrl = `${apiUrl}/elements?type=${topic}`;
   const fetchHeader = new Headers({'Content-Type': 'application/json'});
 
 
@@ -133,6 +136,7 @@ const TopicScreen = ({route}) => {
        mode: 'cors',
        type: topic
      }
+
 
   // ------------------------------< Fetch Topic Data >------------------------------------------  
 
@@ -157,44 +161,62 @@ useEffect(() => {
     fetchCorroData();
 }, []);
 
-// ------------------------------< Create/Cancel System >------------------------------------------  
+
+// -----------------------------------< Create/Cancel System >------------------------------------------  
 
 const createSystem = async () =>{
 
-  console.log('Checking Fields:');
-  console.log('comp:', selectedElements.comp.length);
-  console.log('fonts:', selectedElements.fonts.length);
-  console.log('gradients:', selectedElements.gradients.length);
-  console.log('icons:', selectedElements.icons.length);
-  console.log('typography:', selectedElements.typography.length);
-  console.log('name:', selectedElements.name.length);
+  // console.log('Checking Fields:');
+  // console.log('comp:', selectedElements.comp.length);
+  // console.log('fonts:', selectedElements.fonts.length);
+  // console.log('gradients:', selectedElements.gradients.length);
+  // console.log('icons:', selectedElements.icons.length);
+  console.log('typography:', selectedElements.typography);
+  
+  // console.log('name:', selectedElements.name.length);
 
   if(selectedElements.comp.length >= 1 && selectedElements.fonts.length >= 1 && selectedElements.gradients.length >= 1 && selectedElements.icons.length >= 1 && selectedElements.typography.length >= 1 && selectedElements.name.length >= 1){
     
     const type = 'designSystem';
-    const fetchUrl = `http://10.0.2.2:4500/save?type=${type}`; 
+    const fetchUrl = `${apiUrl}/save?type=${type}`; 
+
+      // Clean data structure correctly
+  const cleanElements = {
+    comp: selectedElements.comp,
+    fonts: selectedElements.fonts,
+    gradients: selectedElements.gradients,
+    icons: selectedElements.icons,
+    typography: selectedElements.typography.flat(),
+    name: selectedElements.name[0] || 'Untitled', // Always just the first name string
+    about: selectedElements.about?.[0] || '',     // Always just the first about string 
+  };
     
+
     const fetchOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' }, 
       mode: 'cors',
-      body: JSON.stringify({ ...selectedElements, username }),
+      body: JSON.stringify({ ...cleanElements, username }),
      
     };
 
     try {
+      
       const response = await fetch(fetchUrl, fetchOptions);
 
    
-      if (!response.ok) {
-        setErrorMessage(`Server responded with status ${response.status}`)
-      }
+      // if (!response.ok) {
+      //   setErrorMessage(`Server responded with status ${response.status}`)
+      // }
 
        const data = await response.json();
 
        setErrorMessage(data.message); 
+
        setTimeout(() => {
-        navigation.navigate("Project");
+         navigation.navigate('Tabs', {
+          screen: 'Project',
+        });
        }, 1000);
       //  navigation.navigate('Home'); 
     } catch (err) {
@@ -208,15 +230,18 @@ const createSystem = async () =>{
 
 
 const cancelSystem = () => {
-  navigation.navigate("Home")
+  navigation.navigate('Tabs', {
+    screen: 'Home',
+  });
 }
 
-
+ {/* -----------------------------------------------< RETURN JSX >-----------------------------------------------  */} 
     return(
+    <SafeAreaView style={{ flex: 1, backgroundColor: 'black' }}>
       <View style={globalStyles.screenStyles.container}>
         <ScrollView 
          
-         contentContainerStyle={{  flexDirection: 'column'}}
+         contentContainerStyle={{  flexDirection: 'column', paddingBottom: 50}}
          keyboardShouldPersistTaps="handled"
          
         >
@@ -236,7 +261,7 @@ const cancelSystem = () => {
                 showsHorizontalScrollIndicator={false} // Hides the scroll indicator
                 contentContainerStyle={globalStyles.screenStyles.scrollContainer} 
             >
-               { data.fonts.map((element, index) => {
+               {data.fonts.map((element, index) => {
                      
                       const matchingFont = element.name;
                      // Check if the font exists in the global styles
@@ -245,8 +270,8 @@ const cancelSystem = () => {
                      }
        
                 return (
-                  <View>
-                  <View key={index} style={globalStyles.screenStyles.box}>
+                  <View key={index} >
+                  <View style={globalStyles.screenStyles.box}>
                    <Pressable onPress={() => toggleSelection('fonts', element)}>
                     <View style={globalStyles.screenStyles.checkCircle}>
                       {selectedElements.fonts.some((item) => item.name === element.name) && ( // this is just matching the circle with the corrospponding element
@@ -289,7 +314,7 @@ const cancelSystem = () => {
               { data.gradients.map((element, index) => {
                   
                 return (
-                <View>
+                <View key={index}>
                   <Pressable onPress={() => toggleSelection('gradients', element)}>
                     <View style={globalStyles.screenStyles.checkCircle}>
                         {selectedElements.gradients.some((item) => item.name === element.name) && (
@@ -319,7 +344,9 @@ const cancelSystem = () => {
 
              </ScrollView>
             </>
-           )}
+          )}
+
+
   {/* -----------------------------------------------< TYPOGRAPHY >-----------------------------------------------  */}
 
    {data && data.typography && data.typography.length > 0 && (
@@ -333,22 +360,21 @@ const cancelSystem = () => {
             >
               
                <View>
-               <Pressable onPress={() => toggleSelection('typography', data.typography[0])}>
-                  <View style={globalStyles.screenStyles.box}>
-                     <View style={globalStyles.screenStyles.checkCircle}>
-                       {selectedElements.typography.some((item) => (item.name === data.typography[0].name)) && (
-                         <View style={globalStyles.screenStyles.filledCircle}></View>
-                       )}
-                     </View>
-                
-                    <Text>Typography Scale</Text>
-                    
-                </View>
-                </Pressable>
-                  <Pressable onPress={() => handleCompElement("typography")}   style={globalStyles.screenStyles.viewBtn}>
-                    <Text >View</Text>
-                  </Pressable>
-               </View>
+               <Pressable onPress={() => toggleSelection('typography', data.typography)}>
+  <View style={globalStyles.screenStyles.box}>
+    <View style={globalStyles.screenStyles.checkCircle}>
+      {selectedElements.typography.length > 0 && (
+        <View style={globalStyles.screenStyles.filledCircle}></View>
+      )}
+    </View>
+    <Text>Typography Scale</Text>
+  </View>
+</Pressable>
+
+<Pressable onPress={() => handleCompElement("typography")} style={globalStyles.screenStyles.viewBtn}>
+  <Text>View</Text>
+</Pressable>
+               </View>  
                
              </ScrollView>
             </>
@@ -531,7 +557,7 @@ const cancelSystem = () => {
             <TextInput
                 onChangeText={(value) => toggleSelection('name', value)}
                 value={selectedElements.name}
-                style={[globalStyles.screenStyles.input, {width: 400 }]}
+                style={[globalStyles.screenStyles.input, {width: '85%' }]}
                 placeholder="System Name"
                 placeholderTextColor="gray"
                 maxLength={15}
@@ -544,7 +570,7 @@ const cancelSystem = () => {
             <TextInput
               onChangeText={(value) => toggleSelection('about', value)}
               value={selectedElements.about}
-              style={[globalStyles.screenStyles.input, {width: 400 }]}
+              style={[globalStyles.screenStyles.input, {width: '85%' }]}
               placeholder="About ( optional )"
               placeholderTextColor="gray"
               maxLength={30}
@@ -573,6 +599,7 @@ const cancelSystem = () => {
 
          </ScrollView>
       </View>
+  </SafeAreaView>  
     )
   }
 

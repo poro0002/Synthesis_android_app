@@ -30,6 +30,45 @@ import Icon from './Icon'
 const ElementScreen = ({ route }) => {
   const { element, type, iconType, data } = route.params;
 
+  // console.log("ElementScreen received data:", data);
+
+
+
+  // const [selectedFavBtn, setSelectedFavBtn] = useState(false);
+
+  // const saveFavorite =  async (element) =>{
+  //     const fetchURL = `http://192.168.1.83:4500/save?type=${type}`
+  //     const fetchHeaders = new Headers({'Content-Type':'application/json'})
+
+  //     const fetchOptions = {
+  //       method: 'POST',
+  //       mode: cors,
+  //       headers: fetchHeaders,
+  //       body: element,
+  //     }
+
+  //     try{
+  //       const response = await fetch(fetchURL, fetchOptions);
+
+  //       if(!response.ok){
+  //         throw new error('there was a problem with the response')
+  //       }
+
+  //       let data = await response.json();
+
+  //       if(data.message === 'successfully saved element to your favorites'){
+  //         // show the user that their favorite was stored on the DB correctly
+  //         console.log(data.message)
+  //       }  else{
+  //         console.log('the favorite could not be saved')
+  //       }
+
+  //     }catch(err){
+  //        console.log('there was an error with the fetch', err)
+  //     }
+
+  // }
+
   let alpha = "Aa | Bb | Cc | Dd | Ee | Ff | Gg |  Hh | Ii | Jj | Kk | Ll | Mm | Nn | Oo | Pp | Qq | Rr | Ss | Tt | Uu | Vv | Ww | Xx | Yy | Zz" 
 
   let btnBorder;
@@ -46,30 +85,49 @@ const ElementScreen = ({ route }) => {
   let cardDir;
   let cardPadding;
 
-  if (iconType === "component") {
-    // btn
-    btnBorder = data.styledComponents.components.button.styles.borderWidth + ' ' + data.styledComponents.components.button.styles.borderColor;
-    btnBorderRadius = data.styledComponents.components.button.styles.borderRadius;
-    btnBoxShadow = `${data.styledComponents.components.button.styles.shadowOffset.width} ${data.styledComponents.components.button.styles.shadowOffset.height} ${data.styledComponents.components.button.styles.shadowRadius} ${data.styledComponents.components.button.styles.shadowColor}`;
-    btnMargin = data.styledComponents.components.button.styles.margin;
-    btnPadding = `${data.styledComponents.components.button.styles.paddingVertical} ${data.styledComponents.components.button.styles.paddingHorizontal}`;
+  const packageName = data?.comp?.[0]?.package ?? 'Unknown Package';
 
-    // card
-    cardBorder = data.styledComponents.components.card.styles.borderWidth + ' ' + data.styledComponents.components.card.styles.borderColor;
-    cardBorderRadius = data.styledComponents.components.card.styles.borderRadius;
-    cardBoxShadow = `${data.styledComponents.components.card.styles.shadowOffset.width} ${data.styledComponents.components.card.styles.shadowOffset.height} ${data.styledComponents.components.card.styles.shadowRadius} ${data.styledComponents.components.card.styles.shadowColor}`;
-    cardLayout = 'flex';
-    cardDir = data.styledComponents.components.card.styles.flexDirection;
-    cardPadding = data.styledComponents.components.card.styles.padding;
+  if (iconType === "component" && data.styledComponents?.components) {
+    try {
+      btnBorder = data.styledComponents.components.button.styles.borderWidth + ' ' + data.styledComponents.components.button.styles.borderColor;
+      btnBorderRadius = data.styledComponents.components.button.styles.borderRadius;
+      btnBoxShadow = `${data.styledComponents.components.button.styles.shadowOffset.width} ${data.styledComponents.components.button.styles.shadowOffset.height} ${data.styledComponents.components.button.styles.shadowRadius} ${data.styledComponents.components.button.styles.shadowColor}`;
+      btnMargin = data.styledComponents.components.button.styles.margin;
+      btnPadding = `${data.styledComponents.components.button.styles.paddingVertical} ${data.styledComponents.components.button.styles.paddingHorizontal}`;
+
+      cardBorder = data.styledComponents.components.card.styles.borderWidth + ' ' + data.styledComponents.components.card.styles.borderColor;
+      cardBorderRadius = data.styledComponents.components.card.styles.borderRadius;
+      cardBoxShadow = `${data.styledComponents.components.card.styles.shadowOffset.width} ${data.styledComponents.components.card.styles.shadowOffset.height} ${data.styledComponents.components.card.styles.shadowRadius} ${data.styledComponents.components.card.styles.shadowColor}`;
+      cardLayout = 'flex';
+      cardDir = data.styledComponents.components.card.styles.flexDirection;
+      cardPadding = data.styledComponents.components.card.styles.padding;
+    } catch (error) {
+      console.log("Error accessing styled components:", error);
+      return <Text style={{ color: 'red' }}>Error accessing styled components data.</Text>;
+    }
   }
 
   return (
     <View style={globalStyles.screenStyles.centerContainer}>
-      <View style={{ flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', marginTop: 10 }}>   
-        <Pressable>
-          <MaterialIcons name='favorite' size={50} color='orange'/>
+        <ScrollView   
+                  contentContainerStyle={{  flexDirection: 'column'}}
+                  keyboardShouldPersistTaps="handled"
+                  >
+      {/* <View style={{ flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', marginTop: 10 }}>   
+      <Pressable onPress={() => { 
+            saveFavorite(element); 
+            setSelectedFavBtn(true); 
+           }}>
+            {selectedFavBtn ? (
+               <MaterialIcons name='favorite-filled' size={50} color='orange'></MaterialIcons>
+            ):
+            (
+              <MaterialIcons name='favorite-outlined' size={50} color='orange'></MaterialIcons>
+            )
+          }
+            
         </Pressable>
-      </View>
+      </View> */}
       {type === "font" && (
          <View style={globalStyles.screenStyles.centerColumn}>
           <View>
@@ -157,40 +215,44 @@ const ElementScreen = ({ route }) => {
 
        
       )}
+{type === "typography" && data.typography && (
+  <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: 20 }}>
+    <View style={{ alignItems: 'center' }}>
+      <Text style={[{ color: 'white', fontSize: 35 }]}>Typography Scale</Text>
+      <Text style={[{ color: 'white', fontSize: 20, marginTop: 20 }]}>Examples</Text>
+    </View>
 
-      {type === "typography" && (
-        // first section show the hierarchy using the example of each scale to show how it will look stacked together
-        // have an about section for what this would be best for ?
+    {data.typography.map((element, index) => (
+      <View key={`${element.label}-${index}`} style={[globalStyles.screenStyles.centerColumn, { marginTop: 50, backgroundColor: '#f8f8f8', borderRadius: 5, padding: 20 }]}>
+        <Text style={{
+          color: 'black',
+          fontSize: element.size,
+          fontFamily: data.fontFamily,
+          fontWeight: data.fontWeight?.match(/\d{3}/)?.[0] || '400',
+          lineHeight: data.lineHeight,
+          textAlign: 'center',
+        }}>
+          {element.label}
+        </Text>
 
-        <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{  flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: 20 }}>
-                
-                
-                 <View style={{alignItems: 'center'}}>
-                    <Text style={[{ color: 'white', fontSize: 35 }]}>Typography Scale</Text>
-                   
-                 
-                    <Text  style={[{ color: 'white', fontSize:  20, marginTop: 20  }]}>Examples</Text>
-                </View>
-           {data.typography.map((element) => {
-                    return(
-                     
-                     <View key={element.label} style={[globalStyles.screenStyles.centerColumn, {marginTop: 50,backgroundColor: '#f8f8f8', borderRadius: 5, padding: 20, }]} >
-                        <Text style={[{ color: 'black', fontSize: element.size, fontWeight: 'bold',  }]} >
-                           {element.label}
-                        </Text>
-                    
-                     <Text style={[{ color: 'black', fontSize: element.size, textAlign: 'center' }]} >
-                       {element.example}
-                     </Text>
-                    
-                  </View>
-               )
-           })}
-              <Text style={[{ color: 'black', fontSize:  13, textAlign: 'center', marginTop: 30, backgroundColor: '#f8f8f8', borderRadius: 5, padding: 20 }]}>
-                        Typography hierarchy is crucial in design systems because it helps organize content in a way that is visually clear and easy to read. By defining distinct typographic levels—such as headings, subheadings, and body text—it guides the reader’s eye, making the content more digestible and accessible. Proper hierarchy ensures that important information stands out, while less critical details are presented in a way that doesn’t overwhelm the viewer. Effective use of typography creates visual flow and structure, allowing for consistent and scalable designs across different platforms. This enhances user experience by improving navigation and ensuring that content is both aesthetically pleasing and easy to interact with
-                    </Text>
-        </ScrollView>
-      )}
+        <Text style={{
+          color: 'black',
+          fontSize: element.size,
+          fontFamily: data.fontFamily,
+          fontWeight: data.fontWeight?.match(/\d{3}/)?.[0] || '400',
+          lineHeight: data.lineHeight,
+          textAlign: 'center',
+        }}>
+          {element.example}
+        </Text>
+      </View>
+    ))}
+
+    <Text style={[{ color: 'black', fontSize: 13, textAlign: 'center', marginTop: 30, backgroundColor: '#f8f8f8', borderRadius: 5, padding: 20 }]}>
+      Typography hierarchy is crucial in design systems because it helps organize content...
+    </Text>
+  </ScrollView>
+)}
 
       {/* Icon Type Renders
          - show like 5-10 different icons from the brand to show the user what they would be using 
@@ -255,9 +317,7 @@ const ElementScreen = ({ route }) => {
       {iconType === "component" && (
 
         <View >
-          <Text style={[{ color: 'white', fontSize: 25}]}>
-             {data.styledComponents.package}
-          </Text>
+          <Text style={{ color: 'white' }}>Package: {packageName}</Text>
           {/* Card Style */}
           <Text style={[{ color: 'white', fontSize:  20, margin: 20, fontWeight: 'bold' }]}>
                Card Component
@@ -288,80 +348,68 @@ const ElementScreen = ({ route }) => {
               <Text style={{ color: 'white' }}>{cardPadding}</Text>
             </View>
           </View>
-          <View  style={{
-            borderWidth: parseInt(cardBorder.split(' ')[0]),
-            borderColor: cardBorder.split(' ')[1],
-            borderRadius: cardBorderRadius,
-            shadowColor: cardBoxShadow.split(' ')[3],
-            shadowOffset: {
-              width: parseInt(cardBoxShadow.split(' ')[0]),
-              height: parseInt(cardBoxShadow.split(' ')[1])
-            },
-            shadowOpacity: 0.2, // Using the value from JSON
-            shadowRadius: parseInt(cardBoxShadow.split(' ')[2]),
-            elevation: 15, // Using the value from JSON
-            flexDirection: cardDir,
-            padding: cardPadding,
-            backgroundColor: 'white',
-            height: 150,
-            width: 100,
-            margin: 20
-    
-          }}>
-            <Text style={{ color: 'black' }}>Card</Text>
-          </View>
-
-          {/* Button Style */}
-          <Text style={[{ color: 'white', fontSize:  20, margin: 20, fontWeight: 'bold'   }]}>
-               Button Component
-          </Text>
-          <View >
-          <View style={{ flexDirection: 'row', marginBottom: 5 }}>
-              <Text style={{ color: 'white', fontWeight: 'bold', marginRight: 15 }}>btnBorder:</Text>
-              <Text style={{ color: 'white' }}>{btnBorder}</Text>
-            </View>
-            <View style={{ flexDirection: 'row', marginBottom: 5 }}>
-              <Text style={{ color: 'white', fontWeight: 'bold', marginRight: 15 }}>btnBorderRadius:</Text>
-              <Text style={{ color: 'white' }}>{btnBorderRadius}</Text>
-            </View>
-            <View style={{ flexDirection: 'row', marginBottom: 5 }}>
-              <Text style={{ color: 'white', fontWeight: 'bold', marginRight: 15 }}>btnBoxShadow:</Text>
-              <Text style={{ color: 'white' }}>{btnBoxShadow}</Text>
-            </View>
-            <View style={{ flexDirection: 'row', marginBottom: 5 }}>
-              <Text style={{ color: 'white', fontWeight: 'bold', marginRight: 15 }}>btnMargin:</Text>
-              <Text style={{ color: 'white' }}>{btnMargin}</Text>
-            </View>
-            <View style={{ flexDirection: 'row', marginBottom: 5 }}>
-              <Text style={{ color: 'white', fontWeight: 'bold', marginRight: 15 }}>btnPadding:</Text>
-              <Text style={{ color: 'white' }}>{btnPadding}</Text>
-            </View>
-          </View>
           <View style={{
-            borderWidth: parseInt(btnBorder.split(' ')[0]),
-            borderColor: btnBorder.split(' ')[1],
-            borderRadius: btnBorderRadius,
-            shadowColor: btnBoxShadow.split(' ')[3],
-            shadowOffset: {
-              width: parseInt(btnBoxShadow.split(' ')[0]),
-              height: parseInt(btnBoxShadow.split(' ')[1])
-            },
-            shadowOpacity: 0.1, // Using the value from JSON
-            shadowRadius: parseInt(btnBoxShadow.split(' ')[2]),
-            elevation: 6, // Using the value from JSON
-            margin: btnMargin,
-            paddingVertical: parseInt(btnPadding.split(' ')[0]),
-            paddingHorizontal: parseInt(btnPadding.split(' ')[1]),
-            backgroundColor: 'white',
-            height: 50,
-            width: 150,
-              margin: 20
-          }}>
-            <Text style={{ color: 'black' }}>Button</Text>
-        </View>
+  borderWidth: cardBorder && cardBorder.includes('-') ? parseInt(cardBorder.split('-')[1]) : 1,
+  borderColor: cardBorder && cardBorder.includes(' ') ? cardBorder.split(' ')[1] : 'black',
+  borderRadius: cardBorderRadius,
+  shadowColor: cardBoxShadow && cardBoxShadow.split(' ').length > 3 ? cardBoxShadow.split(' ')[3] : 'black',
+  shadowOffset: {
+    width: cardBoxShadow && cardBoxShadow.split(' ').length > 0 ? parseInt(cardBoxShadow.split(' ')[0]) : 0,
+    height: cardBoxShadow && cardBoxShadow.split(' ').length > 1 ? parseInt(cardBoxShadow.split(' ')[1]) : 0
+  },
+  shadowOpacity: 0.2,
+  shadowRadius: cardBoxShadow && cardBoxShadow.split(' ').length > 2 ? parseInt(cardBoxShadow.split(' ')[2]) : 5,
+  elevation: 15,
+  flexDirection: cardDir,
+  padding: cardPadding,
+  backgroundColor: 'white',
+  height: 150,
+  width: 100,
+  margin: 20
+}}>
+  <Text style={{ color: 'black' }}>Card</Text>
+</View>
+
+{/* Button Style */}
+<Text style={[{ color: 'white', fontSize:  20, margin: 20, fontWeight: 'bold' }]}>
+    Button Component
+</Text>
+<View>
+  <View style={{ flexDirection: 'row', marginBottom: 5 }}>
+    <Text style={{ color: 'white', fontWeight: 'bold', marginRight: 15 }}>btnBorder:</Text>
+    <Text style={{ color: 'white' }}>{btnBorder}</Text>
+  </View>
+  {/* ... other info lines ... */}
+</View>
+<View style={{
+  borderWidth: btnBorder && btnBorder.split(' ').length > 0 ? parseInt(btnBorder.split(' ')[0]) : 1,
+  borderColor: btnBorder && btnBorder.split(' ').length > 1 ? btnBorder.split(' ')[1] : 'black',
+  borderRadius: btnBorderRadius,
+  shadowColor: btnBoxShadow && btnBoxShadow.split(' ').length > 3 ? btnBoxShadow.split(' ')[3] : 'black',
+  shadowOffset: {
+    width: btnBoxShadow && btnBoxShadow.split(' ').length > 0 ? parseInt(btnBoxShadow.split(' ')[0]) : 0,
+    height: btnBoxShadow && btnBoxShadow.split(' ').length > 1 ? parseInt(btnBoxShadow.split(' ')[1]) : 0
+  },
+  shadowOpacity: 0.1,
+  shadowRadius: btnBoxShadow && btnBoxShadow.split(' ').length > 2 ? parseInt(btnBoxShadow.split(' ')[2]) : 5,
+  elevation: 6,
+  margin: btnMargin,
+  paddingVertical: btnPadding && btnPadding.split(' ').length > 0 ? parseInt(btnPadding.split(' ')[0]) : 5,
+  paddingHorizontal: btnPadding && btnPadding.split(' ').length > 1 ? parseInt(btnPadding.split(' ')[1]) : 10,
+  backgroundColor: 'white',
+  height: 50,
+  width: 150,
+  margin: 20
+}}>
+  <Text style={[{color: 'black'}]}>
+     Button
+  </Text>
+</View>
 
         </View>
       )}
+
+      </ScrollView>
     </View>
   );
 };

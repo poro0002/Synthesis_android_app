@@ -15,7 +15,8 @@ import {
   Picker, // A dropdown component for selecting options <select> <option>
   ActivityIndicator, // For showing loading indicators during asynchronous tasks
   Switch, // A toggle component for binary options (on/off)
-  Pressable // Import Pressable for user interactions
+  Pressable, // Import Pressable for user interactions
+  SafeAreaView
 } from 'react-native';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -50,7 +51,12 @@ const HomeScreen = ({username}) => {
    
 
   return (
+  <SafeAreaView style={{ flex: 1, backgroundColor: 'black' }}>
     <View style={globalStyles.screenStyles.container}>
+       <ScrollView   
+                 contentContainerStyle={{  flexDirection: 'column'}}
+                 keyboardShouldPersistTaps="handled"
+                 >
         <Text style={globalStyles.screenStyles.h1}>Hello {storedUsername}</Text>
 
    
@@ -139,7 +145,10 @@ const HomeScreen = ({username}) => {
                </Pressable>
         </View>
 
+        </ScrollView>
+
       </View>
+ </SafeAreaView>     
   );
 };
 

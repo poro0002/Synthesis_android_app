@@ -48,6 +48,7 @@ const firestore = admin.firestore();
 
 
 app.get('/test-firebase', async (req, res) => {
+  console.log('Received request for /test-firebase');
   try {
     // Add a document to Firestore (for testing)
     const docRef = await firestore.collection('test').add({
@@ -56,6 +57,7 @@ app.get('/test-firebase', async (req, res) => {
     });
 
     // Read the newly added document
+    console.log('Document added to Firestore');
     const doc = await firestore.collection('test').doc(docRef.id).get();
     
     if (doc.exists) {
@@ -1331,6 +1333,26 @@ const styledComponents = [
   }
 ]
 
+app.get('pickElement', async (req, res) => {
+    const {category} = req.body;
+
+    if(category === "fonts"){
+      return res.json(fonts)
+    }
+
+    else if(category === "gradients"){
+      return res.json(gradients)
+    }
+
+    else if(category === 'typography'){
+      return res.json(typographyScales)
+    }
+
+    else if(category === 'comp'){
+      return res.json(styledComponents)
+    }
+});
+
 
 // --------------------< icons >-------------
 
@@ -1471,6 +1493,73 @@ catch(error){
 
 })
 
+// ----------------------------< Change Account Route >---------------------------------------
+
+app.post('/changePass', async (req, res) => {
+   
+  const { username, oldUsername, email, pass} = req.body;
+  console.log(req.body)
+
+  try{
+
+    const existingUser = await firestore.collection('users').where('username', '==', oldUsername).get();
+
+    if(existingUser.empty){
+      return res.status(500).json({message: "could not find that user"})
+      
+    }
+
+    // how do i write code here to update apreexisting password ?
+    const userDoc = existingUser.docs[0];
+    await userDoc.ref.update({ pass });
+
+    return res.status(200).json({message: "password successfully changed"})
+
+
+  }catch(err){
+    console.error('Error updating password:', err);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+
+
+});
+
+app.post('/changeUsername', async (req, res) => {
+   
+  const { newUsername, oldUsername, email} = req.body;
+  // maybe make it so it uses the users email and sends an automated message to their email to know that its being changed or verify it 
+  // do this with password too ?
+  console.log(req.body)
+
+
+  try{
+
+    const snapshot = await firestore.collection('users').where('username', "==", oldUsername).get();
+
+    if(snapshot.empty){
+      return res.status(500).json({message: "could not find a user with that username"})
+    }
+
+    const existingUsername = await firestore.collection('users').where('username', '==', newUsername).get();
+    if (!existingUsername.empty) {
+      return res.status(400).json({ message: 'That username is already taken' });
+    }
+ 
+    const userDoc = snapshot.docs[0];
+    await userDoc.ref.update({ username: newUsername });
+
+    return res.status(200).json({message: 'username successfully changed'})
+
+
+  }catch(err){
+    console.error('Error updating new username', err)
+    return res.status(500).json({ message: "Internal server error" });
+  }
+
+
+});
+
+
 // ----------------------------< Login Route >---------------------------------------
 
 app.post('/login', async (req, res) => {
@@ -1559,9 +1648,35 @@ if(type === 'designSystem'){
     console.error('Error saving design system:', error);
     return res.status(500).json({ message: 'Error saving design system. Please try again later.' });
   }
-}
+} // this where single elements from favorites will be saved ?
 else if(type === 'element'){
+   try{
 
+    const userRef = await firestore.collection('users').where('username', '==', username).get();
+
+    if(!username){
+      return res.status(404).json({message: 'uername is required'})
+    }
+  
+
+    if(userRef.empty){
+      return res.status(404).json({message: 'no snapshot could be found for that username '})
+    }
+
+    const userDoc = userRef.docs[0].ref;
+
+    await userDoc.collection('favorites').add({ // creates a collection called favs if it doesnt exist yet.
+      ...data,
+      createdAt: new Date().toISOString(), 
+    });
+
+    return res.status(200).json({message: 'successfully saved element to your favorites'})
+
+
+   }catch(err){
+    console.log('Error saving that favorite to DB', err)
+     return res.status(500).json({message: 'Error saving favorite element. Please try again later.'})
+   }
 }
   
 
@@ -1608,14 +1723,14 @@ app.get('/saved', async (req, res) => {
     }
    
 
-
-
 })
 
-// ----------------------------< Delete Saved Design System >---------------------------------------
+// ----------------------------< Delete Saved Design Element >---------------------------------------
 
 app.delete('/deleteElement', async (req, res) => {
-    let {type, id, username} = req.query;
+
+    let {type, id, username, index} = req.body;
+    console.log(id)
 
     try{
       const userRef = await firestore.collection('users').where('username', '==', username).get(); 
@@ -1626,13 +1741,9 @@ app.delete('/deleteElement', async (req, res) => {
 
 
         const userDoc = userRef.docs[0];  // snap shot of what you want to look at
-        const savedSystemsRef = await userDoc.ref.collection('savedSystems').where('id', '==', id).get(); // filter the to find the corro ID
+        const systemDoc = await userDoc.ref.collection('savedSystems').doc(id).get(); // filter the to find the corro ID
 
-        if (savedSystemsRef.empty) {
-          return res.status(404).json({ message: 'No system found with the specified ID.' });
-        }
-
-        const systemDoc = savedSystemsRef.docs[0]; // snap shot of what you want to look at again a directory deeper
+    
         const systemData = systemDoc.data(); // returns the data for that first index of savedSystems
 
         if (!systemData[type]) {
@@ -1640,25 +1751,47 @@ app.delete('/deleteElement', async (req, res) => {
         }
     
         // Filter out the element to delete
-        let updatedElements = systemData[type].filter((item) => item.name !== elementName); // Match by 'name'
+        let updatedElements = [...systemData[type]];
+
+        // cut that element out of the array 
+        updatedElements.splice(index, 1)
     
-        // Update the specific Firestore property value with the new filtered array
+        // Update the specific Firestore property value with the new filtered/spliced array
           await systemDoc.ref.update({ [type]: updatedElements });
     
-        return res.status(200).json({ message: 'Element successfully deleted from the system.' });
-
-      
-      
-
+        return res.status(200).json({ message: 'Element successfully deleted from the system' });
 
 
     }catch(err){
       console.error('Error deleting element:', err);
-      res.status(500).json({message: 'Error deleting elemt from corro system. Please try again later.'})
+      res.status(500).json({message: 'Error deleting element from corro system. Please try again later.'})
     }
 
+})
 
+// ----------------------------< Delete Saved Design System >---------------------------------------
 
-     
+app.delete('/deleteSystem', async (req, res) =>{
+   const {username, id} = req.body;
+
+   try{
+
+    const existingUser = await firestore.collection('users').where('username', '==', username).get();
+
+    if(existingUser.empty){
+       return res.status(404).json({message: 'no user with that username was found'});
+    }
+ 
+    const userDoc = existingUser.docs[0];
+    await userDoc.ref.collection('savedSystems').doc(id).delete(); 
+ 
+    return res.status(200).json({ message: 'Design system successfully deleted' });
+
+   }catch(err){
+    console.error('Error deleting design system:', err);
+    return res.status(500).json({ message: 'Failed to delete design system' });
+   }
   
+
+
 })

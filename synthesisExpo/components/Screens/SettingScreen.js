@@ -1,11 +1,26 @@
 import globalStyles from '../../styles'
 import React, { useState } from 'react';
-import { View, Text, Pressable, Switch, Image, Button, TextInput  } from 'react-native';
+import {
+  View, // A container that supports layout with flexbox
+  Text, // For displaying text
+  TextInput, // For user input text fields
+  StyleSheet, // For creating styles similar to CSS
+  ScrollView, // Enables scrolling for content that may exceed the screen height
+  SectionList, // For rendering a list with grouped data, like a <ul> with <li> 's'
+  Image, // For displaying images from local or remote sources
+  Modal, // For presenting content over the current view (like alerts or dialogs)
+  Picker, // A dropdown component for selecting options <select> <option>
+  ActivityIndicator, // For showing loading indicators during asynchronous tasks
+  Switch, // A toggle component for binary options (on/off)
+  Pressable // Import Pressable for user interactions
+} from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
+
+import { useAuth } from '../../LogContext';
 
 const SettingScreen = ({ route }) => {
   const [selectedSetting, setSelectedSetting] = useState('default');
-  const { logout } = route.params; //   here is logout function deconstructed from the params properrty that is in the route 
+//   here is logout function deconstructed from the params property that is in the route 
   console.log(selectedSetting);
 
   const [isAB, setIsAB] = useState(false); // state to control the switch (on/off)
@@ -21,10 +36,28 @@ const SettingScreen = ({ route }) => {
     </View>
   );
 
+  const { logout } = useAuth();
+
+
+  const [feedbackData, setFeedbackData] = useState({
+    subject: [],
+    message: [],
+  })
+
+  const submitFeedback = () =>{
+      // fetch to the backend and create a spot in the database that stores users feedback so i can read it.
+
+  }
+
   //so the only props that should be passed is navigation and route and whatever initial params you send get attached to the route
 
   return (
+ 
     <View style={[globalStyles.screenStyles.container, {alignItems: 'center'}]}>
+        <ScrollView   
+                  contentContainerStyle={{  flexDirection: 'column'}}
+                  keyboardShouldPersistTaps="handled"
+          >
       {selectedSetting === 'default' && (
         <View>
          <View style={[{ alignItems: 'center' }]}>
@@ -143,12 +176,19 @@ const SettingScreen = ({ route }) => {
                   numberOfLines={4}
                 />
 
-                 <Button color="orange" title="Submit Feedback"  />
+                 <Pressable onPress={submitFeedback} style={[globalStyles.screenStyles.viewBtn]}>
+                     <Text>
+                        Submit Feedback
+                     </Text>
+                  </Pressable>
                </View>
           )}
         </View>
       )}
+
+       </ScrollView>
     </View>
+ 
   );
 };
 

@@ -25,67 +25,35 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native'
 
+import { useAuth } from '../../LogContext'; // Adjust path as needed
+
 
 
 const ProjectScreen = () => {
 
+  const { designSystemData, getDesignSystem } = useAuth();
+
   const navigation = useNavigation();
-  const [designSystemData, setDesignSystemData] = useState([]);
-
-  const getDesignSystem = async () => {
-
-    const username = await AsyncStorage.getItem('username');
-    const fetchUrl = `http://10.0.2.2:4500/saved?username=${encodeURIComponent(username)}`; //
-    const fetchHeader = new Headers({'Content-Type': 'application/json'});
-
   
-    const fetchOptions = {
-         method: 'GET',
-         headers: fetchHeader,
-         mode: 'cors',
-       }
-
-    try{
-  
-        const response = await fetch(fetchUrl, fetchOptions);
-  
-        // if(!response.ok){
-        //   throw new error(`there was an issued with the response: ${response.status}`)
-        // }
-  
-        const data = await response.json();
-        console.log('Fetched data:', data);
-
-     
-    if (Array.isArray(data)) {
-      setDesignSystemData(data);
-      console.log(designSystemData)
-    } else {
-      console.error('Expected data to be an array, got:', data);
-      setDesignSystemData([]); // Set it as an empty array to avoid issues
-    }
-        
-       
-  
-  
-    }catch(err){
-      console.log('there was an error with the fetch', err)
-    }
-    
-  }
-  
-  
-  const editDesignSystem = (item) => {
-    console.log('edit design system btn pressed ')
-    navigation.navigate('MyDesignScreen', {data: item})
-  }
+  const editDesignSystem = (element) => {
+    console.log('designSystemData length on press:', designSystemData.length)
+    setTimeout(() => {
+      navigation.navigate('MyDesignScreen', { data: element });
+    }, 100); // small delay to let state settle
+  };
+  // edit design system function is not opening the corrosponding design system 
   
   
   useFocusEffect(
-    useCallback(() => {
+    React.useCallback(() => {
+      console.log('Screen focused. Fetching design systems...');
       getDesignSystem();
     }, [])
   );
+
+  useEffect(() => {
+    console.log('Updated designSystemData:', designSystemData);
+  }, [designSystemData]);
 
 
 
@@ -118,7 +86,7 @@ const ProjectScreen = () => {
                 }}
               >
                 <LinearGradient
-                  colors={element.gradients[0].colors}
+                   colors={(element.gradients?.[0]?.colors && element.gradients[0].colors.length > 0) ? element.gradients[0].colors : ['white', 'white']}
                   start={{ x: 1, y: 1 }}
                   end={{ x: 0, y: 0 }}
                   style={{

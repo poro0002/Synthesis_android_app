@@ -16,7 +16,8 @@ import {
   Picker, // A dropdown component for selecting options <select> <option>
   ActivityIndicator, // For showing loading indicators during asynchronous tasks
   Switch,  // A toggle component for binary options (on/off)
-  Button
+  Button,
+  SafeAreaView
 } from 'react-native';
 
 import { MaterialIcons } from '@expo/vector-icons';
@@ -25,11 +26,21 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native'
 
 import Icon from './Icon'
+import { useAuth } from '../../../LogContext'; 
+
+import Constants from 'expo-constants';
+const apiUrl = Constants.expoConfig.extra.API_URL; 
 
 
 const MyDesignScreen = ({route}) => {
-    const {data} = route.params;
-    console.log("data:", data)
+  const { data } = route.params || {}; // we now get data from the react context pattern
+    // console.log("data:", data);
+
+  const { designSystemData, getDesignSystem, setDesignSystemData } = useAuth();
+  const [selectedIndex, setSelectedIndex] = useState(0); // Defaults to showing the first design system
+  const [currentSystem, setCurrentSystem] = useState(data); // keep this
+
+
 
   const navigation = useNavigation();
 
@@ -37,40 +48,79 @@ const MyDesignScreen = ({route}) => {
     navigation.navigate('Element',{element: element, type: type}) 
  }
 
- const handleIconElement = (iconType) => {
-    navigation.navigate('Element', { iconType: iconType, data: data }) 
+ const handleIconElement = (iconType, data, element) => {
+    navigation.navigate('Element', { iconType: iconType, data: data, element: element }) // <------- issue with these 
 }
 
-const handleCompElement = (type) => {
-  navigation.navigate('Element', {type: type, data: data}) 
+const handleTypoElement = (type, currentSystem, element) => {
+  navigation.navigate('Element', { 
+    type,
+    data: currentSystem,  // pass the WHOLE system
+    element: element,     // pass the specific element as well if needed
+  });
+};
 
+const handleCompElement = (type, currentSystem, element) => {
+  navigation.navigate('Element', { 
+    type,
+    data: element, 
+    iconType: 'component'
+  });
+};
+
+useEffect(() => {
+  if (!designSystemData || designSystemData.length === 0) return;
+
+  // Find the current system by ID in the updated designSystemData
+  const updatedSystem = designSystemData.find(system => system.id === currentSystem?.id);
+
+  if (updatedSystem) {
+    setCurrentSystem(updatedSystem);
+  }
+}, [designSystemData]);
+
+
+{/* ----------------------------------------------------< ADD Element  >--------------------------------------------------- */} 
+
+const addElement = () =>{
+  // add element functionality after i fix this delete element issues
 }
 
- const deleteElement = async (element, type) => { 
-    // slice or splice and return a new array without the corro element and update the data use state with the new structure\
+
+{/* ----------------------------------------------------< Delete Element  >--------------------------------------------------- */} 
+
+ const deleteElement = async (element, type, systemId, index) => {
     
+   console.log('Deleting element from system:', systemId, 'type:', type, 'index:', index, element.username);
+  
 
-    const fetchURL = `http://10.0.2.2:4500/deleteElement?type=${type}id=${element.id}username=${element.username}`;
+    const fetchURL = `${apiUrl}/deleteElement`;
     const fetchHeaders = new Headers({'Content-Type': 'application/json'});
 
     const fetchOptions = {
         method: "DELETE",
         headers: fetchHeaders,
         mode: 'cors',
+        body: JSON.stringify({
+          username: currentSystem.username,
+          type: type,
+          id: systemId,
+          index: index,
+        })
     }
 
     try{
         let response = await fetch(fetchURL, fetchOptions);
 
-        if(!response.ok){
-            throw new error ('there was an error with the response')
-        }
-
         let data = await response.json();
 
-        if(data.message === 'Element successfully deleted from the system.'){
-            
-            
+        if(data.message === 'Element successfully deleted from the system'){
+
+          await new Promise(resolve => setTimeout(resolve, 500)); 
+          // basically this is a async version of a timeout  
+          // good for giving the backend a chance to update before the code moves forward
+
+           await getDesignSystem();
 
         }
 
@@ -82,199 +132,266 @@ const handleCompElement = (type) => {
     }
  }
 
-  return(
+{/* ----------------------------------------------------< Delete System >--------------------------------------------------- */} 
+ const deleteSystem = async (id) =>{
+
+
+  const fetchURL = `${apiUrl}/deleteSystem`;
+  const fetchHeaders = new Headers({'Content-Type': 'application/json'});
+
+  const fetchOptions = {
+      method: "DELETE",
+      headers: fetchHeaders,
+      mode: 'cors',
+      body: JSON.stringify({
+        username: currentSystem.username,
+        id: id,
+      })
+  }
+
+  try{
+      let response = await fetch(fetchURL, fetchOptions);
+
+      let data = await response.json();
+
+      if(data.message === 'Design system successfully deleted'){
+        console.log('Deletion confirmed, updating local state...');
+
+        // prevdata is the systems with the one we want to delete. we match the id and remove it updating the designsystemdata
+        setDesignSystemData(prevData => prevData.filter(system => system.id !== id));
+
+        navigation.navigate('Tabs', {
+          screen: 'Project',
+        });
+
+
+        // Refresh in the background
+        getDesignSystem().catch((err) => console.log('Error refreshing design systems:', err));
+      }
+
+      console.log(data.message)
+
+     
+  }catch(err){
+      console.log("there was an error with the fetch", err)
+  }
+      
+ }
+
+ {/* ----------------------------------------------------< RETURN JSX >--------------------------------------------------- */} 
+
+ return(
+  <SafeAreaView style={{ flex: 1, backgroundColor: 'black' }}>
     <View style={[globalStyles.screenStyles.container, {alignItems: 'center'}]}>
          <ScrollView   
-            contentContainerStyle={{  flexDirection: 'column'}}
+            contentContainerStyle={{  flexDirection: 'column', paddingBottom: 50}}
             keyboardShouldPersistTaps="handled"
             >
 
- {/* ----------------------------------------------------< FONTS >--------------------------------------------------- */} 
+    <Text style={[globalStyles.screenStyles.h3, {color: 'white', textAlign: 'center'}]}>{currentSystem.name}</Text>
+
+    {/* ----------------------------------------------------< FONTS >--------------------------------------------------- */} 
 
     <Text style={[globalStyles.screenStyles.h4, {color: 'white'}]}>Fonts</Text>
 
-           <ScrollView   
-             contentContainerStyle={{  flexDirection: 'column'}}
-             keyboardShouldPersistTaps="handled"
-             horizontal
-           >
-
-                {data && data.fonts && data.fonts.length > 0 && (
-                      data.fonts.map((element, index) => {
-                        return (
-                          <View key={index}>
-                              <View key={index} style={globalStyles.screenStyles.box}>
-                                <Text style={[{ fontFamily: element.name, color: 'black', fontSize: 40 }]}>T t</Text>
-                                <Text style={{ fontFamily:  element.name }}>{element.name}</Text>
-                             </View>       
-                              <View style={{flexDirection: 'column', justifyContent: 'center',}}>
-                                <Pressable onPress={() => handleViewElement(element, "font")}  style={globalStyles.screenStyles.viewBtn}>
-                                 <Text >View</Text>
-                               </Pressable>
-                               <Pressable onPress={() => deleteElement(element, "font")}  style={[globalStyles.screenStyles.viewBtn, {backgroundColor: 'red'}]}>
-                                 <Text >Delete</Text>
-                               </Pressable>
-                            </View>
-                          </View>
-                        );
-                      })
-                 )}
-          </ScrollView>
-
- {/* ----------------------------------------------------< COLORS >---------------------------------------------------  */}  
-
- <Text style={[globalStyles.screenStyles.h4, {color: 'white'}]}>Color Gradients</Text>
-         
-          <ScrollView   
-             contentContainerStyle={{  flexDirection: 'column'}}
-             keyboardShouldPersistTaps="handled"
-             horizontal
-           >
-
-                {data && data.gradients && data.gradients.length > 0 && (
-                    data.gradients.map((element, index) => {  
-                        return (
-                        <View>     
-                           <LinearGradient
-                            key={index} style={globalStyles.screenStyles.box}
-                            colors={element.colors} // Array of colors
-                             // Adjust style as needed
-                            start={{ x: 0, y: 0 }} // Gradient start (top-left)
-                            end={{ x: 1, y: 1 }} // Gradient end (bottom-right)
-                            >
-                          <Text style={{ color: '#fff'}}>{element.name}</Text>
-                          </LinearGradient>
-                      
-                         <View style={{flexDirection: 'column', justifyContent: 'center',}}>
-                              <Pressable onPress={() => handleViewElement(element, "color")}  style={globalStyles.screenStyles.viewBtn}>
-                                 <Text >View</Text>
-                               </Pressable>
-                               <Pressable onPress={() => deleteElement(element, "color")}  style={[globalStyles.screenStyles.viewBtn, {backgroundColor: 'red'}]}>
-                                 <Text >Delete</Text>
-                               </Pressable>
-                         </View>
-                       </View>
-                        );
-                    })  
-                        
-                 )}
-          </ScrollView>
-
-  {/* ----------------------------------------------------< TYPOGRAPHY >---------------------------------------------------  */}           
-
- <Text style={[globalStyles.screenStyles.h4, {color: 'white'}]}>Typography</Text>
-
-           <ScrollView   
-             contentContainerStyle={{  flexDirection: 'column'}}
-             keyboardShouldPersistTaps="handled"
-             horizontal
-           >
-            {data && data.typography && data.typography.length > 0 && (
-                data.typography.map((element, index) => { 
-                    return(
-                <View>
-
-                  <View key={index} style={globalStyles.screenStyles.box}>
-                     <Text>Typography Scale</Text> 
-                  </View>
-
-                   <View style={{flexDirection: 'column', justifyContent: 'center',}}>
-                     <Pressable  onPress={() => handleCompElement("typography")}  style={globalStyles.screenStyles.viewBtn}>
-                        <Text >View</Text>
-                      </Pressable>
-                      <Pressable onPress={() => deleteElement(element, "typography")}  style={[globalStyles.screenStyles.viewBtn, {backgroundColor: 'red'}]}>
-                        <Text >Delete</Text>
-                      </Pressable>
-                 </View>
-
-              </View>
-                    )
-                }) 
-            )}
-         </ScrollView>
-
-{/* ----------------------------------------------------< ICONS >---------------------------------------------------  */} 
-
-<Text style={[globalStyles.screenStyles.h4, {color: 'white'}]}>Icons</Text>
-
-        <ScrollView   
-             contentContainerStyle={{  flexDirection: 'column'}}
-             keyboardShouldPersistTaps="handled"
-             horizontal
-           >
-        {data && data.icons && data.icons.length > 0 && (
-            data.icons.map((element, index) => { 
-                return(
-                 <View key={index}>
-
-                      <View  style={globalStyles.screenStyles.box}>
-                         <Icon type={element.name} />
-                         <Text>{element.name}</Text> 
-                    
-                      </View>
-
-                       <View style={{flexDirection: 'column', justifyContent: 'center',}}>
-                         <Pressable  onPress={() => handleIconElement(element.name)}  style={globalStyles.screenStyles.viewBtn}>
-                            <Text >View</Text>
-                          </Pressable>
-                          <Pressable onPress={() => deleteElement(element, "icon")}  style={[globalStyles.screenStyles.viewBtn, {backgroundColor: 'red'}]}>
-                            <Text >Delete</Text>
-                          </Pressable>
-                     </View>
-
-                 </View>
-                    )
-                }) 
-            )}
-       </ScrollView>
-
-
-
-{/* ----------------------------------------------------< COMPONENTS >---------------------------------------------------  */} 
-
-
-<Text style={[globalStyles.screenStyles.h4, {color: 'white'}]}>Styled Components</Text>
-
-
-        <ScrollView   
-             contentContainerStyle={{  flexDirection: 'column'}}
-             keyboardShouldPersistTaps="handled"
-             horizontal
-           >
-             {data && data.comp && data.comp.length > 0 && (
-                data.comp.map((element, index) => { 
-                return(
-                  <View key={index}>
-
-                   <View  style={globalStyles.screenStyles.box}>
-                         <Text>{element.package}</Text> 
-                    
-                      </View>
-                    {/* components property in {data} is an array here which is causing issues on the elements screen */}
-                        <Pressable onPress={() => handleIconElement('component')} style={globalStyles.screenStyles.viewBtn}>
-                            <Text>View</Text>
-                          </Pressable >
-                        <Pressable onPress={() => deleteElement(element, "icon")}  style={[globalStyles.screenStyles.viewBtn, {backgroundColor: 'red'}]}>
-                            <Text >Delete</Text>
-                        </Pressable>
-
-                  </View>
-                    
-                  )
-                })
-                
-             )}
-
-
-
-        </ScrollView>   
+    <ScrollView   
+      contentContainerStyle={{ flexDirection: 'row' }} // horizontal scroll
+      keyboardShouldPersistTaps="handled"
+      horizontal
+    >
+      {/* Check if currentSystem exists and has fonts */}
+      {currentSystem?.fonts?.length > 0 ? (
+        currentSystem.fonts.map((element, fontIndex) => (
+          <View key={`${currentSystem.id}-${fontIndex}`} style={{ marginRight: 20 }}>
+            <View style={globalStyles.screenStyles.box}>
+              <Text style={[{ fontFamily: element.name, color: 'black', fontSize: 40 }]}>T t</Text>
+              <Text style={{ fontFamily: element.name }}>{element.name}</Text>
+            </View>
+            <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
+              <Pressable onPress={() => handleViewElement(element, "font", currentSystem.id)} style={globalStyles.screenStyles.viewBtn}>
+                <Text>View</Text>
+              </Pressable>
+              <Pressable onPress={() => deleteElement(element, "fonts", currentSystem.id, fontIndex)} style={[globalStyles.screenStyles.viewBtn, { backgroundColor: 'red' }]}>
+                <Text>Delete</Text>
+              </Pressable>
+            </View>
+          </View>
+        ))
+      ) : (
+        <Text style={{ color: 'white' }}>
+          {currentSystem ? `No fonts in system "${currentSystem.name[0]}"` : 'Loading...'}
+        </Text>
+      )}
     </ScrollView>
-
-  </View>
-  )
-
-
-}
+    
+    {/* ----------------------------------------------------< COLORS >---------------------------------------------------  */}  
+    
+    <Text style={[globalStyles.screenStyles.h4, {color: 'white'}]}>Color Gradients</Text>
+    
+          <ScrollView   
+            contentContainerStyle={{ flexDirection: 'row' }} // row for horizontal scroll
+            keyboardShouldPersistTaps="handled"
+            horizontal
+           >
+            {/* Check if currentSystem exists and has gradients */}
+            {currentSystem?.gradients?.length > 0 ? (
+              currentSystem.gradients.map((element, gradientIndex) => (
+                <View key={`${currentSystem.id}-${gradientIndex}`} style={{ marginRight: 20 }}>
+                  <LinearGradient
+                    style={globalStyles.screenStyles.box}
+                    colors={element.colors}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 1 }}
+                  >
+                    <Text style={{ color: '#fff' }}>{element.name}</Text>
+                  </LinearGradient>
+                  <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
+                    <Pressable onPress={() => handleViewElement(element, "color", currentSystem.id)} style={globalStyles.screenStyles.viewBtn}>
+                      <Text>View</Text>
+                    </Pressable>
+                    <Pressable onPress={() => deleteElement(element, "gradients", currentSystem.id, gradientIndex)} style={[globalStyles.screenStyles.viewBtn, { backgroundColor: 'red' }]}>
+                      <Text>Delete</Text>
+                    </Pressable>
+                  </View>
+                </View>
+              ))
+            ) : (
+              <Pressable onPress={addElement} style={globalStyles.screenStyles.centerRow}>
+              <MaterialIcons name="add" size={30} color="orange" />
+              <Text style={globalStyles.screenStyles.text}>
+                 Add Element
+              </Text>
+              </Pressable>
+            )}
+          </ScrollView>
+    {/* ----------------------------------------------------< TYPOGRAPHY >---------------------------------------------------  */}           
+          
+    <Text style={[globalStyles.screenStyles.h4, { color: 'white' }]}>Typography</Text>
+          
+    <ScrollView
+      contentContainerStyle={{ flexDirection: 'row' }}
+      keyboardShouldPersistTaps="handled"
+      horizontal
+    >
+      {currentSystem && currentSystem.typography && currentSystem.typography.length > 0 ? (
+        <View key={`${currentSystem.id}-typography`} style={{ marginRight: 20 }}>
+          <View style={globalStyles.screenStyles.box}>
+            <Text>Typography Scale</Text>
+          </View>
+          <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
+            <Pressable
+              onPress={() => handleTypoElement("typography", currentSystem, currentSystem.typography)}
+              style={globalStyles.screenStyles.viewBtn}
+            >
+              <Text>View</Text>
+            </Pressable>
+            <Pressable
+              onPress={() => deleteElement(null, "typography", currentSystem.id)}
+              style={[globalStyles.screenStyles.viewBtn, { backgroundColor: 'red' }]}
+            >
+              <Text>Delete</Text>
+            </Pressable>
+          </View>
+        </View>
+      ) : (
+        <Text style={{ color: 'white' }}>
+          {currentSystem ? `No typography in system "${currentSystem.name[0]}"` : 'Loading...'}
+        </Text>
+      )}
+    </ScrollView>
+    
+    {/* ----------------------------------------------------< ICONS >---------------------------------------------------  */} 
+    
+    <Text style={[globalStyles.screenStyles.h4, { color: 'white' }]}>Icons</Text>
+          <ScrollView
+            contentContainerStyle={{ flexDirection: 'row' }}
+            keyboardShouldPersistTaps="handled"
+            horizontal
+          >
+            {currentSystem?.icons?.length > 0 ? (
+              currentSystem.icons.map((icon, index) => (
+                <View key={`${icon.id}-${index}`} style={{ marginRight: 10 }}>
+                  <View style={globalStyles.screenStyles.box}>
+                    <Icon type={icon.name} />
+                    <Text>{icon.name}</Text>
+                  </View>
+                  <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
+                    <Pressable  
+                      onPress={() => handleIconElement(icon.name, currentSystem, icon )} 
+                      style={globalStyles.screenStyles.viewBtn}
+                    >
+                      <Text>View</Text>
+                    </Pressable>
+                    <Pressable
+                      onPress={() => deleteElement(icon, 'icons', currentSystem.id, index)}
+                      style={[globalStyles.screenStyles.viewBtn, { backgroundColor: 'red' }]}
+                    >
+                      <Text>Delete</Text>
+                    </Pressable>
+                  </View>
+                </View>
+              ))
+            ) : (
+              <Text style={{ color: 'white' }}>No icons available</Text>
+            )}
+          </ScrollView>
+          
+    {/* ----------------------------------------------------< COMPONENTS >---------------------------------------------------  */} 
+    <Text style={[globalStyles.screenStyles.h4, { color: 'white' }]}>Styled Components</Text>
+          
+          <ScrollView   
+            contentContainerStyle={{ flexDirection: 'column' }} 
+            keyboardShouldPersistTaps="handled"
+            horizontal
+          >
+            {currentSystem?.comp?.length > 0 ? (
+              currentSystem.comp.map((element, index) => (
+                <View key={index}>
+                  <View style={globalStyles.screenStyles.box}>
+                    <Text>{element.package}</Text>
+                  </View>
+              
+                  <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
+                    <Pressable
+                      onPress={() => handleCompElement("comp", currentSystem, element)}
+                      style={globalStyles.screenStyles.viewBtn}
+                    >
+                      <Text>View</Text>
+                    </Pressable>
+                    <Pressable
+                      onPress={() => deleteElement(element, "comp", currentSystem.id, index)}
+                      style={[globalStyles.screenStyles.viewBtn, { backgroundColor: 'red' }]}
+                    >
+                      <Text>Delete</Text>
+                    </Pressable>
+                  </View>
+                </View>
+              ))
+            ) : (
+              <Text style={{ color: 'white' }}>
+                {currentSystem ? `No components in system "${currentSystem.name[0]}"` : 'Loading...'}
+              </Text>
+            )}
+          </ScrollView>
+          
+    {/* ----------------------------------------------------< OPTIONS >---------------------------------------------------  */} 
+          
+    <View>
+       <Pressable onPress={() => deleteSystem(currentSystem.id)} style={[globalStyles.screenStyles.btn1, {backgroundColor: 'red', color: 'black'}]}>
+            <Text style={globalStyles.screenStyles.text}>
+              Delete Design System
+            </Text>
+       </Pressable>
+    </View>
+          
+          
+          
+        </ScrollView>
+          
+      </View>
+   </SafeAreaView>
+      )
+    }
 
 
 export default MyDesignScreen;

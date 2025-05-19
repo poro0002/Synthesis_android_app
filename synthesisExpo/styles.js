@@ -126,6 +126,7 @@ const globalStyles = StyleSheet.create({
              flexDirection: 'row', // Align children in a row
              justifyContent: 'space-between', // Space evenly between items
              marginBottom: 30, // Space between rows
+             flexWrap: 'wrap', 
            },
          column: {
                flexDirection: 'column', // Align children in a row
@@ -144,15 +145,15 @@ const globalStyles = StyleSheet.create({
             color: 'black',
             alignItems: 'center',
             justifyContent: 'center',
-            paddingTop: 7,
-            paddingBottom: 7,
+            paddingTop: 9,
+            paddingBottom: 9,
             paddingLeft: 10,
             paddingRight: 10,
            
 
         },
           topicText: {
-            fontSize: 16, // Text size for readability
+            fontSize: 14, // Text size for readability
             color: "black", // Bold text
             fontFamily: 'AbrilFatface-Regular',
           },

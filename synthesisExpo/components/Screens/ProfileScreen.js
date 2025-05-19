@@ -22,6 +22,9 @@ import {
 import { MaterialIcons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { launchImageLibrary } from 'react-native-image-picker';
+import { useNavigation } from '@react-navigation/native'
+
+ 
 
 
 const ProfileScreen = () => {
@@ -29,6 +32,9 @@ const ProfileScreen = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [profileImage, setProfileImage] = useState(null);
+  
+
+  const navigation = useNavigation();
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -43,23 +49,24 @@ const ProfileScreen = () => {
   }, []);
 
 // write backend functionality 
-  // const changePassword = () => {
-  //   const fetchUrl = 
-  //   const fetchHeader = 
-    
-  //   const fetchOptions = {
-  //       mode: 'cors',
-  //       method: 'POST',
-  //       header: fetchHeader,
-  //       body: JSON.stringify()
 
-  //    }
-    
-  //   fetch(fetchHeader, fetchUrl)
-  //   .then()
-  //   .then()
-  //   .catch()
-  // }
+// basically you would need to show a password change form when the user prompts it or create another screen within this screen for the process to begin
+// then, both pwords input values would have to match to confirm them and push those values to a use state
+// also, password rules would have to come into play again so grab those from the app.js
+// the change for username or pword will be done in the register endpoint using a type query in the url
+
+const handlePassChange = (type) =>{
+  navigation.navigate('AccountChangeScreen', {type})
+}
+
+
+
+const handleUsernameChange = (type) =>{
+  navigation.navigate('AccountChangeScreen', {type})
+}
+
+
+
 
 // assets property
 
@@ -109,15 +116,23 @@ const ProfileScreen = () => {
           <MaterialIcons name="person" size={100} color="white" />
         )}
       </View>
+     <Pressable onPress={pickImage} style={[{backgroundColor: "orange"}]}>
+        <Text>
+            Upload Profile Picture
+        </Text>
+     </Pressable>
 
-      <Button title="Pick Profile Picture" onPress={pickImage} color="orange" />
 
       {/* Display Username and Email */}
       <Text style={globalStyles.screenStyles.text}>Username: {username || 'Not set'}</Text>
       <Text style={globalStyles.screenStyles.text}>Email: {email || 'Not set'}</Text>
 
-      <Pressable  style={globalStyles.screenStyles.settingsComp}>
+      <Pressable onPress={() => handlePassChange('pass')}  style={globalStyles.screenStyles.settingsComp}>
               <Text style={globalStyles.screenStyles.topicText}>Change Password</Text>
+      </Pressable>
+
+      <Pressable onPress={() => handleUsernameChange('user')}  style={globalStyles.screenStyles.settingsComp}>
+              <Text style={globalStyles.screenStyles.topicText}>Change Username</Text>
       </Pressable>
 
       <Pressable  style={globalStyles.screenStyles.settingsComp}>

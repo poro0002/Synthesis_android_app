@@ -12,19 +12,17 @@ import SettingScreen from '../Screens/SettingScreen';
 import TopicScreen from '../Screens/subScreens/TopicScreen';
 import ElementScreen from '../Screens/subScreens/ElementScreen';
 import MyDesignScreen from '../Screens/subScreens/MyDesignScreen';
+import AccountChangeScreen from '../Screens/subScreens/ChangeAccount';
+import PickElementScreen from '../Screens/subScreens/pickElementScreen';
+
 
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
-const SettingsWrapper = (props) => {
-  const { logout } = props.route.params; 
-  return <SettingScreen {...props} logout={logout} />;
-};
 
 
-
-const TabNavigator = ({ username, logout }) => {
+const TabNavigator = ({ username }) => {
 
 // the wrapper pretty much handles the props before hand so there is no issues passing props when the component is actually renders 
 
@@ -39,7 +37,7 @@ const HomeWrapper = (props) => {
       <Tab.Screen
         name="Home"
         component={HomeWrapper} 
-        initialParams={{ username }} // 
+        initialParams={{ username }} //  You use initialParams to pass data into a screen before the screen is rendered. // This is where `username` is passed to the `HomeWrapper` component
         options={{
           tabBarIcon: ({ color, size }) => (
             <MaterialIcons name="home" color={color} size={size} />
@@ -66,8 +64,7 @@ const HomeWrapper = (props) => {
       />
   <Tab.Screen
         name="Settings"
-        component={SettingsWrapper} // Use SettingsWrapper
-        initialParams={{ logout }} // Pass `logout` as initialParams
+        component={SettingScreen}
         options={{
           tabBarIcon: ({ color, size }) => (
             <MaterialIcons name="settings" color={color} size={size} />
@@ -78,13 +75,13 @@ const HomeWrapper = (props) => {
   );
 };
 
-const StackNavigator = ({ username, logout }) => {
+const StackNavigator = ({ username }) => {
   return (
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
           name="Tabs"
-          children={() => <TabNavigator username={username} logout={logout} />}
+          children={() => <TabNavigator username={username}/>}
           options={{ headerShown: false }} // Hide header for the tab navigator
         />
         <Stack.Screen
@@ -104,8 +101,7 @@ const StackNavigator = ({ username, logout }) => {
         />
       <Stack.Screen
         name="Settings"
-        component={SettingsWrapper}
-        initialParams={{ logout }} 
+        component={SettingScreen}
         options={{ headerTitle: 'Settings' }}
       />
         <Stack.Screen name="Topic" 
@@ -120,6 +116,16 @@ const StackNavigator = ({ username, logout }) => {
         component={MyDesignScreen} 
          
         />
+                <Stack.Screen name="AccountChangeScreen" 
+        component={AccountChangeScreen} 
+         
+        />
+
+        <Stack.Screen name="PickElementScreen" 
+        component={PickElementScreen} 
+         
+        />
+
       </Stack.Navigator>
     </NavigationContainer>
   );
