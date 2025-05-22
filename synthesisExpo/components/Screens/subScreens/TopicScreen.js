@@ -13,7 +13,7 @@ import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import Octicons from 'react-native-vector-icons/Octicons';
 
 
-
+// Constants makes it so i can access the app.config file in my project from anywhere 
 import Constants from 'expo-constants';
 const apiUrl = Constants.expoConfig.extra.API_URL; 
 
@@ -92,18 +92,27 @@ const TopicScreen = ({route}) => {
   // ------------------------------< Toggle Selection >------------------------------------------
 
   const toggleSelection = (type, element) => {
+   // Checks if the new selection is identical to the current state (same length and same labels at each index).
+   // If it's identical, clear the selection (toggle off).
+   // If it's different, update the selection with the new items.
+
     setSelectedElements((prevState) => {
       // For name & about (always string)
       if (type === 'name' || type === 'about') {
         return { ...prevState, [type]: [element] };
       }
-  
-      // If adding full scale (array), set it cleanly
+      
+      // basically below, it’s comparing the current selected state (element) with the stored previous state (prevState[type]).
+      // so every time it runs false it means there is a discrepancy between both arrays
+      
       if (Array.isArray(element)) {
-        const isSameAsCurrent =
-          prevState[type].length === element.length &&
-          prevState[type].every((item, index) => item.label === element[index].label);
-  
+          // Check if the current selected items (prevState[type]) match the new selection (element)
+          // checks if every item at each index has the same label.
+          // Then it checks if each item at the same position (index) in both arrays has the same label value.
+        const isSameAsCurrent = prevState[type].length === element.length && prevState[type].every((item, index) => item.label === element[index].label);
+        
+         // If the new selection matches the old one exactly, it interprets that as a “deselect”so it clears the selection by returning an empty array [].
+        // Otherwise, replace the current selection with the new one
         return {
           ...prevState,
           [type]: isSameAsCurrent ? [] : [...element],
@@ -111,16 +120,29 @@ const TopicScreen = ({route}) => {
       }
   
       // For single element toggle
-      const isSelected = prevState[type].some((item) =>
-        (item.label && element.label && item.label === element.label) ||
-        (item.name && element.name && item.name === element.name)
-      );
+      // 	.some() — returns true if any element in the array matches the current one.
+      // 	If both item and element have a .label, compare those. Else, if they have .name, compare those.
+      const isSelected = prevState[type].some((item) => (item.label && element.label && item.label === element.label) || (item.name && element.name && item.name === element.name));
   
+      // [type] dynamic key (used to overwrite this one part of the state)
+      // this  ...prevState ----> 
+      // {
+      //  gradients: [...],
+      //  icons: [...],
+      //  fonts: [...],
+      //   etc: ...
+      //   }
+
+      //this [type]: ... ----> gradients: ...
+      // ----->  isSelected checks if it was already selected before the click. <------
+
+      //example adding a element
+      // type = "gradients"
+      // isSelected = false
+      // if both these above pass like this it adds a gradient to the selectedItems gradient object state 
+     
       return {
-        ...prevState,
-        [type]: isSelected
-          ? prevState[type].filter((item) => item.label !== element.label)
-          : [...prevState[type], element],
+        ...prevState, [type]: isSelected ? prevState[type].filter((item) => item.label !== element.label) : [...prevState[type], element],
       };
     });
   };
@@ -166,11 +188,6 @@ useEffect(() => {
 
 const createSystem = async () =>{
 
-  // console.log('Checking Fields:');
-  // console.log('comp:', selectedElements.comp.length);
-  // console.log('fonts:', selectedElements.fonts.length);
-  // console.log('gradients:', selectedElements.gradients.length);
-  // console.log('icons:', selectedElements.icons.length);
   console.log('typography:', selectedElements.typography);
   
   // console.log('name:', selectedElements.name.length);
@@ -218,7 +235,7 @@ const createSystem = async () =>{
           screen: 'Project',
         });
        }, 1000);
-      //  navigation.navigate('Home'); 
+      
     } catch (err) {
       console.error('Error saving design system:', err);
       setErrorMessage('Failed to save design system. Please try again.');

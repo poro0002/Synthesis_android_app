@@ -39,7 +39,9 @@ const apiUrl = Constants.expoConfig.extra.API_URL;
     try {
       const response = await fetch(fetchUrl, fetchOptions);
       const data = await response.json();
-      // console.log('logContext fetched data:', data);
+      console.log('logContext fetched data:', data);
+ 
+
 
       if (Array.isArray(data)) {
         setDesignSystemData(data);

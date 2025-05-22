@@ -46,14 +46,14 @@ const ProjectScreen = () => {
   
   useFocusEffect(
     React.useCallback(() => {
-      console.log('Screen focused. Fetching design systems...');
+      // console.log('Screen focused. Fetching design systems...');
       getDesignSystem();
     }, [])
   );
 
-  useEffect(() => {
-    console.log('Updated designSystemData:', designSystemData);
-  }, [designSystemData]);
+  // useEffect(() => {
+  //   console.log('Updated designSystemData:', designSystemData);
+  // }, [designSystemData]);
 
 
 

@@ -33,7 +33,7 @@ const apiUrl = Constants.expoConfig.extra.API_URL;
 
 
 const MyDesignScreen = ({route}) => {
-  const { data } = route.params || {}; // we now get data from the react context pattern
+  const { data } = route?.params || {}; // we now get data from the react context pattern
     // console.log("data:", data);
 
   const { designSystemData, getDesignSystem, setDesignSystemData } = useAuth();
@@ -45,7 +45,7 @@ const MyDesignScreen = ({route}) => {
   const navigation = useNavigation();
 
   const handleViewElement = (element, type) => {
-    navigation.navigate('Element',{element: element, type: type}) 
+    navigation.navigate('Element', {element: element, type: type}) 
  }
 
  const handleIconElement = (iconType, data, element) => {
@@ -68,22 +68,43 @@ const handleCompElement = (type, currentSystem, element) => {
   });
 };
 
+useFocusEffect(
+  useCallback(() => {
+    console.log('Screen focused. (myDesignScreen) Refetching design system...');
+    getDesignSystem(); // <-- this should call your backend and refresh data
+  }, [])
+);
+
+  
+
+// this basically keeps an eye on the designSystemData Var and if a new system has been created it updates it.\
+// when the currentSystem state gets updated it does the same to the designSystemData State
 useEffect(() => {
-  if (!designSystemData || designSystemData.length === 0) return;
+  if (!designSystemData || designSystemData.length === 0){
+    return;
+  }
 
   // Find the current system by ID in the updated designSystemData
   const updatedSystem = designSystemData.find(system => system.id === currentSystem?.id);
 
   if (updatedSystem) {
-    setCurrentSystem(updatedSystem);
+   setCurrentSystem({ ...updatedSystem });
   }
 }, [designSystemData]);
 
 
 {/* ----------------------------------------------------< ADD Element  >--------------------------------------------------- */} 
 
-const addElement = () =>{
+const addElement = (category, systemId) =>{
   // add element functionality after i fix this delete element issues
+   console.log("Navigating to PickElementScreen with category:", category, "and systemId:", systemId);
+
+  navigation.navigate('PickElementScreen', {
+    category: category,
+    systemId: systemId,
+    username: currentSystem.username
+  });
+
 }
 
 
@@ -91,7 +112,7 @@ const addElement = () =>{
 
  const deleteElement = async (element, type, systemId, index) => {
     
-   console.log('Deleting element from system:', systemId, 'type:', type, 'index:', index, element.username);
+  //  console.log('Deleting element from system:', systemId, 'type:', type, 'index:', index, element.username);
   
 
     const fetchURL = `${apiUrl}/deleteElement`;
@@ -188,7 +209,11 @@ const addElement = () =>{
             keyboardShouldPersistTaps="handled"
             >
 
-    <Text style={[globalStyles.screenStyles.h3, {color: 'white', textAlign: 'center'}]}>{currentSystem.name}</Text>
+{currentSystem?.name && (
+  <Text style={[globalStyles.screenStyles.h3, {color: 'white', textAlign: 'center'}]}>
+    {currentSystem.name}
+  </Text>
+)}
 
     {/* ----------------------------------------------------< FONTS >--------------------------------------------------- */} 
 
@@ -218,9 +243,12 @@ const addElement = () =>{
           </View>
         ))
       ) : (
-        <Text style={{ color: 'white' }}>
-          {currentSystem ? `No fonts in system "${currentSystem.name[0]}"` : 'Loading...'}
-        </Text>
+         <Pressable onPress={() => addElement("fonts", currentSystem.id)} style={globalStyles.screenStyles.centerRow}>
+           <MaterialIcons name="add" size={30} color="orange" />
+           <Text style={globalStyles.screenStyles.text}>
+              Add Element
+            </Text>
+        </Pressable>
       )}
     </ScrollView>
     
@@ -256,11 +284,11 @@ const addElement = () =>{
                 </View>
               ))
             ) : (
-              <Pressable onPress={addElement} style={globalStyles.screenStyles.centerRow}>
-              <MaterialIcons name="add" size={30} color="orange" />
-              <Text style={globalStyles.screenStyles.text}>
-                 Add Element
-              </Text>
+              <Pressable onPress={() => addElement("gradients", currentSystem.id)} style={globalStyles.screenStyles.centerRow}>
+                 <MaterialIcons name="add" size={30} color="orange" />
+                 <Text style={globalStyles.screenStyles.text}>
+                    Add Element
+                  </Text>
               </Pressable>
             )}
           </ScrollView>
@@ -273,7 +301,7 @@ const addElement = () =>{
       keyboardShouldPersistTaps="handled"
       horizontal
     >
-      {currentSystem && currentSystem.typography && currentSystem.typography.length > 0 ? (
+      {currentSystem?.typography?.length > 0 ? (
         <View key={`${currentSystem.id}-typography`} style={{ marginRight: 20 }}>
           <View style={globalStyles.screenStyles.box}>
             <Text>Typography Scale</Text>
@@ -290,13 +318,16 @@ const addElement = () =>{
               style={[globalStyles.screenStyles.viewBtn, { backgroundColor: 'red' }]}
             >
               <Text>Delete</Text>
-            </Pressable>
+            </Pressable> 
           </View>
         </View>
       ) : (
-        <Text style={{ color: 'white' }}>
-          {currentSystem ? `No typography in system "${currentSystem.name[0]}"` : 'Loading...'}
-        </Text>
+        <Pressable onPress={() => addElement("typography", currentSystem.id)} style={globalStyles.screenStyles.centerRow}>
+                 <MaterialIcons name="add" size={30} color="orange" />
+                 <Text style={globalStyles.screenStyles.text}>
+                    Add Element
+                  </Text>
+              </Pressable>
       )}
     </ScrollView>
     
@@ -332,7 +363,12 @@ const addElement = () =>{
                 </View>
               ))
             ) : (
-              <Text style={{ color: 'white' }}>No icons available</Text>
+                <Pressable onPress={() => addElement("icons", currentSystem.id)} style={globalStyles.screenStyles.centerRow}>
+                    <MaterialIcons name="add" size={30} color="orange" />
+                    <Text style={globalStyles.screenStyles.text}>
+                       Add Element
+                     </Text>
+                 </Pressable>
             )}
           </ScrollView>
           
@@ -368,9 +404,12 @@ const addElement = () =>{
                 </View>
               ))
             ) : (
-              <Text style={{ color: 'white' }}>
-                {currentSystem ? `No components in system "${currentSystem.name[0]}"` : 'Loading...'}
-              </Text>
+                <Pressable onPress={() => addElement("comp", currentSystem.id)} style={globalStyles.screenStyles.centerRow}>
+                  <MaterialIcons name="add" size={30} color="orange" />
+                  <Text style={globalStyles.screenStyles.text}>
+                     Add Element
+                   </Text>
+               </Pressable>
             )}
           </ScrollView>
           

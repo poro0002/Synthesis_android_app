@@ -1333,8 +1333,8 @@ const styledComponents = [
   }
 ]
 
-app.get('pickElement', async (req, res) => {
-    const {category} = req.body;
+app.get('/pickElement', async (req, res) => {
+    const {category} = req.query;
 
     if(category === "fonts"){
       return res.json(fonts)
@@ -1682,6 +1682,60 @@ else if(type === 'element'){
 
 });
 
+// ----------------------------< Update Existing Design Systems >---------------------------------------
+
+app.patch('/updateSystem', async (req, res) => {
+
+  const {username, systemId, element, category} = req.body;
+
+  let success = false;
+
+  try{
+
+      if (!username) {
+        return res.status(400).json({ message: 'Username is required.' });
+    }
+    // snapshot list of all the users with that name (should just be one tho)
+    const existingUser = await firestore.collection('users').where('username', '==', username).get();
+      
+      if(existingUser.empty){
+        success = false
+        return res.status(400).json({message: 'could not find snapshot of that user', success: success})
+      }
+
+      // This grabs the first matching document snapshot (hence first index [0])
+      const userDoc = existingUser.docs[0].ref
+
+      const systemDocRef = userDoc.collection('savedSystems').doc(systemId); // reference it 
+      const systemDoc = await systemDocRef.get(); // async get it 
+
+      if (!systemDoc.exists) { // .empty is used with snapshots, .exists is used with docs
+        success = false
+        return res.status(404).json({ message: 'Design system not found.', success: success });
+      }
+
+      const systemData = systemDoc.data();
+      const updatedArray = [...(systemData[category] || []), element]; // create the new array with the added element 
+
+      await systemDocRef.update({ // update the pre-existing array in the database with the new one 
+        [category]: updatedArray
+      });
+
+      // then open up the correct category and make a copy of the array with the new element pushed in it
+      // then replace the old one with the new one in the database 
+      success = true
+      res.status(200).json({ message: 'Element added to design system.', success: success});
+
+     
+  }catch(err){
+    console.error('error saving that element to a corro design system', err)
+    success = false
+    return res.status(500).json({message: "error occured when trying to update design system", success: success})
+
+  }
+   
+})
+
 
 // ----------------------------< Get Saved Design Systems >---------------------------------------
 
@@ -1741,14 +1795,19 @@ app.delete('/deleteElement', async (req, res) => {
 
 
         const userDoc = userRef.docs[0];  // snap shot of what you want to look at
-        const systemDoc = await userDoc.ref.collection('savedSystems').doc(id).get(); // filter the to find the corro ID
-
+        const systemDocRef = userDoc.ref.collection('savedSystems').doc(id); // filter the to find the corro ID
+        const systemDoc = await systemDocRef.get();
     
         const systemData = systemDoc.data(); // returns the data for that first index of savedSystems
 
         if (!systemData[type]) {
           return res.status(404).json({ message: `The specified type (${type}) does not exist in the system.` }); // if that corro system does not have to corro type
         }
+
+        if (type === 'typography') {
+          // Set the typography field to an empty array
+          await systemDocRef.update({ typography: [] });
+        } else {
     
         // Filter out the element to delete
         let updatedElements = [...systemData[type]];
@@ -1757,8 +1816,8 @@ app.delete('/deleteElement', async (req, res) => {
         updatedElements.splice(index, 1)
     
         // Update the specific Firestore property value with the new filtered/spliced array
-          await systemDoc.ref.update({ [type]: updatedElements });
-    
+          await systemDocRef.update({ [type]: updatedElements });
+        }
         return res.status(200).json({ message: 'Element successfully deleted from the system' });
 
 
