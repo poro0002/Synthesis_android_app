@@ -91,39 +91,350 @@ app.listen(port, (err) => {
 
    // -------------------< Color gradients >------------------
 
-      const gradients = [
-        { name: 'Sunset', colors: ['#FF5F6D', '#FFC371'] },
-        { name: 'Ocean Blues', colors: ['#36D1DC', '#5B86E5'] },
-        { name: 'Night Sky', colors: ['#000428', '#004e92'] },
-        { name: 'Purple Haze', colors: ['#9D50BB', '#6E48AA'] },
-        { name: 'Lush Green', colors: ['#56ab2f', '#a8e063'] },
-        { name: 'Warm Sun', colors: ['#f46b45', '#eea849'] },
-        { name: 'Deep Space', colors: ['#434343', '#000000'] },
-        { name: 'Calm Waters', colors: ['#89f7fe', '#66a6ff'] },
-        { name: 'Sunny Days', colors: ['#f7971e', '#ffd200'] },
-        { name: 'Blue Lagoon', colors: ['#43cea2', '#185a9d'] },
-        { name: 'Electric Violet', colors: ['#3a1c71', '#d76d77', '#ffaf7b'] },
-        { name: 'Cool Breeze', colors: ['#00c6ff', '#0072ff'] },
-        { name: 'Peachy', colors: ['#ed4264', '#ffedbc'] },
-        { name: 'Pink Sunrise', colors: ['#f953c6', '#b91d73'] },
-        { name: 'Skyline', colors: ['#1488cc', '#2b32b2'] },
-        { name: 'Candy', colors: ['#ff6a00', '#ee0979'] },
-        { name: 'Berry Delight', colors: ['#c31432', '#240b36'] },
-        { name: 'Purple Dream', colors: ['#bc4e9c', '#f80759'] },
-        { name: 'Flare', colors: ['#f12711', '#f5af19'] },
-        { name: 'Mint Fresh', colors: ['#00b09b', '#96c93d'] },
-        { name: 'Steel Blue', colors: ['#2980b9', '#6dd5fa', '#ffffff'] },
-        { name: 'Emerald Water', colors: ['#348f50', '#56b4d3'] },
-        { name: 'Bloody Sunset', colors: ['#ff512f', '#dd2476'] },
-        { name: 'Seashore', colors: ['#43c6ac', '#191654'] },
-        { name: 'Sky Blue', colors: ['#00c6ff', '#0072ff'] },
-        { name: 'Mango', colors: ['#ffe259', '#ffa751'] },
-        { name: 'Morning', colors: ['#ff5f6d', '#ffc371'] },
-        { name: 'Frost', colors: ['#000428', '#004e92'] },
-        { name: 'Pastel Blue', colors: ['#7f7fd5', '#86a8e7', '#91eae4'] },
-        { name: 'Flamingo', colors: ['#fe8c00', '#f83600'] },
-        { name: 'Royal Blue', colors: ['#536976', '#292e49'] }
-      ];
+   
+   const gradients = [
+     {
+       name: 'Sunset',
+       colors: ['#FF5F6D', '#FFC371'],
+       description: 'Sunset captures the warm energy of a financial sunrise, symbolizing optimism and growth.',
+       primary: '#FF5F6D',
+       primaryLight: '#FF7F8A',
+       primaryDark: '#CC4B54',
+       secondary: '#FFC371',
+       secondaryLight: '#FFD788',
+       secondaryDark: '#CC9F5B'
+     },
+     {
+       name: 'Ocean Blues',
+       colors: ['#36D1DC', '#5B86E5'],
+       description: 'Ocean Blues combines clarity and depth, perfect for conveying trust and stability in finance.',
+       primary: '#36D1DC',
+       primaryLight: '#64E6F1',
+       primaryDark: '#2AA2B1',
+       secondary: '#5B86E5',
+       secondaryLight: '#809EF7',
+       secondaryDark: '#4665B6'
+     },
+     {
+       name: 'Night Sky',
+       colors: ['#000428', '#004e92'],
+       description: 'Night Sky evokes calm and dependability, qualities essential in financial security.',
+       primary: '#000428',
+       primaryLight: '#202049',
+       primaryDark: '#00031D',
+       secondary: '#004e92',
+       secondaryLight: '#2B75C4',
+       secondaryDark: '#003E6F'
+     },
+     {
+       name: 'Purple Haze',
+       colors: ['#9D50BB', '#6E48AA'],
+       description: 'Purple Haze blends creativity with wisdom, inspiring confident financial decisions.',
+       primary: '#9D50BB',
+       primaryLight: '#B470D0',
+       primaryDark: '#7A3A95',
+       secondary: '#6E48AA',
+       secondaryLight: '#8A6DBC',
+       secondaryDark: '#55378A'
+     },
+     {
+       name: 'Lush Green',
+       colors: ['#56ab2f', '#a8e063'],
+       description: 'Lush Green embodies growth and renewal, symbolizing prosperous financial health.',
+       primary: '#56ab2f',
+       primaryLight: '#7AC758',
+       primaryDark: '#418224',
+       secondary: '#a8e063',
+       secondaryLight: '#C9F186',
+       secondaryDark: '#7DB44A'
+     },
+     {
+       name: 'Warm Sun',
+       colors: ['#f46b45', '#eea849'],
+       description: 'Warm Sun radiates positivity and wealth, perfect for financial optimism.',
+       primary: '#f46b45',
+       primaryLight: '#F9825F',
+       primaryDark: '#B75133',
+       secondary: '#eea849',
+       secondaryLight: '#FBC369',
+       secondaryDark: '#B7853A'
+     },
+     {
+       name: 'Deep Space',
+       colors: ['#434343', '#000000'],
+       description: 'Deep Space represents stability and strength, foundational to financial security.',
+       primary: '#434343',
+       primaryLight: '#666666',
+       primaryDark: '#2B2B2B',
+       secondary: '#000000',
+       secondaryLight: '#262626',
+       secondaryDark: '#000000'
+     },
+     {
+       name: 'Calm Waters',
+       colors: ['#89f7fe', '#66a6ff'],
+       description: 'Calm Waters soothes financial anxiety with trust and clarity.',
+       primary: '#89f7fe',
+       primaryLight: '#A7FAFF',
+       primaryDark: '#5EC9D1',
+       secondary: '#66a6ff',
+       secondaryLight: '#8AADFF',
+       secondaryDark: '#446CCC'
+     },
+     {
+       name: 'Sunny Days',
+       colors: ['#f7971e', '#ffd200'],
+       description: 'Sunny Days brings energy and optimism, brightening financial futures.',
+       primary: '#f7971e',
+       primaryLight: '#FBB93E',
+       primaryDark: '#B86F16',
+       secondary: '#ffd200',
+       secondaryLight: '#FFEB55',
+       secondaryDark: '#BBA000'
+     },
+     {
+       name: 'Blue Lagoon',
+       colors: ['#43cea2', '#185a9d'],
+       description: 'Blue Lagoon balances refreshing growth with deep trust in financial planning.',
+       primary: '#43cea2',
+       primaryLight: '#6CE2BD',
+       primaryDark: '#349373',
+       secondary: '#185a9d',
+       secondaryLight: '#3A7FC5',
+       secondaryDark: '#134471'
+     },
+     {
+       name: 'Electric Violet',
+       colors: ['#3a1c71', '#d76d77', '#ffaf7b'],
+       description: 'Electric Violet sparks creativity and passion for dynamic financial growth.',
+       primary: '#3a1c71',
+       primaryLight: '#574196',
+       primaryDark: '#2D165B',
+       secondary: '#d76d77',
+       secondaryLight: '#E38B8F',
+       secondaryDark: '#A35158'
+     },
+     {
+       name: 'Cool Breeze',
+       colors: ['#00c6ff', '#0072ff'],
+       description: 'Cool Breeze refreshes the financial landscape with calm confidence.',
+       primary: '#00c6ff',
+       primaryLight: '#33D2FF',
+       primaryDark: '#0096CC',
+       secondary: '#0072ff',
+       secondaryLight: '#3293FF',
+       secondaryDark: '#0059B3'
+     },
+     {
+       name: 'Peachy',
+       colors: ['#ed4264', '#ffedbc'],
+       description: 'Peachy blends warmth and softness, inspiring approachable financial optimism.',
+       primary: '#ed4264',
+       primaryLight: '#F06A80',
+       primaryDark: '#B2344C',
+       secondary: '#ffedbc',
+       secondaryLight: '#FFF3D1',
+       secondaryDark: '#CCB77F'
+     },
+     {
+       name: 'Pink Sunrise',
+       colors: ['#f953c6', '#b91d73'],
+       description: 'Pink Sunrise ignites passion and confidence for a bright financial dawn.',
+       primary: '#f953c6',
+       primaryLight: '#F96CD6',
+       primaryDark: '#B93694',
+       secondary: '#b91d73',
+       secondaryLight: '#D2449E',
+       secondaryDark: '#8A1657'
+     },
+     {
+       name: 'Skyline',
+       colors: ['#1488cc', '#2b32b2'],
+       description: 'Skyline reflects structure and ambition, reaching new financial heights.',
+       primary: '#1488cc',
+       primaryLight: '#4799E6',
+       primaryDark: '#0F6BA1',
+       secondary: '#2b32b2',
+       secondaryLight: '#5359CF',
+       secondaryDark: '#1F2491'
+     },
+     {
+       name: 'Candy',
+       colors: ['#ff6a00', '#ee0979'],
+       description: 'Candy energizes with vibrant passion and excitement for financial adventure.',
+       primary: '#ff6a00',
+       primaryLight: '#FF8741',
+       primaryDark: '#CC5600',
+       secondary: '#ee0979',
+       secondaryLight: '#F04B9B',
+       secondaryDark: '#B00662'
+     },
+     {
+       name: 'Berry Delight',
+       colors: ['#c31432', '#240b36'],
+       description: 'Berry Delight combines richness and mystery for confident financial boldness.',
+       primary: '#c31432',
+       primaryLight: '#D9435D',
+       primaryDark: '#970026',
+       secondary: '#240b36',
+       secondaryLight: '#4D3B62',
+       secondaryDark: '#190829'
+     },
+     {
+       name: 'Purple Dream',
+       colors: ['#bc4e9c', '#f80759'],
+       description: 'Purple Dream inspires visionary financial growth with passion and creativity.',
+       primary: '#bc4e9c',
+       primaryLight: '#CF72B4',
+       primaryDark: '#8E3B75',
+       secondary: '#f80759',
+       secondaryLight: '#FA3C7A',
+       secondaryDark: '#B30544'
+     },
+     {
+       name: 'Flare',
+       colors: ['#f12711', '#f5af19'],
+       description: 'Flare ignites energy and optimism, perfect for bold financial moves.',
+       primary: '#f12711',
+       primaryLight: '#F3462A',
+       primaryDark: '#B3170C',
+       secondary: '#f5af19',
+       secondaryLight: '#F7C545',
+       secondaryDark: '#B88A12'
+     },
+     {
+       name: 'Mint Fresh',
+       colors: ['#00b09b', '#96c93d'],
+       description: 'Mint Fresh refreshes financial perspectives with growth and vitality.',
+       primary: '#00b09b',
+       primaryLight: '#33C1AA',
+       primaryDark: '#008377',
+       secondary: '#96c93d',
+       secondaryLight: '#B6D46B',
+       secondaryDark: '#728A2D'
+     },
+     {
+       name: 'Steel Blue',
+       colors: ['#2980b9', '#6dd5fa', '#ffffff'],
+       description: 'Steel Blue stands for strength and clarity, essential in financial stability.',
+       primary: '#2980b9',
+       primaryLight: '#57A3D9',
+       primaryDark: '#1F5E88',
+       secondary: '#6dd5fa',
+       secondaryLight: '#9BE0FF',
+       secondaryDark: '#4AB2D1'
+     },
+     {
+       name: 'Emerald Water',
+       colors: ['#348f50', '#56b4d3'],
+       description: 'Emerald Water combines the stability of blue with the growth symbolism of green, making it perfect for representing prosperity and security in finance.',
+       primary: '#458B92',
+       primaryLight: '#74BCD9',
+       primaryDark: '#2A6D48',
+       secondary: '#469E7F',
+       secondaryLight: '#7CC6B4',
+       secondaryDark: '#2A6C50'
+     },
+     {
+       name: 'Bloody Sunset',
+       colors: ['#ff512f', '#dd2476'],
+       description: 'Bloody Sunset brings intense passion and drive, fueling ambitious financial goals.',
+       primary: '#ff512f',
+       primaryLight: '#FF6D54',
+       primaryDark: '#CC4125',
+       secondary: '#dd2476',
+       secondaryLight: '#E95699',
+       secondaryDark: '#AA1C5B'
+     },
+     {
+       name: 'Seashore',
+       colors: ['#43c6ac', '#191654'],
+       description: 'Seashore evokes tranquility and depth, grounding financial decisions with calm confidence.',
+       primary: '#43c6ac',
+       primaryLight: '#68D2BC',
+       primaryDark: '#36927D',
+       secondary: '#191654',
+       secondaryLight: '#403F81',
+       secondaryDark: '#121040'
+     },
+     {
+       name: 'Sky Blue',
+       colors: ['#00c6ff', '#0072ff'],
+       description: 'Sky Blue reflects clarity and trust, essential for transparent financial growth.',
+       primary: '#00c6ff',
+       primaryLight: '#33D4FF',
+       primaryDark: '#009ACC',
+       secondary: '#0072ff',
+       secondaryLight: '#3391FF',
+       secondaryDark: '#005BCC'
+     },
+     {
+       name: 'Mango',
+       colors: ['#ffe259', '#ffa751'],
+       description: 'Mango radiates warmth and abundance, ideal for optimistic financial outlooks.',
+       primary: '#ffe259',
+       primaryLight: '#FFEF7E',
+       primaryDark: '#CCB84A',
+       secondary: '#ffa751',
+       secondaryLight: '#FFB577',
+       secondaryDark: '#B37442'
+     },
+     {
+       name: 'Morning',
+       colors: ['#ff5f6d', '#ffc371'],
+       description: 'Morning symbolizes fresh starts and growth, perfect for new financial beginnings.',
+       primary: '#ff5f6d',
+       primaryLight: '#FF7D83',
+       primaryDark: '#CC4B56',
+       secondary: '#ffc371',
+       secondaryLight: '#FFDD90',
+       secondaryDark: '#CC9F58'
+     },
+     {
+       name: 'Frost',
+       colors: ['#000428', '#004e92'],
+       description: 'Frost cools tensions, providing steady and reliable financial confidence.',
+       primary: '#000428',
+       primaryLight: '#202049',
+       primaryDark: '#00031D',
+       secondary: '#004e92',
+       secondaryLight: '#2B75C4',
+       secondaryDark: '#003E6F'
+     },
+     {
+       name: 'Pastel Blue',
+       colors: ['#7f7fd5', '#86a8e7', '#91eae4'],
+       description: 'Pastel Blue promotes calmness and thoughtful growth in financial decisions.',
+       primary: '#7f7fd5',
+       primaryLight: '#9CA0E8',
+       primaryDark: '#6466B6',
+       secondary: '#86a8e7',
+       secondaryLight: '#A3C1F0',
+       secondaryDark: '#5D79BD'
+     },
+     {
+      name: 'Flamingo',
+      colors: ['#fe8c00', '#f83600'],
+      description: 'Flamingo bursts with energetic vibrance and bold ambition, symbolizing fearless financial moves and creative growth.',
+      primary: '#fe8c00',
+      primaryLight: '#FF9F33',
+      primaryDark: '#CB7000',
+      secondary: '#f83600',
+      secondaryLight: '#FF5C33',
+      secondaryDark: '#C42A00'
+    },
+    {
+      name: 'Royal Blue',
+      colors: ['#536976', '#292e49'],
+      description: 'Royal Blue exudes sophistication and strength, ideal for portraying trust, intelligence, and financial authority.',
+      primary: '#536976',
+      primaryLight: '#708796',
+      primaryDark: '#3F505D',
+      secondary: '#292e49',
+      secondaryLight: '#464A67',
+      secondaryDark: '#1C2035'
+    }
+  ];
 
       const categorizedGradients = {
           finance: [
@@ -1081,6 +1392,7 @@ app.listen(port, (err) => {
     // -------------------< Scales >-----------------
     const typographyScales = [
       [
+        {name: 'Display Heavy'},
         { label: 'h1', size: 44, example: 'Brown jars prevented the mixture from freezing too quickly' },
         { label: 'h2', size: 34, example: 'Brown jars prevented the mixture from freezing too quickly' },
         { label: 'h3', size: 29, example: 'Brown jars prevented the mixture from freezing too quickly' },
@@ -1092,6 +1404,7 @@ app.listen(port, (err) => {
         { label: 'scale15', size: 8, example: 'Brown jars prevented the mixture from freezing too quickly' }
       ],
       [
+        {name: 'Display'},
         { label: 'h1', size: 42, example: 'Brown jars prevented the mixture from freezing too quickly' },
         { label: 'h2', size: 32, example: 'Brown jars prevented the mixture from freezing too quickly' },
         { label: 'h3', size: 27, example: 'Brown jars prevented the mixture from freezing too quickly' },
@@ -1103,6 +1416,7 @@ app.listen(port, (err) => {
         { label: 'scale14', size: 7, example: 'Brown jars prevented the mixture from freezing too quickly' }
       ],
       [
+        {name: 'Display Compact'},
         { label: 'h1', size: 40, example: 'Brown jars prevented the mixture from freezing too quickly' },
         { label: 'h2', size: 30, example: 'Brown jars prevented the mixture from freezing too quickly' },
         { label: 'h3', size: 25, example: 'Brown jars prevented the mixture from freezing too quickly' },
@@ -1114,6 +1428,7 @@ app.listen(port, (err) => {
         { label: 'scale13', size: 6, example: 'Brown jars prevented the mixture from freezing too quickly' }
       ],
       [
+        {name: 'Readable'},
         { label: 'h1', size: 38, example: 'Brown jars prevented the mixture from freezing too quickly' },
         { label: 'h2', size: 28, example: 'Brown jars prevented the mixture from freezing too quickly' },
         { label: 'h3', size: 24, example: 'Brown jars prevented the mixture from freezing too quickly' },
@@ -1125,6 +1440,7 @@ app.listen(port, (err) => {
         { label: 'scale12', size: 7, example: 'Brown jars prevented the mixture from freezing too quickly' }
       ],
       [
+        {name: 'Compact'},
         { label: 'h1', size: 36, example: 'Brown jars prevented the mixture from freezing too quickly' },
         { label: 'h2', size: 26, example: 'Brown jars prevented the mixture from freezing too quickly' },
         { label: 'h3', size: 23, example: 'Brown jars prevented the mixture from freezing too quickly' },
@@ -1136,6 +1452,7 @@ app.listen(port, (err) => {
         { label: 'scale11', size: 6, example: 'Brown jars prevented the mixture from freezing too quickly' }
       ],
       [
+        {name: 'Minimal'},
         { label: 'h1', size: 34, example: 'Brown jars prevented the mixture from freezing too quickly' },
         { label: 'h2', size: 24, example: 'Brown jars prevented the mixture from freezing too quickly' },
         { label: 'h3', size: 22, example: 'Brown jars prevented the mixture from freezing too quickly' },
@@ -1147,6 +1464,7 @@ app.listen(port, (err) => {
         { label: 'scale10', size: 5, example: 'Brown jars prevented the mixture from freezing too quickly' }
       ],
       [
+        {name: 'MiExperimental or Glitched'},
         { label: 'h1', size: 3, example: 'Brown jars prevented the mixture from freezing too quickly' },
         { label: 'h2', size: 22, example: 'Brown jars prevented the mixture from freezing too quickly' },
         { label: 'h3', size: 20, example: 'Brown jars prevented the mixture from freezing too quickly' },
@@ -1548,6 +1866,22 @@ app.post('/changeUsername', async (req, res) => {
     const userDoc = snapshot.docs[0];
     await userDoc.ref.update({ username: newUsername });
 
+    // update username property in all the design systems 
+    
+    // get the saved systems collection snapshot
+    const systemsSnapshot = await firestore.collection('savedSystems').where('username', '==', oldUsername).get();
+    
+   // firestore batch lets you update multiple documents at once 
+   const batch = firestore.batch(); // initialize it 
+
+      systemsSnapshot.forEach((doc) => {
+        batch.update(doc.ref, { username: newUsername }); // use it on the saved systems to update all of them at once 
+      });
+
+    await batch.commit();
+
+    // then send success 
+
     return res.status(200).json({message: 'username successfully changed'})
 
 
@@ -1614,13 +1948,11 @@ app.post('/login', async (req, res) => {
 app.post('/save', async (req, res) => {
 
 
-  const data = req.body;
-  const {type} = req.query
-  const username = data.username;
+  const {data, username, element, iconType, type} = req.body;
+  const { queryType } = req.query
  
 
-
-if(type === 'designSystem'){
+if(queryType === 'designSystem'){
  
     try {
       // Fetch the user's document using their username
@@ -1648,8 +1980,10 @@ if(type === 'designSystem'){
     console.error('Error saving design system:', error);
     return res.status(500).json({ message: 'Error saving design system. Please try again later.' });
   }
-} // this where single elements from favorites will be saved ?
-else if(type === 'element'){
+} 
+// ----------------------------< SAVE FAVORITES >---------------------------------------
+
+else if(queryType === 'element'){
    try{
 
     const userRef = await firestore.collection('users').where('username', '==', username).get();
@@ -1664,11 +1998,31 @@ else if(type === 'element'){
     }
 
     const userDoc = userRef.docs[0].ref;
+    let favoriteData = {
+      createdAt: new Date().toISOString(),
+      type, // Always store the type for easier filtering later
+    };
 
-    await userDoc.collection('favorites').add({ // creates a collection called favs if it doesnt exist yet.
-      ...data,
-      createdAt: new Date().toISOString(), 
-    });
+    if (type === 'font' || type === 'color') {
+      favoriteData = {
+        ...favoriteData,
+        ...element,
+      };
+    } else if (type === 'icon') {
+      favoriteData = {
+        ...favoriteData,
+        iconType,
+      };
+    } else {
+      favoriteData = {
+        ...favoriteData,
+        ...data,
+      };
+    }
+
+    await userDoc.collection('favorites').add(favoriteData);// creates a collection called favs if it doesnt exist yet.
+      
+ 
 
     return res.status(200).json({message: 'successfully saved element to your favorites'})
 
@@ -1715,7 +2069,9 @@ app.patch('/updateSystem', async (req, res) => {
       }
 
       const systemData = systemDoc.data();
-      const updatedArray = [...(systemData[category] || []), element]; // create the new array with the added element 
+      const incoming = Array.isArray(element) ? element : [element];
+
+      const updatedArray = [...(systemData[category] || []), ...incoming]; // create the new array with the added element 
 
       await systemDocRef.update({ // update the pre-existing array in the database with the new one 
         [category]: updatedArray

@@ -1,20 +1,23 @@
-import React from 'react';
 import globalStyles from '../../../styles';
-
+import React, { useState, useEffect, useCallback } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 
 import {
   View, // A container that supports layout with flexbox
   Text, // For displaying text
+  TouchableOpacity, // A button that responds to user touch with visual feedback
   TextInput, // For user input text fields
-  StyleSheet, // For creating styles similar to CSS
+  StyleSheet,
+  Pressable, // For creating styles similar to CSS
   ScrollView, // Enables scrolling for content that may exceed the screen height
   SectionList, // For rendering a list with grouped data, like a <ul> with <li> 's'
   Image, // For displaying images from local or remote sources
   Modal, // For presenting content over the current view (like alerts or dialogs)
   Picker, // A dropdown component for selecting options <select> <option>
   ActivityIndicator, // For showing loading indicators during asynchronous tasks
-  Switch, // A toggle component for binary options (on/off)
-  Pressable // Import Pressable for user interactions
+  Switch,  // A toggle component for binary options (on/off)
+  Button,
+  SafeAreaView
 } from 'react-native';
 
 import { LinearGradient } from 'expo-linear-gradient';
@@ -27,47 +30,100 @@ import { MaterialIcons } from '@expo/vector-icons';
 
 import Icon from './Icon'
 
+import { useAuth } from '../../../LogContext'; 
+
+import Constants from 'expo-constants';
+const apiUrl = Constants.expoConfig.extra.API_URL; 
+
 const ElementScreen = ({ route }) => {
-  const { element, type, iconType, data } = route.params;
+  let { element, type, iconType, data } = route.params;
 
   // console.log("ElementScreen received data:", data);
 
+  // console.log(type)
+  console.log('element:', element) // font, 
+  console.log('iconType:', iconType)
+  console.log('type:', type)
+
+  if(iconType){
+    type = "icon"
+  }
+
+  const { username, getUpdatedUsername } = useAuth();
+
+  useEffect(() => {
+    getUpdatedUsername();
+  }, [])
+  
 
 
-  // const [selectedFavBtn, setSelectedFavBtn] = useState(false);
+  const [selectedFavBtn, setSelectedFavBtn] = useState(false);
 
-  // const saveFavorite =  async (element) =>{
-  //     const fetchURL = `http://192.168.1.83:4500/save?type=${type}`
-  //     const fetchHeaders = new Headers({'Content-Type':'application/json'})
+  const saveFavorite =  async (data) =>{
+      const fetchURL = `${apiUrl}/save?queryType=element`
+      const fetchHeaders = new Headers({'Content-Type':'application/json'})
 
-  //     const fetchOptions = {
-  //       method: 'POST',
-  //       mode: cors,
-  //       headers: fetchHeaders,
-  //       body: element,
-  //     }
+      // console.log('element:', data)
 
-  //     try{
-  //       const response = await fetch(fetchURL, fetchOptions);
+      let payloadData;
 
-  //       if(!response.ok){
-  //         throw new error('there was a problem with the response')
-  //       }
+      // --> because this screen is using element data sometimes vs iconType vs type vs data. they have to be dealt with in their own way
+      if (type === 'font' || type === 'color') {
+        payloadData = {
+          data: null, // not needed
+          element,
+          type, // use full element object
+        }
+      }
+        else if(type === "icon"){
+          payloadData = {
+            data: null, // not needed
+            element: null,
+            iconType,
+            type,
+          }
+        }
+       else {
+        payloadData = {
+          data: data[type], // extract the correct part
+          element: null,
+          type,
+        };
+      }
 
-  //       let data = await response.json();
+      const fetchOptions = {
+        method: 'POST',
+        mode: 'cors',
+        headers: fetchHeaders,
+        body: JSON.stringify({
+          ...payloadData,
+          username,
+        }),
+      }
 
-  //       if(data.message === 'successfully saved element to your favorites'){
-  //         // show the user that their favorite was stored on the DB correctly
-  //         console.log(data.message)
-  //       }  else{
-  //         console.log('the favorite could not be saved')
-  //       }
+      try{
+        const response = await fetch(fetchURL, fetchOptions);
 
-  //     }catch(err){
-  //        console.log('there was an error with the fetch', err)
-  //     }
+        // if(!response.ok){
+        //   throw new error('there was a problem with the response')
+        // }
 
-  // }
+        let data = await response.json();
+
+        console.log(data)
+
+        if(data.message === 'successfully saved element to your favorites'){
+          // show the user that their favorite was stored on the DB correctly
+          console.log(data.message)
+        }  else{
+          console.log('the favorite could not be saved')
+        }
+
+      }catch(err){
+         console.log('there was an error with the fetch', err)
+      }
+
+  }
 
   let alpha = "Aa | Bb | Cc | Dd | Ee | Ff | Gg |  Hh | Ii | Jj | Kk | Ll | Mm | Nn | Oo | Pp | Qq | Rr | Ss | Tt | Uu | Vv | Ww | Xx | Yy | Zz" 
 
@@ -113,21 +169,21 @@ const ElementScreen = ({ route }) => {
                   contentContainerStyle={{  flexDirection: 'column'}}
                   keyboardShouldPersistTaps="handled"
                   >
-      {/* <View style={{ flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', marginTop: 10 }}>   
+      <View style={{ flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', marginTop: 10 }}>   
       <Pressable onPress={() => { 
-            saveFavorite(element); 
+            saveFavorite(data); 
             setSelectedFavBtn(true); 
            }}>
             {selectedFavBtn ? (
-               <MaterialIcons name='favorite-filled' size={50} color='orange'></MaterialIcons>
+               <MaterialIcons name='favorite' size={50} color='orange'></MaterialIcons>
             ):
             (
-              <MaterialIcons name='favorite-outlined' size={50} color='orange'></MaterialIcons>
+              <MaterialIcons name='favorite-border' size={50} color='orange'></MaterialIcons>
             )
           }
             
         </Pressable>
-      </View> */}
+      </View>
       {type === "font" && (
          <View style={globalStyles.screenStyles.centerColumn}>
           <View>
@@ -182,7 +238,7 @@ const ElementScreen = ({ route }) => {
                     <Text style={{ color: '#fff'}}>{element.colors[0]}  |  {element.colors[1]}  |  {element.colors[2]}</Text>
             
                
-                  </LinearGradient>
+              </LinearGradient>
 
                   
             
@@ -232,7 +288,7 @@ const ElementScreen = ({ route }) => {
           lineHeight: data.lineHeight,
           textAlign: 'center',
         }}>
-          {element.label}
+          {element.label || element.name}
         </Text>
 
         <Text style={{
@@ -245,6 +301,7 @@ const ElementScreen = ({ route }) => {
         }}>
           {element.example}
         </Text>
+    
       </View>
     ))}
 

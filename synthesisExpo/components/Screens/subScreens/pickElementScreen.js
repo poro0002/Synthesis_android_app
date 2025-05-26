@@ -46,13 +46,15 @@ const apiUrl = Constants.expoConfig.extra.API_URL;
 
 
 const PickElementScreen = ({route}) => {
-    const {category, systemId, username} = route.params;
+    const {category, systemId} = route.params;
     // console.log('category:', category, 'username:', username, 'system ID:', systemId)
 
     const [corroData, setCorroData] = useState();
-    const { getDesignSystem } = useAuth();
+    const { getDesignSystem, username } = useAuth();
 
      const navigation = useNavigation();
+
+    
 
 
     // so basically we have to run a fetch to the backend and depending on the type we choose before the fetch even
@@ -119,7 +121,7 @@ const PickElementScreen = ({route}) => {
 
            // the code below is running but when the design screen returns,  the new "added element" is a no show
 
-             await getDesignSystem(); 
+         await getDesignSystem(); 
             navigation.goBack();
             return;
          }else {
@@ -145,7 +147,7 @@ const PickElementScreen = ({route}) => {
    
 
     
-//    console.log("pick element corro data", corroData)
+   console.log("pick element corro data", corroData)
 
    // so basically grab the corro data
    // display it in the same way it is on the other topic screens but just with a VIEW or ADD btn
@@ -217,11 +219,15 @@ const PickElementScreen = ({route}) => {
 
             {category === "typography" ? (
                 corroData && corroData.map((element, index) => {
+                    console.log('element :', element)
                     return(
                      <View key={index} style={{ marginRight: 20, marginBottom: 20 }}>
                
                       <View style={globalStyles.screenStyles.box}>
-                        <Text>Typography Scale</Text>
+                        <Text >Typography Scale</Text>
+                        <Text style={[{fontWeight: 'bold'}]}>
+                          {element[0].name}
+                        </Text>
                       </View>
 
                          <View style={{ flexDirection: 'column', justifyContent: 'center' }}>

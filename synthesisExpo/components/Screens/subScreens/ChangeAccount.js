@@ -21,6 +21,9 @@ import {
 import { faExternalLinkSquare } from '@fortawesome/free-solid-svg-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import Constants from 'expo-constants';
+const apiUrl = Constants.expoConfig.extra.API_URL; 
+
 // notes
 
 // make sure the new password is different from the old one 
@@ -146,7 +149,7 @@ const ChangeAccount = ({ route }) => {
 
       const changePassword = async () => {
 
-          const fetchURL = `http://192.168.1.83:4500/changePass`
+          const fetchURL = `${apiUrl}/changePass`
           const fetchHeaders = new Headers({'Content-Type':'application/json'})
 
        
@@ -200,7 +203,7 @@ const ChangeAccount = ({ route }) => {
 
   const changeUsername = async () => {
 
-    const fetchURL = `http://192.168.1.83:4500/changeUsername`
+    const fetchURL = `${apiUrl}/changeUsername`
     const fetchHeaders = new Headers({'Content-Type':'application/json'})
 
     const fetchOptions = {

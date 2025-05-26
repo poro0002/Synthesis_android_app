@@ -3,6 +3,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Constants from 'expo-constants';
 
 
+// ------------------------------------------< REACT CONTEXT PATTERN API >-----------------------------------------------
+
+
 export const LogContext = createContext();
 
 export const LogProvider = ({ children }) => {
@@ -24,10 +27,22 @@ const apiUrl = Constants.expoConfig.extra.API_URL;
   // get the saved design systems from the backend
   // designSystemData gets set every time this function runs
 
+
+
+
+  const getUpdatedUsername = async () => {
+    const storedUsername = await AsyncStorage.getItem('username');
+    setUsername(storedUsername);
+  }
+
+ 
+  
+
   const getDesignSystem = async () => {
-    const username = await AsyncStorage.getItem('username');
+    const storedUsername = await AsyncStorage.getItem('username');
+    setUsername(storedUsername);
     
-    const fetchUrl = `${apiUrl}/saved?username=${encodeURIComponent(username)}`;
+    const fetchUrl = `${apiUrl}/saved?username=${encodeURIComponent(storedUsername)}`;
     const fetchHeader = new Headers({ 'Content-Type': 'application/json' });
 
     const fetchOptions = {
@@ -39,12 +54,16 @@ const apiUrl = Constants.expoConfig.extra.API_URL;
     try {
       const response = await fetch(fetchUrl, fetchOptions);
       const data = await response.json();
-      console.log('logContext fetched data:', data);
+      // console.log('logContext fetched data:', data);
  
 
 
       if (Array.isArray(data)) {
-        setDesignSystemData(data);
+        const updatedData = data.map(item => ({
+          ...item,
+          username: storedUsername, // Overwrite the old username in each item if its been changed 
+        }));
+        setDesignSystemData(updatedData);
       } else {
         console.error('Expected data to be an array, got:', data);
         setDesignSystemData([]);
@@ -65,6 +84,7 @@ const apiUrl = Constants.expoConfig.extra.API_URL;
         designSystemData,
         setDesignSystemData,
         getDesignSystem,
+        getUpdatedUsername,
       }}
     >
       {children} 

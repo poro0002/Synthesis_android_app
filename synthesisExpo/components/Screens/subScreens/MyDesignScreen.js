@@ -102,7 +102,7 @@ const addElement = (category, systemId) =>{
   navigation.navigate('PickElementScreen', {
     category: category,
     systemId: systemId,
-    username: currentSystem.username
+    // username: currentSystem.username
   });
 
 }
@@ -210,9 +210,14 @@ const addElement = (category, systemId) =>{
             >
 
 {currentSystem?.name && (
+  <>
   <Text style={[globalStyles.screenStyles.h3, {color: 'white', textAlign: 'center'}]}>
     {currentSystem.name}
   </Text>
+  <Text style={[globalStyles.screenStyles.h5, {color: 'white', textAlign: 'center'}]}>
+    {currentSystem.username}
+  </Text>
+  </>
 )}
 
     {/* ----------------------------------------------------< FONTS >--------------------------------------------------- */} 
@@ -305,6 +310,9 @@ const addElement = (category, systemId) =>{
         <View key={`${currentSystem.id}-typography`} style={{ marginRight: 20 }}>
           <View style={globalStyles.screenStyles.box}>
             <Text>Typography Scale</Text>
+            <Text style={[{fontWeight: 'bold'}]}>
+                {currentSystem.typography[0].name}
+             </Text>
           </View>
           <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
             <Pressable

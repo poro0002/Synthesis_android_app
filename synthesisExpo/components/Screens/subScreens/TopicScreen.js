@@ -17,6 +17,8 @@ import Octicons from 'react-native-vector-icons/Octicons';
 import Constants from 'expo-constants';
 const apiUrl = Constants.expoConfig.extra.API_URL; 
 
+import { useAuth } from '../../../LogContext'; 
+
 
 import {
   View, // A container that supports layout with flexbox
@@ -42,7 +44,9 @@ import { useNavigation } from '@react-navigation/native'
 
 const TopicScreen = ({route}) => {
 
-  const {topic, username} = route.params;
+  const {topic} = route.params;
+  const { username } = useAuth()
+
   const [data, setData] = useState(null);
   const [serverFonts, setServerFonts] = useState([]);
   const [errorMessage, setErrorMessage] = useState("")
@@ -195,7 +199,7 @@ const createSystem = async () =>{
   if(selectedElements.comp.length >= 1 && selectedElements.fonts.length >= 1 && selectedElements.gradients.length >= 1 && selectedElements.icons.length >= 1 && selectedElements.typography.length >= 1 && selectedElements.name.length >= 1){
     
     const type = 'designSystem';
-    const fetchUrl = `${apiUrl}/save?type=${type}`; 
+    const fetchUrl = `${apiUrl}/save?queryType=${type}`; 
 
       // Clean data structure correctly
   const cleanElements = {
