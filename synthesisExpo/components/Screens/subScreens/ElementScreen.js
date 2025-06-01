@@ -29,84 +29,76 @@ import Octicons from 'react-native-vector-icons/Octicons';
 import { MaterialIcons } from '@expo/vector-icons';
 
 import Icon from './Icon'
-
 import { useAuth } from '../../../LogContext'; 
-
 import Constants from 'expo-constants';
 const apiUrl = Constants.expoConfig.extra.API_URL; 
 
+
+
 const ElementScreen = ({ route }) => {
+
   let { element, type, iconType, data } = route.params;
 
-  // console.log("ElementScreen received data:", data);
+  const { username, getUpdatedUsername, checkFavorites, getPayloadData } = useAuth();
+  // theoretically, this needs to fetch check if the current element is already in the favorites or not because choosing what is true of false
+  const [selectedFavBtn, setSelectedFavBtn] = useState(checkFavorites()); 
 
-  // console.log(type)
-  console.log('element:', element) // font, 
-  console.log('iconType:', iconType)
-  console.log('type:', type)
 
-  if(iconType){
-    type = "icon"
+
+
+  
+  // icon isn't initially changed through the params so if thats whats being displayed it needs to be manually set 
+  if (iconType === "component") {
+    type = "styledComponents";
+  } else if (iconType && type !== "styledComponents") {
+    type = "icon";
   }
 
-  const { username, getUpdatedUsername } = useAuth();
+  console.log('element screen element:', element) // font, 
+  console.log(' element screen iconType:', iconType)
+  console.log('element screen  type:', type)
+  console.log('element screen data:', data)
+
 
   useEffect(() => {
     getUpdatedUsername();
   }, [])
+
+
+  useEffect(() =>{
+    const fetchFavoriteStatus = async () => {
+      const payload = getPayloadData({ type, data, element, iconType });
+      const isFavorite = await checkFavorites(payload);
+      setSelectedFavBtn(isFavorite);
+    };
+  
+    fetchFavoriteStatus();
+  }, [])
   
 
 
-  const [selectedFavBtn, setSelectedFavBtn] = useState(false);
+// ---------------------------------------------------------< SAVE FAVORITE >---------------------------------------------------------
 
   const saveFavorite =  async (data) =>{
       const fetchURL = `${apiUrl}/save?queryType=element`
       const fetchHeaders = new Headers({'Content-Type':'application/json'})
 
-      // console.log('element:', data)
+      let payload;
 
-      let payloadData;
-
-      // --> because this screen is using element data sometimes vs iconType vs type vs data. they have to be dealt with in their own way
-      if (type === 'font' || type === 'color') {
-        payloadData = {
-          data: null, // not needed
-          element,
-          type, // use full element object
-        }
-      }
-        else if(type === "icon"){
-          payloadData = {
-            data: null, // not needed
-            element: null,
-            iconType,
-            type,
-          }
-        }
-       else {
-        payloadData = {
-          data: data[type], // extract the correct part
-          element: null,
-          type,
-        };
-      }
+      payload = getPayloadData({ type, data, element, iconType });
 
       const fetchOptions = {
         method: 'POST',
         mode: 'cors',
         headers: fetchHeaders,
         body: JSON.stringify({
-          ...payloadData,
+          ...payload,
           username,
         }),
       }
 
       try{
         const response = await fetch(fetchURL, fetchOptions);
-
-        // if(!response.ok){
-        //   throw new error('there was a problem with the response')
-        // }
 
         let data = await response.json();
 
@@ -115,8 +107,11 @@ const ElementScreen = ({ route }) => {
         if(data.message === 'successfully saved element to your favorites'){
           // show the user that their favorite was stored on the DB correctly
           console.log(data.message)
-        }  else{
-          console.log('the favorite could not be saved')
+        } else if(data.message === 'you already have that element favorited'){
+           console.log(data.message)
+          //  setSelectedFavBtn(false)
+        } else if(data.message === "Error saving favorite element. Please try again later.") {
+          console.log(data.message)
         }
 
       }catch(err){
@@ -125,8 +120,57 @@ const ElementScreen = ({ route }) => {
 
   }
 
-  let alpha = "Aa | Bb | Cc | Dd | Ee | Ff | Gg |  Hh | Ii | Jj | Kk | Ll | Mm | Nn | Oo | Pp | Qq | Rr | Ss | Tt | Uu | Vv | Ww | Xx | Yy | Zz" 
+  // ---------------------------------------------------------< REMOVE FAVORITE >---------------------------------------------------------
 
+const removeFav = async (data, element) => {
+    // fetch to a backend route /deleteElement
+    // send the same body json element, iconType, data ect.
+    // no query param needed
+    // if its true/false run a statement that runs the corro function 
+    // also make sure the setSelectedFavBtn checks the favorites database for whats already been favorited and shows the corro icon
+
+    const fetchURL = `${apiUrl}/deleteFavorite`
+    const fetchHeaders = new Headers({'Content-Type':'application/json'})
+
+    let payload;
+
+    payload = getPayloadData({ type, data, element, iconType });
+
+
+    const fetchOptions = {
+      method: 'DELETE',
+      mode: 'cors',
+      headers: fetchHeaders,
+      body: JSON.stringify({
+        ...payload,
+        username,
+      })
+    }
+    
+    try{
+
+      let response = await fetch(fetchURL, fetchOptions);
+
+      let data = await response.json();
+
+      if(data.success){
+        console.log(data.message)
+      } else{
+        console.log(data.message)
+      }
+
+
+    }catch(err){
+      console.log('something went wrong with the /deleteElement fetch');
+    }
+
+    
+}
+
+
+  let alpha = "Aa | Bb | Cc | Dd | Ee | Ff | Gg |  Hh | Ii | Jj | Kk | Ll | Mm | Nn | Oo | Pp | Qq | Rr | Ss | Tt | Uu | Vv | Ww | Xx | Yy | Zz" 
+  
+  // btn
   let btnBorder;
   let btnBorderRadius;
   let btnBoxShadow;
@@ -141,27 +185,31 @@ const ElementScreen = ({ route }) => {
   let cardDir;
   let cardPadding;
 
-  const packageName = data?.comp?.[0]?.package ?? 'Unknown Package';
+  const packageName = data?.package ?? 'Unknown Package'; // ?? uses a fallback "Unknown Package" if the data doesn't exist
 
-  if (iconType === "component" && data.styledComponents?.components) {
+  if (iconType === "component" && data?.components) {
     try {
-      btnBorder = data.styledComponents.components.button.styles.borderWidth + ' ' + data.styledComponents.components.button.styles.borderColor;
-      btnBorderRadius = data.styledComponents.components.button.styles.borderRadius;
-      btnBoxShadow = `${data.styledComponents.components.button.styles.shadowOffset.width} ${data.styledComponents.components.button.styles.shadowOffset.height} ${data.styledComponents.components.button.styles.shadowRadius} ${data.styledComponents.components.button.styles.shadowColor}`;
-      btnMargin = data.styledComponents.components.button.styles.margin;
-      btnPadding = `${data.styledComponents.components.button.styles.paddingVertical} ${data.styledComponents.components.button.styles.paddingHorizontal}`;
+      btnBorder = data.components.button.styles.borderWidth + ' ' + data.components.button.styles.borderColor;
+      btnBorderRadius = data.components.button.styles.borderRadius;
+      btnBoxShadow = `${data.components.button.styles.shadowOffset.width} ${data.components.button.styles.shadowOffset.height} ${data.components.button.styles.shadowRadius} ${data.components.button.styles.shadowColor}`;
+      btnMargin = data.components.button.styles.margin
+      btnPadding = `${data.components.button.styles.paddingVertical} ${data.components.button.styles.paddingHorizontal}`;
 
-      cardBorder = data.styledComponents.components.card.styles.borderWidth + ' ' + data.styledComponents.components.card.styles.borderColor;
-      cardBorderRadius = data.styledComponents.components.card.styles.borderRadius;
-      cardBoxShadow = `${data.styledComponents.components.card.styles.shadowOffset.width} ${data.styledComponents.components.card.styles.shadowOffset.height} ${data.styledComponents.components.card.styles.shadowRadius} ${data.styledComponents.components.card.styles.shadowColor}`;
+      cardBorder = data.components.card.styles.borderWidth + ' ' + data.components.card.styles.borderColor;
+      cardBorderRadius = data.components.card.styles.borderRadius;
+      cardBoxShadow = `${data.components.card.styles.shadowOffset.width} ${data.components.card.styles.shadowOffset.height} ${data.components.card.styles.shadowRadius} ${data.components.card.styles.shadowColor}`;
       cardLayout = 'flex';
-      cardDir = data.styledComponents.components.card.styles.flexDirection;
-      cardPadding = data.styledComponents.components.card.styles.padding;
+      cardDir = data.components.card.styles.flexDirection;
+      cardPadding = data.components.card.styles.padding;
     } catch (error) {
       console.log("Error accessing styled components:", error);
       return <Text style={{ color: 'red' }}>Error accessing styled components data.</Text>;
     }
   }
+
+
+
+  // ---------------------------------------------------------< RETURN JSX >---------------------------------------------------------
 
   return (
     <View style={globalStyles.screenStyles.centerContainer}>
@@ -170,9 +218,15 @@ const ElementScreen = ({ route }) => {
                   keyboardShouldPersistTaps="handled"
                   >
       <View style={{ flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', marginTop: 10 }}>   
-      <Pressable onPress={() => { 
-            saveFavorite(data); 
-            setSelectedFavBtn(true); 
+      <Pressable onPress={ async () => { 
+           
+           if (selectedFavBtn) {
+            await removeFav(data, element);
+            setSelectedFavBtn(false);
+          } else {
+            await saveFavorite(data);
+            setSelectedFavBtn(true);
+          }
            }}>
             {selectedFavBtn ? (
                <MaterialIcons name='favorite' size={50} color='orange'></MaterialIcons>

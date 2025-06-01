@@ -61,14 +61,15 @@ const TopicScreen = ({route}) => {
     about: [],
   });
 
-  // console.log("working ? hello ?", selectedElements)
+ 
   // console.log('typography:', data.typography);
 
-  // console.log('username: ', username)
+  console.log('topic screen username: ', username)
+  console.log('topic screen data', JSON.stringify(data, null, 2))
 
-// useEffect(() => {
-//   console.log("working ? hello ?", selectedElements)
-// }, [selectedElements])
+ useEffect(() => {
+  console.log("Selected Elements:\n", JSON.stringify(selectedElements, null, 2));
+ }, [selectedElements])
 
 
 
@@ -78,20 +79,45 @@ const TopicScreen = ({route}) => {
      setIsChecked(!isChecked);
    };
 
+
+
  // ------------------------------< Handle Elements >------------------------------------------
 
    const handleViewElement = (element, type) => {
       navigation.navigate('Element',{element: element, type: type}) 
+      console.log('topic screen type:', type)
    }
 
    const handleIconElement = (iconType) => {
-      navigation.navigate('Element', { iconType: iconType, data: data }) 
-  }
+    if (iconType === 'component') {
+      const element = data.styledComponents;
+      navigation.navigate('Element', {
+        iconType,
+        data: element,
+        element, // ✅ FIXED: now passing element
+      });
+    } else {
+      const element = data;
+      navigation.navigate('Element', {
+        iconType,
+        data: element,
+        element, // ✅ FIXED: now passing element
+      });
+    }
+  
+    console.log('topic screen data:', data);
+  };
 
-  const handleCompElement = (type) => {
-    navigation.navigate('Element', {type: type, data: data}) 
-
-  }
+  const handleTypoElement = (type) => {
+    navigation.navigate('Element', {
+      type,
+      data,
+      element: data, // ✅ FIXED
+    });
+  
+    console.log('topic screen type:', type);
+    console.log('topic screen data:', data);
+  };
 
   // ------------------------------< Toggle Selection >------------------------------------------
 
@@ -217,7 +243,7 @@ const createSystem = async () =>{
       method: 'POST',
       headers: { 'Content-Type': 'application/json' }, 
       mode: 'cors',
-      body: JSON.stringify({ ...cleanElements, username }),
+      body: JSON.stringify({ data: cleanElements, username, type }),
      
     };
 
@@ -392,7 +418,7 @@ const cancelSystem = () => {
   </View>
 </Pressable>
 
-<Pressable onPress={() => handleCompElement("typography")} style={globalStyles.screenStyles.viewBtn}>
+<Pressable onPress={() => handleTypoElement("typography")} style={globalStyles.screenStyles.viewBtn}>
   <Text>View</Text>
 </Pressable>
                </View>  

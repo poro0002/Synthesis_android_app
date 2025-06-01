@@ -36,6 +36,66 @@ const apiUrl = Constants.expoConfig.extra.API_URL;
   }
 
  
+    const getPayloadData = ({ type, data, element, iconType }) => {
+      console.log('getpayload data type:', type);
+      // console.log('getpayload data:', data === null ? null : JSON.stringify(data, null, 2));
+      console.log('getpayload element:', element);
+      console.log('getpayload element:', iconType)
+
+      if (type === 'font' || type === 'color') {
+        return { data: null, element, type };
+      } else if (type === 'icon') {
+        return { data: null, element: null, iconType, type };
+      } else if (
+        type === 'comp' ||
+        type === 'styledComponents' ||
+        iconType === 'component'
+      ) {
+        return { data, element, type };
+      } else {
+        return { data: data?.[type], element, type };
+      }
+    };
+  
+
+  const checkFavorites = async (payload) =>{
+    console.log('checking favorites');
+
+    const fetchUrl = `${apiUrl}/checkFavorites`;
+    const fetchHeader = new Headers({ 'Content-Type': 'application/json' });
+
+    const fetchOptions = {
+      method: 'POST',
+      headers: fetchHeader,
+      mode: 'cors',
+      body: JSON.stringify({
+         ...payload,
+         username
+      })
+    };
+
+ 
+    try {
+      const response = await fetch(fetchUrl, fetchOptions);
+      const data = await response.json();
+      
+      if(data.success === true){
+       
+        return true
+
+      }else{
+       
+        return false
+      }
+ 
+    }catch(err){
+      console.log('Error with the fetch:', err);
+    }
+
+
+  }
+
+ 
   
 
   const getDesignSystem = async () => {
@@ -85,6 +145,8 @@ const apiUrl = Constants.expoConfig.extra.API_URL;
         setDesignSystemData,
         getDesignSystem,
         getUpdatedUsername,
+        checkFavorites,
+        getPayloadData,
       }}
     >
       {children} 

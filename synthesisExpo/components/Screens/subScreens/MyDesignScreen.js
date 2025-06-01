@@ -46,11 +46,17 @@ const MyDesignScreen = ({route}) => {
 
   const handleViewElement = (element, type) => {
     navigation.navigate('Element', {element: element, type: type}) 
+    console.log('myDesignScreen type:', type)
+    console.log('myDesignScreen element:', element)
  }
 
  const handleIconElement = (iconType, data, element) => {
     navigation.navigate('Element', { iconType: iconType, data: data, element: element }) // <------- issue with these 
+    console.log('myDesignScreen data:', data)
+    console.log(' myDesignScreen element:', element)
+    console.log("my design screen iconType", iconType)
 }
+
 
 const handleTypoElement = (type, currentSystem, element) => {
   navigation.navigate('Element', { 
@@ -58,14 +64,19 @@ const handleTypoElement = (type, currentSystem, element) => {
     data: currentSystem,  // pass the WHOLE system
     element: element,     // pass the specific element as well if needed
   });
+    console.log('myDesignScreen element:', element)
+    console.log('myDesignScreen type:', type)
 };
 
 const handleCompElement = (type, currentSystem, element) => {
   navigation.navigate('Element', { 
     type,
     data: element, 
+    element: element,
     iconType: 'component'
   });
+  console.log('myDesignScreen element:', element)
+  console.log('myDesignScreen type:', type)
 };
 
 useFocusEffect(

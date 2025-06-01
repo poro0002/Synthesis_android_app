@@ -1950,6 +1950,12 @@ app.post('/save', async (req, res) => {
 
   const {data, username, element, iconType, type} = req.body;
   const { queryType } = req.query
+
+  // console.log('data:', data[0].name)
+  console.log('icon Type:', iconType)
+  console.log('element:', element)
+  console.log('type:', type)
+
  
 
 if(queryType === 'designSystem'){
@@ -1981,7 +1987,8 @@ if(queryType === 'designSystem'){
     return res.status(500).json({ message: 'Error saving design system. Please try again later.' });
   }
 } 
-// ----------------------------< SAVE FAVORITES >---------------------------------------
+
+// --------------------------------< SAVE FAVORITES >---------------------------------------
 
 else if(queryType === 'element'){
    try{
@@ -1998,27 +2005,58 @@ else if(queryType === 'element'){
     }
 
     const userDoc = userRef.docs[0].ref;
+
+    let query = userDoc.collection('favorites').where('type', '==', type); // this matches and compares the type in favorites DB of each element with the type thats being passed to the server
+
     let favoriteData = {
       createdAt: new Date().toISOString(),
       type, // Always store the type for easier filtering later
     };
 
-    if (type === 'font' || type === 'color') {
+    // all these if else statements essentially check for DUPLICATES 
+
+    if (type === 'font') {
+      query = query.where('name', '==', element.name); // do they matching for each corro type
       favoriteData = {
         ...favoriteData,
         ...element,
       };
-    } else if (type === 'icon') {
+    } else if(type === 'color'){
+      query = query.where('name', '==', element.name);
+      favoriteData = {
+        ...favoriteData,
+        ...element,
+      };
+
+    }else if (type === 'icon') {
+      query = query.where('iconType', '==', iconType);
       favoriteData = {
         ...favoriteData,
         iconType,
       };
-    } else {
+    } else if (type === 'styledComponents' || type === 'comp'){
+      query = query.where('package', '==', data.package);
+      favoriteData = {
+        ...favoriteData,
+        ...data,
+      };
+    }else if (type === 'typography'){
+
+      query = query.where('name', '==', data[0].name )
       favoriteData = {
         ...favoriteData,
         ...data,
       };
     }
+
+    const existing = await query.get(); //  returns a QuerySnapshot object, 
+
+    if (!existing.empty) { // if isnt empty 
+      console.log('Already favorited!');
+      return res.status(500).json({message: "you already have that element favorited"}); // Stop here — already in favorites
+    }
+
+
 
     await userDoc.collection('favorites').add(favoriteData);// creates a collection called favs if it doesnt exist yet.
       
@@ -2036,7 +2074,135 @@ else if(queryType === 'element'){
 
 });
 
+// ----------------------------< REMOVE FAVORITES >---------------------------------------
+
+app.delete('/deleteFavorite', async (req, res ) => {
+     
+  const {data, username, element, iconType, type} = req.body;
+  let success;
+  
+ console.log('delete favorite server side data:', data)
+ console.log('delete favorite server side element:', element)
+
+
+  try{
+    let userSnapshot = await firestore.collection('users').where('username', '==', username).get();
+
+    if(userSnapshot.empty){
+      success = false
+      return res.status(500).json({message: 'could not find a user assosicated with that username', success: success});
+    }
+  
+    let userDoc = userSnapshot.docs[0].ref // [0] first matching username document reference
+    
+    const favoritesSnapshot = await userDoc.collection('favorites').get(); // gets a snap of all the favorites 
+    const nameToMatch = element?.name || (Array.isArray(data) ? data[0]?.name : null);
+
+    for (const doc of favoritesSnapshot.docs) { // loops through all the favorites in the current user db
+      const fav = doc.data(); // the represents 1 of the docs data per loop
+      console.log('Full favorite doc data:', fav);
+
+      if (!fav) continue; // skip over any empty or undefined docs that might somehow be in the favoritesSnapshot.
+    
+      // if both comparisons check out then thats a true match
+      const match =
+      (type === 'color' && fav?.name === element?.name) ||
+      (type === 'font' && fav?.name === element?.name) ||
+      (type === 'icon' && (fav?.iconType === (element?.iconType || iconType)))||
+      ((type === 'comp' || type === 'styledComponents' || iconType === 'component') &&
+        fav?.type === type &&
+        fav?.package === element?.package) ||
+      (type === 'typography' && fav?.['0']?.name === nameToMatch);
+
+
+
+      if (match) {
+        await doc.ref.delete(); // making it so that corro doc can be deleted
+        success = true;
+        console.log("element successfully deleted");
+        return res.status(200).json({ message: "element successfully deleted", success });
+      }
+    }
+
+       // No match found
+       success = false;
+       console.log('No matching favorite found to delete.');
+       return res.status(404).json({ message: 'No matching favorite found to delete', success });
+
+  }catch(err){
+    success = false
+    console.error('there was an issue deleting that favorite element', err)
+    res.status(500).json({message: "there was an issue deleting that favorite element", success: success})
+  }
+
+})
+
+// ----------------------------< CHECK FAVORITES >---------------------------------------
+
+app.post('/checkFavorites', async (req, res) =>{
+
+  const {data, username, element, iconType, type} = req.body;
+
+
+  try{
+  // use the username to get a snapshot of that users data. "userSnapshot" using get(); asynchronous snapshots are always async.get()
+  let userSnapshot = await firestore.collection('users').where('username', '==', username).get();
+
+  // [0] first matching username document reference. ref is (so you can access subcollections like favorites).
+
+  if (userSnapshot.empty) {
+    return res.status(404).json({ message: 'User not found', success: false });
+  }
+
+  let userDoc = userSnapshot.docs[0].ref 
+
+
+  let favoriteSnapshot = await userDoc.collection('favorites').get();
+  const nameToMatch = element?.name || (Array.isArray(data) ? data[0]?.name : null);
+
+ 
+  let foundMatch = false;
+
+  for(const doc of favoriteSnapshot.docs){
+      let fav = doc.data();
+
+      if (!fav) continue; // skip over any empty or undefined docs that might somehow be in the favoritesSnapshot.
+      
+      const match =
+      (type === 'color' && fav?.name === element?.name) ||
+      (type === 'font' && fav?.name === element?.name) ||
+      (type === 'icon' && (fav?.iconType === (element?.iconType || iconType)))||
+      ((type === 'comp' || type === 'styledComponents' || iconType === 'component') &&
+        fav?.type === type &&
+        fav?.package === element?.package) ||
+      (type === 'typography' && fav?.['0']?.name === nameToMatch);
+
+      if(match){
+        foundMatch = true;
+        return res.status(200).json({message: 'match has been found', success: true})
+      }  
+  }
+
+ 
+  if (!foundMatch) {
+    return res.status(404).json({ message: 'no match found', success: false });
+  }
+
+}catch(err){
+ 
+  console.error('there was an issue trying to check favorites')
+  return res.status(500).json({message: 'there was an issue trying to check favorites', success: false})
+}
+   
+
+})
+
+
+
+
+
 // ----------------------------< Update Existing Design Systems >---------------------------------------
+
 
 app.patch('/updateSystem', async (req, res) => {
 
@@ -2135,7 +2301,7 @@ app.get('/saved', async (req, res) => {
 
 })
 
-// ----------------------------< Delete Saved Design Element >---------------------------------------
+// ----------------------------< Delete Saved Design Element From DS >---------------------------------------
 
 app.delete('/deleteElement', async (req, res) => {
 
