@@ -95,7 +95,7 @@ const iconData = {
   },
 };
 
-const Icon = ({ type }) => {
+const Icon = ({ type, minimal = false  }) => {
 
   const route = useRoute(); 
 
@@ -125,7 +125,7 @@ const Icon = ({ type }) => {
 
   return (
   <View style={{ alignItems: 'center' }}>
-    {route.name === 'MyDesignScreen' ? (
+    { minimal || route.name === 'MyDesignScreen' ? (
       // Render this if coming from "MyDesignScreen"
         <IconComponent size={30} name='folder' style={styles.icon} color="orange" />
     ) : (

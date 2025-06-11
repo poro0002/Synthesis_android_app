@@ -33,31 +33,46 @@ import { useAuth } from '../../../LogContext';
 import Constants from 'expo-constants';
 const apiUrl = Constants.expoConfig.extra.API_URL; 
 
+import { useNavigation } from '@react-navigation/native'
 
 
 const ElementScreen = ({ route }) => {
 
-  let { element, type, iconType, data } = route.params;
+  let { element, type, iconType, data, screenType } = route.params;
+
+   const navigation = useNavigation();
+
+  //  console.log('element screen data', JSON.stringify(data, null, 2))
+
+  //  console.log('element screen element', JSON.stringify(element, null, 2))
 
   const { username, getUpdatedUsername, checkFavorites, getPayloadData } = useAuth();
   // theoretically, this needs to fetch check if the current element is already in the favorites or not because choosing what is true of false
-  const [selectedFavBtn, setSelectedFavBtn] = useState(checkFavorites()); 
+  const [selectedFavBtn, setSelectedFavBtn] = useState(null);
+  
+  
+  // const currentData = data?.typography ? data : typoData?.data ? { ...typoData, typography: typoData.data } : typoData; // Convert from favorite structure to topic-style
 
 
+  // this handles the typography data coming from different screens. from project screen its typoData
+  // const typographyData = currentData?.typography || currentData?.data || [];
+  // const fontFamily = currentData?.fontFamily || 'System';
+  // const fontWeight = currentData?.fontWeight?.match(/\d{3}/)?.[0] || '400';
+  // const lineHeight = currentData?.lineHeight || undefined;
+
+  // console.log('Element Screen typographyData:', typographyData)
 
 
   
   // icon isn't initially changed through the params so if thats whats being displayed it needs to be manually set 
-  if (iconType === "component") {
-    type = "styledComponents";
-  } else if (iconType && type !== "styledComponents") {
+  if (iconType && type !== "styledComponents") {
     type = "icon";
   }
 
-  console.log('element screen element:', element) // font, 
-  console.log(' element screen iconType:', iconType)
-  console.log('element screen  type:', type)
-  console.log('element screen data:', data)
+  // console.log('element screen element:', element) // font, 
+  // console.log(' element screen iconType:', iconType)
+  // console.log('element screen  type:', type)
+  // console.log('element screen data:', data)
 
 
   useEffect(() => {
@@ -65,76 +80,81 @@ const ElementScreen = ({ route }) => {
   }, [])
 
 
+  
+
+
+  // check favorites needs to return true or false so the icon can fill or not
   useEffect(() =>{
-    const fetchFavoriteStatus = async () => {
-      const payload = getPayloadData({ type, data, element, iconType });
-      const isFavorite = await checkFavorites(payload);
-      setSelectedFavBtn(isFavorite);
+
+    console.log('useEffect fired in ElementScreen');
+    
+    const check = async () => {
+      const payload = getPayloadData({element, type, iconType, data});
+      const isFavorite = await checkFavorites(payload); 
+      setSelectedFavBtn(isFavorite); 
     };
   
-    fetchFavoriteStatus();
-  }, [])
-  
+    check();
+  }, []);
+
+
 
 
 // ---------------------------------------------------------< SAVE FAVORITE >---------------------------------------------------------
 
+// write this functionality and make sure each type saves a consistent data structure that can be fetched and displayed easily
+
+
   const saveFavorite =  async (data) =>{
-      const fetchURL = `${apiUrl}/save?queryType=element`
+      const fetchURL = `${apiUrl}/saveFavorite`
       const fetchHeaders = new Headers({'Content-Type':'application/json'})
 
-      let payload;
-
-      payload = getPayloadData({ type, data, element, iconType });
+      let payload = getPayloadData({ type, data, element, iconType });
 
       const fetchOptions = {
         method: 'POST',
         mode: 'cors',
         headers: fetchHeaders,
         body: JSON.stringify({
-          ...payload,
+          type,
           username,
+          payload,
         }),
       }
 
-      try{
-        const response = await fetch(fetchURL, fetchOptions);
+      try{  
+          let response = await fetch(fetchURL, fetchOptions );
 
-        let data = await response.json();
+          let data = await response.json();
 
-        console.log(data)
-
-        if(data.message === 'successfully saved element to your favorites'){
-          // show the user that their favorite was stored on the DB correctly
-          console.log(data.message)
-        } else if(data.message === 'you already have that element favorited'){
-           console.log(data.message)
-          //  setSelectedFavBtn(false)
-        } else if(data.message === "Error saving favorite element. Please try again later.") {
-          console.log(data.message)
-        }
-
+          if(data.success){
+            console.log(data.message)
+            
+          }else{
+            console.log(data.message)
+          }
+     
       }catch(err){
          console.log('there was an error with the fetch', err)
       }
+  
+
 
   }
 
   // ---------------------------------------------------------< REMOVE FAVORITE >---------------------------------------------------------
 
-const removeFav = async (data, element) => {
-    // fetch to a backend route /deleteElement
-    // send the same body json element, iconType, data ect.
-    // no query param needed
-    // if its true/false run a statement that runs the corro function 
-    // also make sure the setSelectedFavBtn checks the favorites database for whats already been favorited and shows the corro icon
 
+// this function may have to be moved to the longContext file so it can be used on multiple screens for further scalability 
+
+// lets work on this today 
+
+const removeFav = async (data, element) => {
+    
+  let payload = getPayloadData({ type, data, element, iconType });
+  
     const fetchURL = `${apiUrl}/deleteFavorite`
     const fetchHeaders = new Headers({'Content-Type':'application/json'})
-
-    let payload;
-
-    payload = getPayloadData({ type, data, element, iconType });
 
 
     const fetchOptions = {
@@ -142,21 +162,22 @@ const removeFav = async (data, element) => {
       mode: 'cors',
       headers: fetchHeaders,
       body: JSON.stringify({
-        ...payload,
+        type,
         username,
+        payload,
+       
       })
     }
     
     try{
 
-      let response = await fetch(fetchURL, fetchOptions);
+      const response = await fetch(fetchURL, fetchOptions)
 
       let data = await response.json();
 
       if(data.success){
         console.log(data.message)
-      } else{
-        console.log(data.message)
+        setSelectedFavBtn(false)
       }
 
 
@@ -187,7 +208,7 @@ const removeFav = async (data, element) => {
 
   const packageName = data?.package ?? 'Unknown Package'; // ?? uses a fallback "Unknown Package" if the data doesn't exist
 
-  if (iconType === "component" && data?.components) {
+  if (type === "component" && data?.components) {
     try {
       btnBorder = data.components.button.styles.borderWidth + ' ' + data.components.button.styles.borderColor;
       btnBorderRadius = data.components.button.styles.borderRadius;
@@ -221,7 +242,7 @@ const removeFav = async (data, element) => {
       <Pressable onPress={ async () => { 
            
            if (selectedFavBtn) {
-            await removeFav(data, element);
+            await removeFav(data, element, screenType);
             setSelectedFavBtn(false);
           } else {
             await saveFavorite(data);
@@ -325,41 +346,69 @@ const removeFav = async (data, element) => {
 
        
       )}
-{type === "typography" && data.typography && (
-  <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: 20 }}>
+      
+{type === "typography" && data?.length > 0 && data[0].styles && (
+  <ScrollView
+    keyboardShouldPersistTaps="handled"
+    contentContainerStyle={{
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center',
+      padding: 20,
+    }}
+  >
     <View style={{ alignItems: 'center' }}>
-      <Text style={[{ color: 'white', fontSize: 35 }]}>Typography Scale</Text>
-      <Text style={[{ color: 'white', fontSize: 20, marginTop: 20 }]}>Examples</Text>
+      <Text style={{ color: 'white', fontSize: 35 }}>Typography Scale</Text>
+      <Text style={{ color: 'white', fontSize: 20, marginTop: 20 }}>Examples</Text>
+      <Text style={{ color: 'white', fontSize: 20, marginTop: 20 }}>
+          {data[0].name}
+      </Text>
     </View>
 
-    {data.typography.map((element, index) => (
-      <View key={`${element.label}-${index}`} style={[globalStyles.screenStyles.centerColumn, { marginTop: 50, backgroundColor: '#f8f8f8', borderRadius: 5, padding: 20 }]}>
-        <Text style={{
-          color: 'black',
-          fontSize: element.size,
-          fontFamily: data.fontFamily,
-          fontWeight: data.fontWeight?.match(/\d{3}/)?.[0] || '400',
-          lineHeight: data.lineHeight,
-          textAlign: 'center',
-        }}>
-          {element.label || element.name}
-        </Text>
+    {data?.[0]?.styles?.map((element, index) => (
+  <View
+    key={`${element.label}-${index}`}
+    style={{
+      marginTop: 50,
+      backgroundColor: '#f8f8f8',
+      borderRadius: 5,
+      padding: 20,
+      alignItems: 'center',
+    }}
+  >
+    <Text
+      style={{
+        color: 'black',
+        fontSize: element.size,
+        textAlign: 'center',
+      }}
+    >
+      {element.label}
+    </Text>
 
-        <Text style={{
-          color: 'black',
-          fontSize: element.size,
-          fontFamily: data.fontFamily,
-          fontWeight: data.fontWeight?.match(/\d{3}/)?.[0] || '400',
-          lineHeight: data.lineHeight,
-          textAlign: 'center',
-        }}>
-          {element.example}
-        </Text>
-    
-      </View>
-    ))}
+    <Text
+      style={{
+        color: 'black',
+        fontSize: element.size,
+        textAlign: 'center',
+      }}
+    >
+      {element.example}
+    </Text>
+  </View>
+))}
 
-    <Text style={[{ color: 'black', fontSize: 13, textAlign: 'center', marginTop: 30, backgroundColor: '#f8f8f8', borderRadius: 5, padding: 20 }]}>
+    <Text
+      style={{
+        color: 'black',
+        fontSize: 13,
+        textAlign: 'center',
+        marginTop: 30,
+        backgroundColor: '#f8f8f8',
+        borderRadius: 5,
+        padding: 20,
+      }}
+    >
       Typography hierarchy is crucial in design systems because it helps organize content...
     </Text>
   </ScrollView>
@@ -369,7 +418,7 @@ const removeFav = async (data, element) => {
          - show like 5-10 different icons from the brand to show the user what they would be using 
          - use case examples ?
          - since these are all done separate you can write a different about description for each and provide links, designers, company
-      */}
+     */}
       
 {iconType === "feather" && (
   <View style={{ alignItems: 'center' }}>
@@ -425,7 +474,7 @@ const removeFav = async (data, element) => {
           
           - you could also demonstrate which colors (as in primary, secondar ect.) goes where on the component (ex. border: primary-light)
       */}
-      {iconType === "component" && (
+      {(type === "component" || type === "styledComponents") && (
 
         <View >
           <Text style={{ color: 'white' }}>Package: {packageName}</Text>
@@ -486,11 +535,28 @@ const removeFav = async (data, element) => {
     Button Component
 </Text>
 <View>
+ <View>
   <View style={{ flexDirection: 'row', marginBottom: 5 }}>
     <Text style={{ color: 'white', fontWeight: 'bold', marginRight: 15 }}>btnBorder:</Text>
     <Text style={{ color: 'white' }}>{btnBorder}</Text>
   </View>
-  {/* ... other info lines ... */}
+  <View style={{ flexDirection: 'row', marginBottom: 5 }}>
+    <Text style={{ color: 'white', fontWeight: 'bold', marginRight: 15 }}>btnBorderRadius:</Text>
+    <Text style={{ color: 'white' }}>{btnBorderRadius}</Text>
+  </View>
+  <View style={{ flexDirection: 'row', marginBottom: 5 }}>
+    <Text style={{ color: 'white', fontWeight: 'bold', marginRight: 15 }}>btnBoxShadow:</Text>
+    <Text style={{ color: 'white' }}>{btnBoxShadow}</Text>
+  </View>
+  <View style={{ flexDirection: 'row', marginBottom: 5 }}>
+    <Text style={{ color: 'white', fontWeight: 'bold', marginRight: 15 }}>btnMargin:</Text>
+    <Text style={{ color: 'white' }}>{btnMargin}</Text>
+  </View>
+  <View style={{ flexDirection: 'row', marginBottom: 5 }}>
+    <Text style={{ color: 'white', fontWeight: 'bold', marginRight: 15 }}>btnPadding:</Text>
+    <Text style={{ color: 'white' }}>{btnPadding}</Text>
+  </View>
+</View>
 </View>
 <View style={{
   borderWidth: btnBorder && btnBorder.split(' ').length > 0 ? parseInt(btnBorder.split(' ')[0]) : 1,

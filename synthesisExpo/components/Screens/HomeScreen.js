@@ -57,7 +57,7 @@ const HomeScreen = ({username}) => {
                  contentContainerStyle={{  flexDirection: 'column'}}
                  keyboardShouldPersistTaps="handled"
                  >
-        <Text style={globalStyles.screenStyles.h1}>Hello {storedUsername}</Text>
+        <Text style={globalStyles.screenStyles.h1}>Welcome {storedUsername}</Text>
 
    
         <Text style={globalStyles.screenStyles.text}>What are you Looking For ?</Text>

@@ -40,20 +40,28 @@ const MyDesignScreen = ({route}) => {
   const [selectedIndex, setSelectedIndex] = useState(0); // Defaults to showing the first design system
   const [currentSystem, setCurrentSystem] = useState(data); // keep this
 
+  // console.log('design screen current system', currentSystem)
 
+  // console.log('design screen typo data:', [currentSystem.typography[0]])
+ 
 
   const navigation = useNavigation();
 
   const handleViewElement = (element, type) => {
-    navigation.navigate('Element', {element: element, type: type}) 
+    navigation.navigate('Element', {
+      element: element, 
+      type: type
+    }) 
     console.log('myDesignScreen type:', type)
     console.log('myDesignScreen element:', element)
  }
 
- const handleIconElement = (iconType, data, element) => {
-    navigation.navigate('Element', { iconType: iconType, data: data, element: element }) // <------- issue with these 
-    console.log('myDesignScreen data:', data)
-    console.log(' myDesignScreen element:', element)
+ const handleIconElement = (iconType, type) => {
+    navigation.navigate('Element', { 
+      iconType,
+      type
+    
+    }) 
     console.log("my design screen iconType", iconType)
 }
 
@@ -61,19 +69,19 @@ const MyDesignScreen = ({route}) => {
 const handleTypoElement = (type, currentSystem, element) => {
   navigation.navigate('Element', { 
     type,
-    data: currentSystem,  // pass the WHOLE system
-    element: element,     // pass the specific element as well if needed
+    data: currentSystem.typography ? [currentSystem.typography[0]] : [],  
+    screenType: "design"  
   });
     console.log('myDesignScreen element:', element)
     console.log('myDesignScreen type:', type)
 };
 
-const handleCompElement = (type, currentSystem, element) => {
+
+
+const handleCompElement = (type, element) => {
   navigation.navigate('Element', { 
     type,
     data: element, 
-    element: element,
-    iconType: 'component'
   });
   console.log('myDesignScreen element:', element)
   console.log('myDesignScreen type:', type)
@@ -367,7 +375,7 @@ const addElement = (category, systemId) =>{
                   </View>
                   <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
                     <Pressable  
-                      onPress={() => handleIconElement(icon.name, currentSystem, icon )} 
+                      onPress={() => handleIconElement(icon.name, "icons")} 
                       style={globalStyles.screenStyles.viewBtn}
                     >
                       <Text>View</Text>
@@ -400,7 +408,9 @@ const addElement = (category, systemId) =>{
             horizontal
           >
             {currentSystem?.comp?.length > 0 ? (
-              currentSystem.comp.map((element, index) => (
+              currentSystem.comp.map((element, index) => {
+                // console.log('design screen comp data index 0:', index, ':', element)
+                return (
                 <View key={index}>
                   <View style={globalStyles.screenStyles.box}>
                     <Text>{element.package}</Text>
@@ -408,7 +418,7 @@ const addElement = (category, systemId) =>{
               
                   <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
                     <Pressable
-                      onPress={() => handleCompElement("comp", currentSystem, element)}
+                      onPress={() => handleCompElement("component", element)}
                       style={globalStyles.screenStyles.viewBtn}
                     >
                       <Text>View</Text>
@@ -421,7 +431,8 @@ const addElement = (category, systemId) =>{
                     </Pressable>
                   </View>
                 </View>
-              ))
+              );
+            })
             ) : (
                 <Pressable onPress={() => addElement("comp", currentSystem.id)} style={globalStyles.screenStyles.centerRow}>
                   <MaterialIcons name="add" size={30} color="orange" />

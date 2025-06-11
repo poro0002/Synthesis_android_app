@@ -1390,6 +1390,108 @@ app.listen(port, (err) => {
   };
 
     // -------------------< Scales >-----------------
+
+    const typographyScales2 = [ // firebase friendly 
+      {
+        name: 'Display Heavy',
+        styles: [
+          { label: 'h1', size: 44, example: 'Brown jars prevented the mixture from freezing too quickly' },
+          { label: 'h2', size: 34, example: 'Brown jars prevented the mixture from freezing too quickly' },
+          { label: 'h3', size: 29, example: 'Brown jars prevented the mixture from freezing too quickly' },
+          { label: 'h4', size: 24, example: 'Brown jars prevented the mixture from freezing too quickly' },
+          { label: 'h5', size: 20, example: 'Brown jars prevented the mixture from freezing too quickly' },
+          { label: 'h6', size: 17, example: 'Brown jars prevented the mixture from freezing too quickly' },
+          { label: 'p', size: 14, example: 'Brown jars prevented the mixture from freezing too quickly' },
+          { label: 'small', size: 11, example: 'Brown jars prevented the mixture from freezing too quickly' },
+          { label: 'scale15', size: 8, example: 'Brown jars prevented the mixture from freezing too quickly' }
+        ]
+      },
+      {
+        name: 'Display',
+        styles: [
+          { label: 'h1', size: 42, example: 'Brown jars prevented the mixture from freezing too quickly' },
+          { label: 'h2', size: 32, example: 'Brown jars prevented the mixture from freezing too quickly' },
+          { label: 'h3', size: 27, example: 'Brown jars prevented the mixture from freezing too quickly' },
+          { label: 'h4', size: 22, example: 'Brown jars prevented the mixture from freezing too quickly' },
+          { label: 'h5', size: 19, example: 'Brown jars prevented the mixture from freezing too quickly' },
+          { label: 'h6', size: 16, example: 'Brown jars prevented the mixture from freezing too quickly' },
+          { label: 'p', size: 13, example: 'Brown jars prevented the mixture from freezing too quickly' },
+          { label: 'small', size: 10, example: 'Brown jars prevented the mixture from freezing too quickly' },
+          { label: 'scale14', size: 7, example: 'Brown jars prevented the mixture from freezing too quickly' }
+        ]
+      },
+      {
+        name: 'Display Compact',
+        styles: [
+          { label: 'h1', size: 40, example: 'Brown jars prevented the mixture from freezing too quickly' },
+          { label: 'h2', size: 30, example: 'Brown jars prevented the mixture from freezing too quickly' },
+          { label: 'h3', size: 25, example: 'Brown jars prevented the mixture from freezing too quickly' },
+          { label: 'h4', size: 21, example: 'Brown jars prevented the mixture from freezing too quickly' },
+          { label: 'h5', size: 18, example: 'Brown jars prevented the mixture from freezing too quickly' },
+          { label: 'h6', size: 15, example: 'Brown jars prevented the mixture from freezing too quickly' },
+          { label: 'p', size: 12, example: 'Brown jars prevented the mixture from freezing too quickly' },
+          { label: 'small', size: 9, example: 'Brown jars prevented the mixture from freezing too quickly' },
+          { label: 'scale13', size: 6, example: 'Brown jars prevented the mixture from freezing too quickly' }
+        ]
+      },
+      {
+        name: 'Readable',
+        styles: [
+          { label: 'h1', size: 38, example: 'Brown jars prevented the mixture from freezing too quickly' },
+          { label: 'h2', size: 28, example: 'Brown jars prevented the mixture from freezing too quickly' },
+          { label: 'h3', size: 24, example: 'Brown jars prevented the mixture from freezing too quickly' },
+          { label: 'h4', size: 20, example: 'Brown jars prevented the mixture from freezing too quickly' },
+          { label: 'h5', size: 17, example: 'Brown jars prevented the mixture from freezing too quickly' },
+          { label: 'h6', size: 14, example: 'Brown jars prevented the mixture from freezing too quickly' },
+          { label: 'p', size: 11, example: 'Brown jars prevented the mixture from freezing too quickly' },
+          { label: 'small', size: 8, example: 'Brown jars prevented the mixture from freezing too quickly' },
+          { label: 'scale12', size: 7, example: 'Brown jars prevented the mixture from freezing too quickly' }
+        ]
+      },
+      {
+        name: 'Compact',
+        styles: [
+          { label: 'h1', size: 36, example: 'Brown jars prevented the mixture from freezing too quickly' },
+          { label: 'h2', size: 26, example: 'Brown jars prevented the mixture from freezing too quickly' },
+          { label: 'h3', size: 23, example: 'Brown jars prevented the mixture from freezing too quickly' },
+          { label: 'h4', size: 19, example: 'Brown jars prevented the mixture from freezing too quickly' },
+          { label: 'h5', size: 16, example: 'Brown jars prevented the mixture from freezing too quickly' },
+          { label: 'h6', size: 13, example: 'Brown jars prevented the mixture from freezing too quickly' },
+          { label: 'p', size: 10, example: 'Brown jars prevented the mixture from freezing too quickly' },
+          { label: 'small', size: 9, example: 'Brown jars prevented the mixture from freezing too quickly' },
+          { label: 'scale11', size: 6, example: 'Brown jars prevented the mixture from freezing too quickly' }
+        ]
+      },
+      {
+        name: 'Minimal',
+        styles: [
+          { label: 'h1', size: 34, example: 'Brown jars prevented the mixture from freezing too quickly' },
+          { label: 'h2', size: 24, example: 'Brown jars prevented the mixture from freezing too quickly' },
+          { label: 'h3', size: 22, example: 'Brown jars prevented the mixture from freezing too quickly' },
+          { label: 'h4', size: 18, example: 'Brown jars prevented the mixture from freezing too quickly' },
+          { label: 'h5', size: 15, example: 'Brown jars prevented the mixture from freezing too quickly' },
+          { label: 'h6', size: 12, example: 'Brown jars prevented the mixture from freezing too quickly' },
+          { label: 'p', size: 9, example: 'Brown jars prevented the mixture from freezing too quickly' },
+          { label: 'small', size: 8, example: 'Brown jars prevented the mixture from freezing too quickly' },
+          { label: 'scale10', size: 5, example: 'Brown jars prevented the mixture from freezing too quickly' }
+        ]
+      },
+      {
+        name: 'MiExperimental or Glitched',
+        styles: [
+          { label: 'h1', size: 3, example: 'Brown jars prevented the mixture from freezing too quickly' },
+          { label: 'h2', size: 22, example: 'Brown jars prevented the mixture from freezing too quickly' },
+          { label: 'h3', size: 20, example: 'Brown jars prevented the mixture from freezing too quickly' },
+          { label: 'h4', size: 16, example: 'Brown jars prevented the mixture from freezing too quickly' },
+          { label: 'h5', size: 14, example: 'Brown jars prevented the mixture from freezing too quickly' },
+          { label: 'h6', size: 11, example: 'Brown jars prevented the mixture from freezing too quickly' },
+          { label: 'p', size: 8, example: 'Brown jars prevented the mixture from freezing too quickly' },
+          { label: 'small', size: 7, example: 'Brown jars prevented the mixture from freezing too quickly' },
+          { label: 'scale9', size: 6, example: 'Brown jars prevented the mixture from freezing too quickly' }
+        ]
+      }
+    ];
+
     const typographyScales = [
       [
         {name: 'Display Heavy'},
@@ -1663,7 +1765,7 @@ app.get('/pickElement', async (req, res) => {
     }
 
     else if(category === 'typography'){
-      return res.json(typographyScales)
+      return res.json(typographyScales2)
     }
 
     else if(category === 'comp'){
@@ -1683,7 +1785,7 @@ app.get('/elements', (req, res) => {
     let entertainmentResponseData = {
       gradients: categorizedGradients.entertainment,
       fonts: fontsByCategory.entertainment,
-      typography: typographyScales[typoIndex],
+      typography: typographyScales2[typoIndex],
       styledComponents: styledComponents[compIndex],
     };
     return res.json(entertainmentResponseData);
@@ -1692,7 +1794,7 @@ app.get('/elements', (req, res) => {
     let techResponseData = {
       gradients: categorizedGradients.tech,
       fonts: fontsByCategory.tech,
-      typography: typographyScales[typoIndex],
+      typography: typographyScales2[typoIndex],
       styledComponents: styledComponents[compIndex],
     };
     return res.json(techResponseData);
@@ -1701,7 +1803,7 @@ app.get('/elements', (req, res) => {
     let healthResponseData = {
       gradients: categorizedGradients.health,
       fonts: fontsByCategory.health,
-      typography: typographyScales[typoIndex],
+      typography: typographyScales2[typoIndex],
       styledComponents: styledComponents[compIndex],
     };
     return res.json(healthResponseData);
@@ -1710,7 +1812,7 @@ app.get('/elements', (req, res) => {
     let foodResponseData = {
       gradients: categorizedGradients.food,
       fonts: fontsByCategory.food,
-      typography: typographyScales[typoIndex],
+      typography: typographyScales2[typoIndex],
       styledComponents: styledComponents[compIndex],
     };
     return res.json(foodResponseData);
@@ -1719,7 +1821,7 @@ app.get('/elements', (req, res) => {
     let financeResponseData = {
       gradients: categorizedGradients.finance,
       fonts: fontsByCategory.finance,
-      typography: typographyScales[typoIndex],
+      typography: typographyScales2[typoIndex],
       styledComponents: styledComponents[compIndex],
     };
     return res.json(financeResponseData);
@@ -1728,7 +1830,7 @@ app.get('/elements', (req, res) => {
     let sportResponseData = {
       gradients: categorizedGradients.sport,
       fonts: fontsByCategory.sport,
-      typography: typographyScales[typoIndex],
+      typography: typographyScales2[typoIndex],
       styledComponents: styledComponents[compIndex],
     };
     return res.json(sportResponseData);
@@ -1737,7 +1839,7 @@ app.get('/elements', (req, res) => {
     let travelResponseData = {
       gradients: categorizedGradients.travel,
       fonts: fontsByCategory.travel,
-      typography: typographyScales[typoIndex],
+      typography: typographyScales2[typoIndex],
       styledComponents: styledComponents[compIndex],
     };
     return res.json(travelResponseData);
@@ -1746,7 +1848,7 @@ app.get('/elements', (req, res) => {
     let musicResponseData = {
       gradients: categorizedGradients.music,
       fonts: fontsByCategory.music,
-      typography: typographyScales[typoIndex],
+      typography: typographyScales2[typoIndex],
       styledComponents: styledComponents[compIndex],
     };
     return res.json(musicResponseData);
@@ -1755,7 +1857,7 @@ app.get('/elements', (req, res) => {
     let educationResponseData = {
       gradients: categorizedGradients.education,
       fonts: fontsByCategory.education,
-      typography: typographyScales[typoIndex],
+      typography: typographyScales2[typoIndex],
       styledComponents: styledComponents[compIndex],
     };
     return res.json(educationResponseData);
@@ -1942,24 +2044,18 @@ app.post('/login', async (req, res) => {
     }
 });
 
-// ----------------------------< Save Design System Route >---------------------------------------
 
 
-app.post('/save', async (req, res) => {
+// -------------------------------------------------< Save Design System Route >--------------------------------------------
 
 
-  const {data, username, element, iconType, type} = req.body;
-  const { queryType } = req.query
+app.post('/saveDesignSystem', async (req, res) => {
 
-  // console.log('data:', data[0].name)
-  console.log('icon Type:', iconType)
-  console.log('element:', element)
-  console.log('type:', type)
+  const { username, data } = req.body;
+  
+  console.log('is this save design system route working or not ??? ')
 
- 
 
-if(queryType === 'designSystem'){
- 
     try {
       // Fetch the user's document using their username
       const userRef = await firestore.collection('users').where('username', '==', username).get();
@@ -1986,15 +2082,125 @@ if(queryType === 'designSystem'){
     console.error('Error saving design system:', error);
     return res.status(500).json({ message: 'Error saving design system. Please try again later.' });
   }
-} 
 
-// --------------------------------< SAVE FAVORITES >---------------------------------------
 
-else if(queryType === 'element'){
-   try{
+});
+
+
+
+// ---------------------------------------------------------------------------------------------------------------------------------------------------------
+// ****  --------------------------------------------------< SAVE FAVORITE INITIALLY >----------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+app.post('/saveFavorite', async(req, res) =>{
+
+  const { payload, username, type } = req.body;
+  // const { screenType} = req.query
+
+  const { data, element, iconType } = payload || {};
+
+
+    try{
+ 
+     const userRef = await firestore.collection('users').where('username', '==', username).get();
+ 
+     if(!username){
+       return res.status(404).json({message: 'uername is required'})
+     }
+   
+ 
+     if(userRef.empty){
+       return res.status(404).json({message: 'no snapshot could be found for that username '})
+     }
+ 
+     const userDoc = userRef.docs[0].ref;
+ 
+     let query = userDoc.collection('favorites').where('type', '==', type); // this matches and compares the type in favorites DB of each element with the type thats being passed to the server
+ 
+     let favoriteData = {
+       createdAt: new Date().toISOString(),
+       type, // Always store the type for easier filtering later
+     };
+ 
+     // all these if else statements essentially check for DUPLICATES 
+ 
+     if (type === 'font') {
+       query = query.where('name', '==', element.name); // do they matching for each corro type
+       favoriteData = {
+         ...favoriteData,
+         ...element,
+       };
+     } else if(type === 'color'){
+       query = query.where('name', '==', element.name);
+       favoriteData = {
+         ...favoriteData,
+         ...element,
+       };
+ 
+     }else if (type === 'icon') {
+       query = query.where('iconType', '==', iconType);
+       favoriteData = {
+         ...favoriteData,
+         iconType,
+       };
+     } else if (type === 'component'){    // this should be 'component' to keep it consistent ?
+       query = query.where('package', '==', data.package);
+       favoriteData = {
+         ...favoriteData,
+         ...data, // data should same structure no matter what when going in the favorite. same with typography. we need to make this consistent. 
+       };
+     }else if (type === 'typography') {
+        // need screentypes ? since data might be different 
+        query = query.where('name', '==', data[0]?.name);
+        favoriteData = {
+          ...favoriteData,
+          ...data[0],  
+        };
+ 
+     }
+ 
+     const existing = await query.get(); //  returns a QuerySnapshot object, 
+ 
+     if (!existing.empty) { // if isnt empty 
+       console.log('Already favorited!');
+       return res.status(500).json({message: "you already have that element favorited", success: true}); // Stop here — already in favorites
+     }
+ 
+ 
+ 
+     await userDoc.collection('favorites').add(favoriteData);// creates a collection called favs if it doesnt exist yet.
+       
+  
+     console.log('successfully saved element to your favorites')
+     return res.status(200).json({message: 'successfully saved element to your favorites', success: true})
+ 
+ 
+    }catch(err){
+     console.log('Error saving that favorite to DB', err)
+      return res.status(500).json({message: 'Error saving favorite element. Please try again later.', success: false})
+    }
+ })
+
+
+// ----------------------------< REMOVE FAVORITES >---------------------------------------
+
+app.delete('/deleteFavorite', async (req, res) => {
+
+  // basically this will be sent a corro element from the "elementScreen" and we will once again look for the match in the favorites DB
+  // if a match is found delete that element from the DB 
+  // if no match is found that means there is a problem lol 
+     
+  const { username, type, payload } = req.body;
+   const { data, element, iconType } = payload || {};
+
+  console.log('Delete Favorite payload:', req.body);
+
+
+  try{
 
     const userRef = await firestore.collection('users').where('username', '==', username).get();
-
+ 
     if(!username){
       return res.status(404).json({message: 'uername is required'})
     }
@@ -2006,133 +2212,44 @@ else if(queryType === 'element'){
 
     const userDoc = userRef.docs[0].ref;
 
-    let query = userDoc.collection('favorites').where('type', '==', type); // this matches and compares the type in favorites DB of each element with the type thats being passed to the server
+    let favoritesSnapshot = await userDoc.collection('favorites').where('type', '==', type).get();
 
-    let favoriteData = {
-      createdAt: new Date().toISOString(),
-      type, // Always store the type for easier filtering later
-    };
+    let foundDoc = null;
 
-    // all these if else statements essentially check for DUPLICATES 
+    for(const doc of favoritesSnapshot.docs){
+      let fav = doc.data()
 
-    if (type === 'font') {
-      query = query.where('name', '==', element.name); // do they matching for each corro type
-      favoriteData = {
-        ...favoriteData,
-        ...element,
-      };
-    } else if(type === 'color'){
-      query = query.where('name', '==', element.name);
-      favoriteData = {
-        ...favoriteData,
-        ...element,
-      };
 
-    }else if (type === 'icon') {
-      query = query.where('iconType', '==', iconType);
-      favoriteData = {
-        ...favoriteData,
-        iconType,
-      };
-    } else if (type === 'styledComponents' || type === 'comp'){
-      query = query.where('package', '==', data.package);
-      favoriteData = {
-        ...favoriteData,
-        ...data,
-      };
-    }else if (type === 'typography'){
+      if (!fav) continue;
 
-      query = query.where('name', '==', data[0].name )
-      favoriteData = {
-        ...favoriteData,
-        ...data,
-      };
+ 
+      const match = 
+         (type === 'color' && element.name === fav.name) ||
+         (type === 'font' && element.name === fav.name) ||
+         (type === 'icon' && iconType === fav.iconType) ||
+         (type === 'typography' && data[0].name === fav.name) ||
+         (type === 'component' && data.package === fav.package)
+ 
+ 
+         if (match) {
+          foundDoc = doc.ref; //  store document reference
+          break;
+        }
     }
 
-    const existing = await query.get(); //  returns a QuerySnapshot object, 
-
-    if (!existing.empty) { // if isnt empty 
-      console.log('Already favorited!');
-      return res.status(500).json({message: "you already have that element favorited"}); // Stop here — already in favorites
+    if (foundDoc) {
+      await foundDoc.delete();
+      return res.status(200).json({ message: 'Favorite match found, fav deleted.', success: true });
+    } else {
+      return res.status(200).json({ message: 'No favorite match found to delete.', success: false });
     }
-
-
-
-    await userDoc.collection('favorites').add(favoriteData);// creates a collection called favs if it doesnt exist yet.
-      
+  
  
 
-    return res.status(200).json({message: 'successfully saved element to your favorites'})
-
-
-   }catch(err){
-    console.log('Error saving that favorite to DB', err)
-     return res.status(500).json({message: 'Error saving favorite element. Please try again later.'})
-   }
-}
-  
-
-});
-
-// ----------------------------< REMOVE FAVORITES >---------------------------------------
-
-app.delete('/deleteFavorite', async (req, res ) => {
-     
-  const {data, username, element, iconType, type} = req.body;
-  let success;
-  
- console.log('delete favorite server side data:', data)
- console.log('delete favorite server side element:', element)
-
-
-  try{
-    let userSnapshot = await firestore.collection('users').where('username', '==', username).get();
-
-    if(userSnapshot.empty){
-      success = false
-      return res.status(500).json({message: 'could not find a user assosicated with that username', success: success});
-    }
-  
-    let userDoc = userSnapshot.docs[0].ref // [0] first matching username document reference
-    
-    const favoritesSnapshot = await userDoc.collection('favorites').get(); // gets a snap of all the favorites 
-    const nameToMatch = element?.name || (Array.isArray(data) ? data[0]?.name : null);
-
-    for (const doc of favoritesSnapshot.docs) { // loops through all the favorites in the current user db
-      const fav = doc.data(); // the represents 1 of the docs data per loop
-      console.log('Full favorite doc data:', fav);
-
-      if (!fav) continue; // skip over any empty or undefined docs that might somehow be in the favoritesSnapshot.
-    
-      // if both comparisons check out then thats a true match
-      const match =
-      (type === 'color' && fav?.name === element?.name) ||
-      (type === 'font' && fav?.name === element?.name) ||
-      (type === 'icon' && (fav?.iconType === (element?.iconType || iconType)))||
-      ((type === 'comp' || type === 'styledComponents' || iconType === 'component') &&
-        fav?.type === type &&
-        fav?.package === element?.package) ||
-      (type === 'typography' && fav?.['0']?.name === nameToMatch);
-
-
-
-      if (match) {
-        await doc.ref.delete(); // making it so that corro doc can be deleted
-        success = true;
-        console.log("element successfully deleted");
-        return res.status(200).json({ message: "element successfully deleted", success });
-      }
-    }
-
-       // No match found
-       success = false;
-       console.log('No matching favorite found to delete.');
-       return res.status(404).json({ message: 'No matching favorite found to delete', success });
 
   }catch(err){
-    success = false
-    console.error('there was an issue deleting that favorite element', err)
-    res.status(500).json({message: "there was an issue deleting that favorite element", success: success})
+    console.log('Error trying to delete favorite from DB', err)
+    return res.status(500).json({message: 'Error trying to delete favorite from DB', success: false})
   }
 
 })
@@ -2141,57 +2258,83 @@ app.delete('/deleteFavorite', async (req, res ) => {
 
 app.post('/checkFavorites', async (req, res) =>{
 
-  const {data, username, element, iconType, type} = req.body;
+  const { payload, username } = req.body;
+  const { data, type, element, iconType } = payload || {};
 
 
-  try{
-  // use the username to get a snapshot of that users data. "userSnapshot" using get(); asynchronous snapshots are always async.get()
-  let userSnapshot = await firestore.collection('users').where('username', '==', username).get();
+// console.log('checkFavs type:', type)
+// console.log('checkFavs data:', data)
+// console.log('checkFavs element:', element)
+ console.log('checkFavs payload:', payload)
+//  console.log('checkFavs username:', username)
 
-  // [0] first matching username document reference. ref is (so you can access subcollections like favorites).
 
-  if (userSnapshot.empty) {
-    return res.status(404).json({ message: 'User not found', success: false });
+try{
+
+    
+  const userRef = await firestore.collection('users').where('username', '==', username).get();
+
+  if(!username){
+    return res.status(404).json({message: 'uername is required'})
   }
 
-  let userDoc = userSnapshot.docs[0].ref 
 
+  if(userRef.empty){
+    return res.status(404).json({message: 'no snapshot could be found for that username '})
+  }
 
-  let favoriteSnapshot = await userDoc.collection('favorites').get();
-  const nameToMatch = element?.name || (Array.isArray(data) ? data[0]?.name : null);
+  const userDoc = userRef.docs[0].ref;
 
  
+
+ // If no payload (meaning no specific item to check), return all favorites of that type
+ if (!payload || Object.keys(payload).length === 0) {
+      const allFavoritesSnapshot = await userDoc.collection('favorites').get();
+      const allFavorites = allFavoritesSnapshot.docs.map(doc => doc.data());
+      // console.log('checkFavs all favoritesData:', allFavorites)
+      return res.status(200).json({ message: 'Favorites data returned', favData: allFavorites });
+}
+
+
+let favoritesSnapshot = await userDoc.collection('favorites').where('type', '==', type).get();
+
   let foundMatch = false;
 
-  for(const doc of favoriteSnapshot.docs){
-      let fav = doc.data();
 
-      if (!fav) continue; // skip over any empty or undefined docs that might somehow be in the favoritesSnapshot.
-      
-      const match =
-      (type === 'color' && fav?.name === element?.name) ||
-      (type === 'font' && fav?.name === element?.name) ||
-      (type === 'icon' && (fav?.iconType === (element?.iconType || iconType)))||
-      ((type === 'comp' || type === 'styledComponents' || iconType === 'component') &&
-        fav?.type === type &&
-        fav?.package === element?.package) ||
-      (type === 'typography' && fav?.['0']?.name === nameToMatch);
+  for(const doc of favoritesSnapshot.docs){
+     let fav = doc.data();
 
-      if(match){
-        foundMatch = true;
-        return res.status(200).json({message: 'match has been found', success: true})
-      }  
+     if (!fav) continue;
+
+     if(type === 'typography'){
+      console.log('checkFav typo data name:', data[0].name)
+      console.log('checkFav typo favorite name:', fav.name)
+
+     }
+
+     const match = 
+        (type === 'color' && element.name === fav.name) ||
+        (type === 'font' && element.name === fav.name) ||
+        (type === 'icon' && iconType === fav.iconType) ||
+        (type === 'typography' && data[0].name === fav.name) ||
+        (type === 'component' && data.package === fav.package)
+
+
+     if(match){
+      foundMatch = true
+     }
+
   }
 
- 
-  if (!foundMatch) {
-    return res.status(404).json({ message: 'no match found', success: false });
+  if (foundMatch) {
+    return res.status(200).json({ message: 'Favorite match found.', success: true });
+  } else {
+    return res.status(200).json({ message: 'No favorite match found.', success: false });
   }
 
 }catch(err){
- 
-  console.error('there was an issue trying to check favorites')
-  return res.status(500).json({message: 'there was an issue trying to check favorites', success: false})
+  console.log('Error checking favorites DB', err)
+     return res.status(500).json({message: 'Error checking favorites DB', success: false})
 }
    
 

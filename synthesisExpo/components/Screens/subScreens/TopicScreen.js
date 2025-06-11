@@ -45,7 +45,7 @@ import { useNavigation } from '@react-navigation/native'
 const TopicScreen = ({route}) => {
 
   const {topic} = route.params;
-  const { username } = useAuth()
+  const { username, getUpdatedUsername } = useAuth();
 
   const [data, setData] = useState(null);
   const [serverFonts, setServerFonts] = useState([]);
@@ -64,12 +64,19 @@ const TopicScreen = ({route}) => {
  
   // console.log('typography:', data.typography);
 
-  console.log('topic screen username: ', username)
-  console.log('topic screen data', JSON.stringify(data, null, 2))
+  // console.log('topic screen username: ', username)
+  // console.log('topic screen data', JSON.stringify(data, null, 2))
 
  useEffect(() => {
   console.log("Selected Elements:\n", JSON.stringify(selectedElements, null, 2));
  }, [selectedElements])
+
+
+
+   useEffect(() => {
+     getUpdatedUsername();
+   }, [])
+ 
 
 
 
@@ -79,44 +86,47 @@ const TopicScreen = ({route}) => {
      setIsChecked(!isChecked);
    };
 
+  //  console.log('topic screen typo data:', data?.typography)
+  //  console.log('topic screen comp data:', data?.styledComponents)
+
 
 
  // ------------------------------< Handle Elements >------------------------------------------
 
    const handleViewElement = (element, type) => {
-      navigation.navigate('Element',{element: element, type: type}) 
+      navigation.navigate('Element',{
+        element, 
+        type
+      }) 
       console.log('topic screen type:', type)
    }
 
-   const handleIconElement = (iconType) => {
-    if (iconType === 'component') {
-      const element = data.styledComponents;
+   const handleIconElement = (iconType, type) => {
       navigation.navigate('Element', {
         iconType,
-        data: element,
-        element, // ✅ FIXED: now passing element
-      });
-    } else {
-      const element = data;
-      navigation.navigate('Element', {
-        iconType,
-        data: element,
-        element, // ✅ FIXED: now passing element
+        type
       });
     }
-  
-    console.log('topic screen data:', data);
-  };
 
+// this here converts the passed data to the element screen so that it ius the same structures as whats being displayed form the design screen
   const handleTypoElement = (type) => {
     navigation.navigate('Element', {
       type,
-      data,
-      element: data, // ✅ FIXED
+      data: [data.typography],
+      screenType: "topic" 
     });
   
     console.log('topic screen type:', type);
-    console.log('topic screen data:', data);
+    // console.log('topic screen data:', JSON.stringify(data, null, 2));
+  };
+
+  const handleCompElement = (type) => {
+    navigation.navigate('Element', { 
+      type,
+      data: data.styledComponents, 
+    });
+ 
+    console.log('topic screen type:', type)
   };
 
   // ------------------------------< Toggle Selection >------------------------------------------
@@ -200,6 +210,7 @@ const TopicScreen = ({route}) => {
      
      
       setData(serverData)
+      // console.log('topic screen fetched data:', data)
       setServerFonts(serverData.fonts)
 
      }catch(err){
@@ -218,14 +229,17 @@ useEffect(() => {
 
 const createSystem = async () =>{
 
-  console.log('typography:', selectedElements.typography);
+  // console.log('typography:', selectedElements.typography);
   
   // console.log('name:', selectedElements.name.length);
 
+  console.log('helloooooo ???')
+  console.log('username:', username)
+
   if(selectedElements.comp.length >= 1 && selectedElements.fonts.length >= 1 && selectedElements.gradients.length >= 1 && selectedElements.icons.length >= 1 && selectedElements.typography.length >= 1 && selectedElements.name.length >= 1){
     
-    const type = 'designSystem';
-    const fetchUrl = `${apiUrl}/save?queryType=${type}`; 
+  
+    const fetchUrl = `${apiUrl}/saveDesignSystem`; 
 
       // Clean data structure correctly
   const cleanElements = {
@@ -243,7 +257,7 @@ const createSystem = async () =>{
       method: 'POST',
       headers: { 'Content-Type': 'application/json' }, 
       mode: 'cors',
-      body: JSON.stringify({ data: cleanElements, username, type }),
+      body: JSON.stringify({ data: cleanElements, username }),
      
     };
 
@@ -396,7 +410,7 @@ const cancelSystem = () => {
 
   {/* -----------------------------------------------< TYPOGRAPHY >-----------------------------------------------  */}
 
-   {data && data.typography && data.typography.length > 0 && (
+   {data && data.typography && data.typography.styles && data.typography.styles.length > 0 && (
          
       <>
         <Text style={[globalStyles.screenStyles.h4, {color: 'white'}]}>Typography</Text>
@@ -408,19 +422,22 @@ const cancelSystem = () => {
               
                <View>
                <Pressable onPress={() => toggleSelection('typography', data.typography)}>
-  <View style={globalStyles.screenStyles.box}>
-    <View style={globalStyles.screenStyles.checkCircle}>
-      {selectedElements.typography.length > 0 && (
-        <View style={globalStyles.screenStyles.filledCircle}></View>
-      )}
-    </View>
-    <Text>Typography Scale</Text>
-  </View>
-</Pressable>
-
-<Pressable onPress={() => handleTypoElement("typography")} style={globalStyles.screenStyles.viewBtn}>
-  <Text>View</Text>
-</Pressable>
+                      <View style={globalStyles.screenStyles.box}>
+                        <View style={globalStyles.screenStyles.checkCircle}>
+                          {selectedElements.typography.length > 0 && (
+                            <View style={globalStyles.screenStyles.filledCircle}></View>
+                          )}
+                        </View>
+                        <Text>Typography Scale</Text>
+                        <Text style={[{fontWeight: 'bold'}]}>
+                            {data.typography.name}
+                        </Text>
+                      </View>
+                    </Pressable>
+                        
+                    <Pressable onPress={() => handleTypoElement("typography")} style={globalStyles.screenStyles.viewBtn}>
+                      <Text>View</Text>
+                    </Pressable>
                </View>  
                
              </ScrollView>
@@ -448,7 +465,7 @@ const cancelSystem = () => {
                          <Text >Feather Icons</Text>
                     </Pressable>
                 </View>
-                  <Pressable onPress={() => handleIconElement( 'feather')}   style={globalStyles.screenStyles.viewBtn}>
+                  <Pressable onPress={() => handleIconElement('feather', "icons")}   style={globalStyles.screenStyles.viewBtn}>
                     <Text >View</Text>
                   </Pressable>
                </View>
@@ -465,7 +482,7 @@ const cancelSystem = () => {
                          <Text >Evil Icons</Text>
                     </Pressable>
                 </View>
-                  <Pressable onPress={() => handleIconElement( 'evil')}  style={globalStyles.screenStyles.viewBtn}>
+                  <Pressable onPress={() => handleIconElement('evil', "icons")}  style={globalStyles.screenStyles.viewBtn}>
                     <Text >View</Text>
                   </Pressable>
                </View>
@@ -482,7 +499,7 @@ const cancelSystem = () => {
                          <Text >SimpleLine Icons</Text>
                     </Pressable>
                 </View>
-                  <Pressable onPress={() => handleIconElement( 'simple')}   style={globalStyles.screenStyles.viewBtn}>
+                  <Pressable onPress={() => handleIconElement('simple', "icons")}   style={globalStyles.screenStyles.viewBtn}>
                     <Text >View</Text>
                   </Pressable>
                </View>
@@ -499,7 +516,7 @@ const cancelSystem = () => {
                          <Text >Octicons Icons</Text>
                     </Pressable>
                 </View>
-                  <Pressable onPress={() => handleIconElement( 'octicons')}   style={globalStyles.screenStyles.viewBtn}>
+                  <Pressable onPress={() => handleIconElement('octicons', "icons")}   style={globalStyles.screenStyles.viewBtn}>
                     <Text >View</Text>
                   </Pressable>
                </View>
@@ -516,7 +533,7 @@ const cancelSystem = () => {
                          <Text >Ionicons</Text>
                     </Pressable>
                 </View>
-                  <Pressable onPress={() => handleIconElement('ionicons')}    style={globalStyles.screenStyles.viewBtn}>
+                  <Pressable onPress={() => handleIconElement('ionicons', "icons")}    style={globalStyles.screenStyles.viewBtn}>
                     <Text >View</Text>
                   </Pressable>
                </View>
@@ -533,7 +550,7 @@ const cancelSystem = () => {
                   <Text >Fontawesome Icons</Text>
                     </Pressable>
                 </View>
-                  <Pressable onPress={() => handleIconElement( 'Fontawesome')}   style={globalStyles.screenStyles.viewBtn}>
+                  <Pressable onPress={() => handleIconElement('Fontawesome', "icons")}   style={globalStyles.screenStyles.viewBtn}>
                     <Text >View</Text>
                   </Pressable>
                </View>
@@ -550,7 +567,7 @@ const cancelSystem = () => {
                          <Text >Material Icons</Text>
                     </Pressable>
                 </View>
-                  <Pressable onPress={() => handleIconElement('material')}  style={globalStyles.screenStyles.viewBtn}>
+                  <Pressable onPress={() => handleIconElement('material', "icons")}  style={globalStyles.screenStyles.viewBtn}>
                     <Text >View</Text>
                   </Pressable>
                </View>
@@ -589,7 +606,7 @@ const cancelSystem = () => {
                            ))}
                          </Pressable>
                        </View>
-                       <Pressable onPress={() => handleIconElement('component')} style={globalStyles.screenStyles.viewBtn}>
+                       <Pressable onPress={() => handleCompElement('component')} style={globalStyles.screenStyles.viewBtn}>
                          <Text>View</Text>
                        </Pressable >
                      </View>

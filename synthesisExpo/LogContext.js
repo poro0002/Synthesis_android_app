@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Constants from 'expo-constants';
 
@@ -14,6 +14,7 @@ export const LogProvider = ({ children }) => {
   const [designSystemData, setDesignSystemData] = useState([]);
   const [username, setUsername] = useState(null); // Add if needed
   const [isLoggedIn, setIsLoggedIn] = useState(false); // Optional
+  const [favData, setFavData] = useState([]);
 
 
 const apiUrl = Constants.expoConfig.extra.API_URL; 
@@ -28,6 +29,9 @@ const apiUrl = Constants.expoConfig.extra.API_URL;
   // designSystemData gets set every time this function runs
 
 
+  // useEffect(() => {
+  //   console.log('react context favData updated:', favData);
+  // }, [favData]);
 
 
   const getUpdatedUsername = async () => {
@@ -37,29 +41,23 @@ const apiUrl = Constants.expoConfig.extra.API_URL;
 
  
     const getPayloadData = ({ type, data, element, iconType }) => {
-      console.log('getpayload data type:', type);
-      // console.log('getpayload data:', data === null ? null : JSON.stringify(data, null, 2));
-      console.log('getpayload element:', element);
-      console.log('getpayload element:', iconType)
-
-      if (type === 'font' || type === 'color') {
-        return { data: null, element, type };
-      } else if (type === 'icon') {
-        return { data: null, element: null, iconType, type };
-      } else if (
-        type === 'comp' ||
-        type === 'styledComponents' ||
-        iconType === 'component'
-      ) {
-        return { data, element, type };
-      } else {
-        return { data: data?.[type], element, type };
-      }
+       if(type === 'font' || type === 'color'){
+        return {type, element, data: null, iconType: null }
+       } else if(type === 'icon'){
+        return {type, iconType, element: null, data: null}
+       }else if(type === 'typography'){
+          return {type, data, element: null, iconType: null}
+       }else if(type === 'component'){
+          return {type, data, element: null, iconType: null}
+       }
     };
   
 
-  const checkFavorites = async (payload) =>{
+  const checkFavorites = async (payload = {}) =>{ // if there is no payload the function just returns the favData
     console.log('checking favorites');
+    
+    const storedUsername = await AsyncStorage.getItem('username');
+    setUsername(storedUsername);
 
     const fetchUrl = `${apiUrl}/checkFavorites`;
     const fetchHeader = new Headers({ 'Content-Type': 'application/json' });
@@ -69,24 +67,30 @@ const apiUrl = Constants.expoConfig.extra.API_URL;
       headers: fetchHeader,
       mode: 'cors',
       body: JSON.stringify({
-         ...payload,
-         username
+         username: storedUsername,
+         payload, 
       })
     };
 
  
     try {
-      const response = await fetch(fetchUrl, fetchOptions);
-      const data = await response.json();
-      
-      if(data.success === true){
-       
-        return true
 
-      }else{
-       
-        return false
+      let response = await fetch(fetchUrl, fetchOptions);
+
+      let data = await response.json();
+
+      if(data.success){
+        console.log(data.message)
+        return true;
+      } else if('Favorites data returned'){
+        console.log(data.message)
+        setFavData(data.favData)
       }
+        else {
+        console.log(data.message)
+        return false;
+      }
+    
  
     }catch(err){
       console.log('Error with the fetch:', err);
@@ -147,6 +151,7 @@ const apiUrl = Constants.expoConfig.extra.API_URL;
         getUpdatedUsername,
         checkFavorites,
         getPayloadData,
+        favData,
       }}
     >
       {children} 

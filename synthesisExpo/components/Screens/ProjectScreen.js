@@ -26,13 +26,14 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native'
 
 import { useAuth } from '../../LogContext'; // Adjust path as needed
+import Icon from './subScreens/Icon'
 
 
 
 const ProjectScreen = () => {
 
-  const { designSystemData, getDesignSystem } = useAuth();
-
+  const { designSystemData, getDesignSystem, checkFavorites, favData } = useAuth();
+ 
   const navigation = useNavigation();
   
   const editDesignSystem = (element) => {
@@ -51,10 +52,84 @@ const ProjectScreen = () => {
     }, [])
   );
 
+
+  // --------< remember, on this screen these functions and the favorites returned JSX are grabbing form the * --favData-- * >---------
+
+  const handleViewElement = (element, type) => {
+    navigation.navigate('Element',{
+      element,
+      type,
+    }) 
+    console.log('project screen type:', type)
+ }
+
+ const handleIconElement = (iconType, type) => {
+  navigation.navigate('Element', {
+    iconType,
+    type
+  });
+}
+
+// this is where problems happened because the data returned was different from firebase 
+
+const handleTypoElement = (type, element) => {
+  console.log('project screen handle typo element:', element)
+  console.log('project screen handle typo type:', type)
+  navigation.navigate('Element', {
+    type,
+    data: [element], // <--- maybe send the sanitized data if it needs to be 
+    screenType: 'project',
+  });
+  
+}
+
+const handleCompElement = (type, item) => {
+  navigation.navigate('Element', { 
+    type,
+    data: item, // <--- maybe send the sanitized data if it needs to be 
+  });
+
+  console.log('project screen type:', type)
+};
+
   // useEffect(() => {
   //   console.log('Updated designSystemData:', designSystemData);
   // }, [designSystemData]);
 
+
+  // I have to send the correct favData per element to the element screen when one of the favs "view" btn is clicked navigate = elementScreen
+  // this is so its displayed properly with the correct params being passed so the element screen can display it and the removeFav function can work
+  // use the "type" property to display the corro fav element from the favData
+  // 
+ 
+
+  useFocusEffect(
+    React.useCallback(() => {
+      checkFavorites();
+      
+    }, [])
+  );
+  
+
+  useEffect(() => {
+    console.log("✅ Updated favData:", JSON.stringify(favData, null, 2));
+  }, [favData]);
+
+
+  if (!Array.isArray(favData)) return null;
+  
+  // filter can only be used on an array 
+  // these return an array also
+  const favoriteFonts = favData.filter(item => item.type === 'font');
+  const favoriteColors = favData.filter(item => item.type === 'color');
+  const favoriteIcons = favData.filter(item => item.type === 'icon');
+  const favoriteTypo = favData.filter(item => item.type === 'typography');
+  const favoriteComp = favData.filter(item => item.type === 'component'); // change this to 'components' to make it consistent ?
+
+
+  favoriteIcons.map((icon, index) => (
+    console.log(icon.iconType)
+  ))
 
 
   return (
@@ -128,8 +203,186 @@ const ProjectScreen = () => {
           
       </View>
 
-      <View style={globalStyles.screenStyles.column}>
+
+{/* -------------------------------------------------------------------------------------------------------------------------------  */}
+ {/* ----------------------------------------------------< FAVORITES >---------------------------------------------------  */}
+ {/* -------------------------------------------------------------------------------------------------------------------------------  */}
+     
+
+
+      <View style={[globalStyles.screenStyles.column,{marginTop: 20} ]}>
         {/* add favorite elements for corro user here */}
+
+     
+     {/* ----------------------------------------------------< FONTS >---------------------------------------------------  */}
+       
+       
+  {favoriteFonts && favoriteFonts.length > 0 && (
+      <>
+        <Text style={[globalStyles.screenStyles.h4, {color: 'white'}]}>Fonts</Text>
+          <ScrollView 
+                horizontal // Enables horizontal scrolling
+                showsHorizontalScrollIndicator={false} // Hides the scroll indicator
+                contentContainerStyle={globalStyles.screenStyles.scrollContainer} 
+            >
+               {favoriteFonts.map((element, index) => {
+                     
+                      const matchingFont = element.name;
+                     // Check if the font exists in the global styles
+                     if (!matchingFont) {
+                       return null; // Skip rendering if font isn't found
+                     }
+       
+                return (
+                  <View key={index} >
+                  <View style={globalStyles.screenStyles.box}>
+              
+                  
+                    <Text style={[{ fontFamily: matchingFont, color: 'black', fontSize: 40 }]}>T t</Text>
+                   
+                    <Text style={{ fontFamily: matchingFont }}>{element.name}</Text>
+
+                </View>
+                {/*Instead of passing a reference to the function (handleViewElement(element)), you’re calling it during the render phase, causing it to execute immediately and navigate without waiting for a user click.*/}
+                  <Pressable onPress={() => handleViewElement(element, "font")}  style={globalStyles.screenStyles.viewBtn}>
+                    <Text >View</Text>
+                  </Pressable>
+               </View>
+                    );
+                  })  
+                }  
+
+            </ScrollView>
+            </>
+          )}
+
+  {/* ---------------------------------------------------< COLORS >---------------------------------------------------  */}
+
+  {favoriteColors && favoriteColors.length > 0 && (
+      <>
+        <Text style={[globalStyles.screenStyles.h4, {color: 'white'}]}>Color Gradients</Text>
+          <ScrollView 
+               horizontal // Enables horizontal scrolling
+                showsHorizontalScrollIndicator={false} // Hides the scroll indicator
+                contentContainerStyle={globalStyles.screenStyles.scrollContainer} 
+            >
+              { favoriteColors.map((element, index) => {
+                  
+                return (
+                <View key={index}>
+                  
+                   <LinearGradient
+                    key={index} style={globalStyles.screenStyles.box}
+                    colors={element.colors} // Array of colors
+                     // Adjust style as needed
+                    start={{ x: 0, y: 0 }} // Gradient start (top-left)
+                    end={{ x: 1, y: 1 }} // Gradient end (bottom-right)
+                    >
+                  <Text style={{ color: '#fff'}}>{element.name}</Text>
+                 
+                  </LinearGradient>
+                
+                <Pressable onPress={() => handleViewElement(element, "color")}   style={globalStyles.screenStyles.viewBtn}>
+                    <Text >View</Text>
+                  </Pressable>
+               </View>
+                );
+                  })  
+                }  
+
+             </ScrollView>
+            </>
+          )}
+
+            {/* -----------------------------------------------< TYPOGRAPHY >-----------------------------------------------  */}
+
+   {favoriteTypo && favoriteTypo.length > 0 && (
+         
+         <>
+           <Text style={[globalStyles.screenStyles.h4, {color: 'white'}]}>Typography</Text>
+             <ScrollView 
+                  horizontal // Enables horizontal scrolling
+                   showsHorizontalScrollIndicator={false} // Hides the scroll indicator
+                   contentContainerStyle={globalStyles.screenStyles.scrollContainer} 
+               >
+            { favoriteTypo.map((element, index) =>{
+                  return(
+                           <View key={index}>
+                                  <View style={globalStyles.screenStyles.box}>
+                                    <Text>Typography Scale</Text>
+                                    <Text>{element.name}</Text>
+                                  </View>
+
+                                <Pressable onPress={() => handleTypoElement("typography", element)} style={globalStyles.screenStyles.viewBtn}>
+                                  <Text>View</Text>
+                                </Pressable>
+                           </View>  
+                          )})}
+                </ScrollView>
+               </>
+              )}
+
+{/* -----------------------------------------------< ICONS  >-----------------------------------------------  */}
+
+{favoriteIcons && favoriteIcons.length > 0 && (
+  <>
+    <Text style={[globalStyles.screenStyles.h4, { color: 'white' }]}>Icons</Text>
+    <ScrollView
+      horizontal
+      showsHorizontalScrollIndicator={false}
+      contentContainerStyle={globalStyles.screenStyles.scrollContainer}
+    >
+      {favoriteIcons.map((icon, index) => (
+        <View key={`${icon.id}-${index}`} style={{ marginRight: 10 }}>
+          <View style={globalStyles.screenStyles.box}>
+            <Icon type={icon.iconType} minimal />
+            <Text style={{ color: 'black' }}>{icon.iconType}</Text>
+          </View>
+          <Pressable
+            onPress={() => handleIconElement(icon.iconType)}
+            style={globalStyles.screenStyles.viewBtn}
+          >
+            <Text>View</Text>
+          </Pressable>
+        </View>
+      ))}
+    </ScrollView>
+  </>
+)}
+
+
+{/* -----------------------------------------------< COMPONENT  >-----------------------------------------------  */}
+
+{favoriteComp && favoriteComp.length > 0 && (
+  <>
+    <Text style={[globalStyles.screenStyles.h4, { color: 'white' }]}>Components</Text>
+    <ScrollView
+      horizontal
+      showsHorizontalScrollIndicator={false}
+      contentContainerStyle={globalStyles.screenStyles.scrollContainer}
+    >
+      {favoriteComp.map((item, index) => (
+        <View key={`${item.id}-${index}`} style={{ marginRight: 10 }}>
+          <View style={globalStyles.screenStyles.box}>
+        <Text style={{ fontWeight: 'bold' }}>
+           Component
+        </Text>
+            <Text style={{ color: 'black' }}>{item.package}</Text>
+          </View>
+          <Pressable
+            onPress={() => handleCompElement(item.type, item)}
+            style={globalStyles.screenStyles.viewBtn}
+          >
+            <Text>View</Text>
+          </Pressable>
+        </View>
+      ))}
+    </ScrollView>
+  </>
+)}
+
+
+
       </View>
       </ScrollView>   
     </View>
