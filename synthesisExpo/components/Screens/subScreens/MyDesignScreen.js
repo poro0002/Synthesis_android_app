@@ -36,7 +36,17 @@ const MyDesignScreen = ({route}) => {
   const { data } = route?.params || {}; // we now get data from the react context pattern
     // console.log("data:", data);
 
-  const { designSystemData, getDesignSystem, setDesignSystemData } = useAuth();
+  const { 
+    designSystemData, 
+    getDesignSystem, 
+    setDesignSystemData,
+    handleViewElement,
+    handleIconElement,
+    handleTypoElement,
+    handleCompElement,
+
+  } = useAuth();
+
   const [selectedIndex, setSelectedIndex] = useState(0); // Defaults to showing the first design system
   const [currentSystem, setCurrentSystem] = useState(data); // keep this
 
@@ -47,45 +57,6 @@ const MyDesignScreen = ({route}) => {
 
   const navigation = useNavigation();
 
-  const handleViewElement = (element, type) => {
-    navigation.navigate('Element', {
-      element: element, 
-      type: type
-    }) 
-    console.log('myDesignScreen type:', type)
-    console.log('myDesignScreen element:', element)
- }
-
- const handleIconElement = (iconType, type) => {
-    navigation.navigate('Element', { 
-      iconType,
-      type
-    
-    }) 
-    console.log("my design screen iconType", iconType)
-}
-
-
-const handleTypoElement = (type, currentSystem, element) => {
-  navigation.navigate('Element', { 
-    type,
-    data: currentSystem.typography ? [currentSystem.typography[0]] : [],  
-    screenType: "design"  
-  });
-    console.log('myDesignScreen element:', element)
-    console.log('myDesignScreen type:', type)
-};
-
-
-
-const handleCompElement = (type, element) => {
-  navigation.navigate('Element', { 
-    type,
-    data: element, 
-  });
-  console.log('myDesignScreen element:', element)
-  console.log('myDesignScreen type:', type)
-};
 
 useFocusEffect(
   useCallback(() => {
@@ -257,7 +228,7 @@ const addElement = (category, systemId) =>{
               <Text style={{ fontFamily: element.name }}>{element.name}</Text>
             </View>
             <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
-              <Pressable onPress={() => handleViewElement(element, "font", currentSystem.id)} style={globalStyles.screenStyles.viewBtn}>
+              <Pressable onPress={() => handleViewElement(navigation, element, "font")} style={globalStyles.screenStyles.viewBtn}>
                 <Text>View</Text>
               </Pressable>
               <Pressable onPress={() => deleteElement(element, "fonts", currentSystem.id, fontIndex)} style={[globalStyles.screenStyles.viewBtn, { backgroundColor: 'red' }]}>
@@ -298,7 +269,7 @@ const addElement = (category, systemId) =>{
                     <Text style={{ color: '#fff' }}>{element.name}</Text>
                   </LinearGradient>
                   <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
-                    <Pressable onPress={() => handleViewElement(element, "color", currentSystem.id)} style={globalStyles.screenStyles.viewBtn}>
+                    <Pressable onPress={() => handleViewElement(navigation, element, "color")} style={globalStyles.screenStyles.viewBtn}>
                       <Text>View</Text>
                     </Pressable>
                     <Pressable onPress={() => deleteElement(element, "gradients", currentSystem.id, gradientIndex)} style={[globalStyles.screenStyles.viewBtn, { backgroundColor: 'red' }]}>
@@ -335,7 +306,7 @@ const addElement = (category, systemId) =>{
           </View>
           <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
             <Pressable
-              onPress={() => handleTypoElement("typography", currentSystem, currentSystem.typography)}
+              onPress={() => handleTypoElement(navigation, "typography", currentSystem.typography[0])}
               style={globalStyles.screenStyles.viewBtn}
             >
               <Text>View</Text>
@@ -375,7 +346,7 @@ const addElement = (category, systemId) =>{
                   </View>
                   <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
                     <Pressable  
-                      onPress={() => handleIconElement(icon.name, "icons")} 
+                      onPress={() => handleIconElement(navigation, icon.name, "icons")} 
                       style={globalStyles.screenStyles.viewBtn}
                     >
                       <Text>View</Text>
@@ -418,7 +389,7 @@ const addElement = (category, systemId) =>{
               
                   <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
                     <Pressable
-                      onPress={() => handleCompElement("component", element)}
+                      onPress={() => handleCompElement(navigation, "component", element)}
                       style={globalStyles.screenStyles.viewBtn}
                     >
                       <Text>View</Text>

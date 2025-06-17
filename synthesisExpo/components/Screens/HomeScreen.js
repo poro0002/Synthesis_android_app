@@ -1,6 +1,6 @@
 
 import globalStyles from '../../styles';
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useLayoutEffect } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 
 import {
@@ -19,6 +19,8 @@ import {
   SafeAreaView
 } from 'react-native';
 
+import { useAuth } from '../../LogContext'
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native'
 import { MaterialIcons } from '@expo/vector-icons'; // Import Expo vector icons
@@ -28,6 +30,24 @@ const HomeScreen = ({username}) => {
      const [topic, setTopic] = useState("home");
      const navigation = useNavigation();
      const [storedUsername, setUsername] = useState("");
+     const { setSelectedElements } = useAuth();
+
+
+     // selected elements state var is used on multiple screens so if canceled(returns to home) they need to be cleared so it doesn't interfere
+     useFocusEffect(  // runs whenever a screen is navigated to
+          useCallback(() => {
+            setSelectedElements({
+              fonts: [],
+              gradients: [],
+              typography: [],
+              icons: [],
+              comp: [],
+              name: [],
+              about: [],
+            });
+          }, [setSelectedElements])
+        );
+      
 
      const getUsername = async ()=> {
           let username1 = await AsyncStorage.getItem('username');
@@ -47,6 +67,22 @@ const HomeScreen = ({username}) => {
             getUsername();
           }, [])
         );
+
+const handleCustomDesign = () => {
+     navigation.navigate('CustomDesignScreen');
+}
+
+useLayoutEffect(() => {
+     navigation.setOptions({
+       headerRight: () => (
+         <Pressable onPress={handleCustomDesign} style={{ marginRight: 16}}>
+         
+           <MaterialIcons name="add" size={35} color="orange" />
+          
+         </Pressable>
+       ),
+     });
+   }, [navigation]);
       
    
 
@@ -57,13 +93,12 @@ const HomeScreen = ({username}) => {
                  contentContainerStyle={{  flexDirection: 'column'}}
                  keyboardShouldPersistTaps="handled"
                  >
-        <Text style={globalStyles.screenStyles.h1}>Welcome {storedUsername}</Text>
-
-   
+        
+               <Text style={globalStyles.screenStyles.h1}>Welcome {storedUsername}</Text>
+             
+         
         <Text style={globalStyles.screenStyles.text}>What are you Looking For ?</Text>
-          <Pressable style={globalStyles.screenStyles.fab}>
-               <MaterialIcons name="add-circle-outline" size={60} color="orange" />
-          </Pressable>
+         
  
 
       <View style={globalStyles.screenStyles.row}>

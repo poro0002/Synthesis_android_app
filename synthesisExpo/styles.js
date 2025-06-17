@@ -224,16 +224,14 @@ const globalStyles = StyleSheet.create({
         },
         fab: {
           position: 'absolute', // Position it absolute to the container
-          top: 15, // Distance from the bottom
           right: 30, // Distance from the right
-          
           borderRadius: 50, // Makes it round
           shadowColor: '#fff', // Shadow color
           shadowOffset: { width: 0, height: 2 }, // Shadow offset
           shadowOpacity: 0.2, // Shadow opacity
           shadowRadius: 3, // Shadow radius
           elevation: 5, // Android shadow
-          padding: 10, // Padding around the icon
+          
         },
         input: {
           height: 40,

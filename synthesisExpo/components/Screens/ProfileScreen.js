@@ -21,10 +21,13 @@ import {
 
 import { MaterialIcons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { launchImageLibrary } from 'react-native-image-picker';
+import * as ImagePicker from 'expo-image-picker';
 import { useNavigation } from '@react-navigation/native'
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
- 
+
+import Constants from 'expo-constants';
+const apiUrl = Constants.expoConfig.extra.API_URL; 
 
 
 const ProfileScreen = () => {
@@ -46,7 +49,10 @@ const ProfileScreen = () => {
     };
 
     fetchUserData();
+    
   }, []);
+
+  console.log('profile screen username:', username)
 
 // write backend functionality 
 
@@ -66,57 +72,132 @@ const handleUsernameChange = (type) =>{
 }
 
 
+// ----------------------------------------------------< Upload Profile Picture >--------------------------------------------------------
 
 
-// assets property
+// This function  uploads the image binary and generates a public (or authenticated) download URL.
+// 	•	You save this URL (e.g., https://firebasestorage.googleapis.com/....) in Firestore as profilePicture.
 
-// {
-//   "assets": [
-//     {
-//       "uri": "file:///path/to/image.jpg", // The file URI
-//       "fileName": "image.jpg",           // The name of the file
-//       "type": "image/jpeg",              // The MIME type of the file
-//       "width": 1080,                     // The width of the image
-//       "height": 1920,                    // The height of the image
-//       "fileSize": 123456                 // The size of the file in bytes
-//     }
-//   ]
-// }
 
-  const pickImage = () => {
-    launchImageLibrary(
-      {
-        mediaType: 'photo',
-        quality: 0.8,
-        maxWidth: 400,
-        maxHeight: 400,
-        
-      },
-     
-      (response) => {
-        if (response.didCancel) {
-          console.log('User closed image picker');
-        } else if (response.errorMessage) {
-          console.error('Image selection Error: ', response.errorMessage);
-        } else if (response.assets && response.assets.length > 0) {
-          const selectedImage = response.assets[0];
-          setProfileImage(selectedImage.uri);
-        }
+const uploadImageAsync = async (uri, userId) => {
+
+  console.log('uploading image...');
+
+  // Convert local file URI to blob
+  const response = await fetch(uri);
+  const blob = await response.blob();
+
+  const storage = getStorage();
+  const storageRef = ref(storage, `profilePictures/${userId}.jpg`);
+
+  // Upload the blob
+  await uploadBytes(storageRef, blob);
+
+  // Get the public download URL
+  const downloadURL = await getDownloadURL(storageRef);
+
+  return downloadURL;
+};
+
+// ----------------------------------------------------< Fetch Stored Profile Picture >--------------------------------------------------------
+
+// When you fetch the profilePicture from Firestore, it will be this download URL which you can safely load on any device/app reload.
+
+const fetchUserProfilePicture = async () => {
+
+  console.log('Fetching profile picture...');
+
+  try {
+    const response = await fetch(`${apiUrl}/getPfp`, {
+      method: 'POST',
+      mode: 'cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username }),
+    });
+
+    const data = await response.json();
+    console.log('fetchUserProfilePicture:', data.message)
+
+    if (data.success && data.profilePicture) {
+      setProfileImage(data.profilePicture);
+    }
+  } catch (err) {
+    console.error('Error fetching profile picture:', err);
+  }
+};
+
+
+
+useEffect(()=>{
+  fetchUserProfilePicture()
+}, [])
+
+
+
+
+// Then you need to:
+// 	1.	Upload the image file to something like Firebase Storage,
+// 	2.	Store the download URL in a Firestore document under the user’s ID,
+// 	3.	Fetch it when rendering the profile screen.
+
+const pickImage = async () => {
+  const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+  if (status !== 'granted') {
+    alert('Permission to access photos is required!');
+    return;
+  }
+
+  const result = await ImagePicker.launchImageLibraryAsync({
+    allowsEditing: true,
+    aspect: [1, 1],
+    quality: 0.8,
+  });
+
+  if (!result.canceled) {
+    const localUri = result.assets[0].uri;
+
+    // Upload image to Firebase Storage and get download URL
+    const downloadUrl = await uploadImageAsync(localUri, username); // username or uid as filename
+
+    setProfileImage(downloadUrl); // show remote image url
+
+    // Save the download URL to Firestore via your backend
+    try {
+      const response = await fetch(`${apiUrl}/savePfp`, {
+        method: 'POST',
+        mode: 'cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, profilePicture: downloadUrl }),
+      });
+
+      const data = await response.json();
+      console.log(data.message)
+
+      if (!data.success) {
+        alert('Failed to save profile picture');
       }
-    );
-  };
+    } catch (err) {
+      console.error('Error saving profile picture:', err);
+    }
+  }
+};
+
+
+// ----------------------------------------------------< Returned JSX >--------------------------------------------------------
+
 
   return (
     <View style={[globalStyles.screenStyles.container, {alignItems: 'center'}]}>
       {/* Profile Image */}
       <View style={styles.imageContainer}>
         {profileImage ? (
-          <Image source={{ uri: profileImage }} style={styles.profileImage} />
+          <Image source={{ uri: profileImage }} style={{ width: 100, height: 100, borderRadius: 50 }} />
         ) : (
           <MaterialIcons name="person" size={100} color="white" />
         )}
       </View>
-     <Pressable onPress={pickImage} style={[{backgroundColor: "orange"}]}>
+     <Pressable onPress={pickImage} style={[{backgroundColor: "orange", padding: 10, borderRadius: 5,}]}>
         <Text>
             Upload Profile Picture
         </Text>

@@ -31,7 +31,7 @@ app.use(cors({
 
 app.use(express.json());
 
-// ----------------------------< Database Connection >---------------------------------------
+// -------------------------------------------------------< Database Connection >-----------------------------------------------------------
 
 const serviceAccount = await import(path.resolve(__dirname, '../synthesis-4c237-firebase-adminsdk-r8ea9-98574971f1.json'), {
   assert: { type: 'json' }
@@ -46,6 +46,7 @@ admin.initializeApp({
 // this must be global 
 const firestore = admin.firestore();
 
+// -----------------------------------------------------< Test Firebase Connection >------------------------------------------------------------
 
 app.get('/test-firebase', async (req, res) => {
   console.log('Received request for /test-firebase');
@@ -71,7 +72,7 @@ app.get('/test-firebase', async (req, res) => {
   }
 });
 
-// ----------------------------< Port Connection >---------------------------------------
+// ---------------------------------------------------------< Port Connection >------------------------------------------------------------
 
 app.listen(port, (err) => {
   if(err){
@@ -84,7 +85,8 @@ app.listen(port, (err) => {
 });
 
 
-// ----------------------------< Packages >---------------------------------------------------
+// -------------------------------------------------------------< Packages >---------------------------------------------------------------
+
 
    // remember, the user will specify which topic they want from the front end
    // here, is where that will be selected here and sent back accordingly
@@ -1753,6 +1755,9 @@ const styledComponents = [
   }
 ]
 
+
+// icons are already impoted on the front end and used with a icon component
+
 app.get('/pickElement', async (req, res) => {
     const {category} = req.query;
 
@@ -1760,7 +1765,7 @@ app.get('/pickElement', async (req, res) => {
       return res.json(fonts)
     }
 
-    else if(category === "gradients"){
+    else if(category === "gradients" || category === 'color'){
       return res.json(gradients)
     }
 
@@ -1768,13 +1773,13 @@ app.get('/pickElement', async (req, res) => {
       return res.json(typographyScales2)
     }
 
-    else if(category === 'comp'){
+    else if(category === 'comp' || category === 'component'){
       return res.json(styledComponents)
     }
 });
 
 
-// --------------------< icons >-------------
+// --------------------------------------------< Topic Screen Pre-Package Category Data >---------------------------------------------------
 
 app.get('/elements', (req, res) => {
   const { type } = req.query;
@@ -1870,7 +1875,7 @@ app.get('/elements', (req, res) => {
 
 
 
-// -------------------------------< Register Route >-------------------------------------------
+// --------------------------------------------------------< Register Route >-------------------------------------------------------------
 
 app.post('/register', async (req, res) => {
 
@@ -1913,7 +1918,8 @@ catch(error){
 
 })
 
-// ----------------------------< Change Account Route >---------------------------------------
+// -------------------------------------------------------< Change Account Route >---------------------------------------------------------
+
 
 app.post('/changePass', async (req, res) => {
    
@@ -1996,7 +2002,8 @@ app.post('/changeUsername', async (req, res) => {
 });
 
 
-// ----------------------------< Login Route >---------------------------------------
+// ------------------------------------------------------------< Login Route >--------------------------------------------------------------
+
 
 app.post('/login', async (req, res) => {
 
@@ -2046,7 +2053,7 @@ app.post('/login', async (req, res) => {
 
 
 
-// -------------------------------------------------< Save Design System Route >--------------------------------------------
+// ----------------------------------------------------< Save Design System Route >--------------------------------------------------------
 
 
 app.post('/saveDesignSystem', async (req, res) => {
@@ -2077,13 +2084,82 @@ app.post('/saveDesignSystem', async (req, res) => {
         createdAt: new Date().toISOString(), 
       });
 
-      return res.status(200).json({ message: 'Design System successfully stored.' });
+      return res.status(200).json({ message: 'Design System successfully stored.', success: true });
   } catch (error) {
     console.error('Error saving design system:', error);
     return res.status(500).json({ message: 'Error saving design system. Please try again later.' });
   }
 
 
+});
+
+
+// ----------------------------------------------------< Get Profile Picture >--------------------------------------------------------
+
+
+app.post('/getPfp', async (req, res) => {
+
+  const { username } = req.body;
+
+  console.log('getPfp called with username:', username);
+
+
+  try {
+    const userRef = await firestore.collection('users').where('username', '==', username).get();
+
+    if(userRef.empty){
+      return res.status(500).json({message: 'no user with that username found', success: false});
+    }
+
+    const userData = userRef.docs[0].data();
+    console.log('Found user data:', userData);
+
+    
+    if(userData.profilePicture){
+      return res.status(200).json({ 
+        success: true,
+        message: 'profile picture found and sent back',
+        profilePicture: userData.profilePicture 
+      });
+
+    }
+  
+
+  } catch(err) {
+    console.error('Error fetching profile picture:', err);
+    return res.status(500).json({ message: 'Error fetching profile picture. Please try again later.', success: false });
+  }
+
+});
+
+
+// ----------------------------------------------------< Save Profile Picture >--------------------------------------------------------
+
+
+app.post('/savePfp', async (req, res) => {
+  const { username, profilePicture } = req.body;
+
+  console.log('savePfp called with:', { username, profilePicture });  // Log incoming data
+
+
+  try {
+    const userRef = await firestore.collection('users').where('username', '==', username).get();
+
+    if (userRef.empty) {
+      return res.status(404).json({ message: 'User not found', success: false });
+    }
+
+    const userDoc = userRef.docs[0].ref;
+    console.log('Found user data:', userDoc);
+
+    await userDoc.update({ profilePicture });
+
+    return res.status(200).json({ message: 'Profile picture updated successfully', success: true });
+
+  } catch (err) {
+    console.error('Error saving profile picture:', err);
+    return res.status(500).json({ message: 'Error saving profile picture. Please try again later.', success: false });
+  }
 });
 
 
@@ -2183,7 +2259,7 @@ app.post('/saveFavorite', async(req, res) =>{
  })
 
 
-// ----------------------------< REMOVE FAVORITES >---------------------------------------
+// --------------------------------------------------------< DELETE FAVORITE >-----------------------------------------------------------
 
 app.delete('/deleteFavorite', async (req, res) => {
 
@@ -2254,7 +2330,7 @@ app.delete('/deleteFavorite', async (req, res) => {
 
 })
 
-// ----------------------------< CHECK FAVORITES >---------------------------------------
+// ------------------------------------------------------< CHECK FAVORITES >---------------------------------------------------------------
 
 app.post('/checkFavorites', async (req, res) =>{
 
@@ -2344,7 +2420,7 @@ let favoritesSnapshot = await userDoc.collection('favorites').where('type', '=='
 
 
 
-// ----------------------------< Update Existing Design Systems >---------------------------------------
+// ------------------------------------------------< Update Existing Design Systems >------------------------------------------------------
 
 
 app.patch('/updateSystem', async (req, res) => {
@@ -2402,7 +2478,7 @@ app.patch('/updateSystem', async (req, res) => {
 })
 
 
-// ----------------------------< Get Saved Design Systems >---------------------------------------
+// ---------------------------------------------------< Get Saved Design Systems >---------------------------------------------------------
 
 
 app.get('/saved', async (req, res) => {
@@ -2444,7 +2520,7 @@ app.get('/saved', async (req, res) => {
 
 })
 
-// ----------------------------< Delete Saved Design Element From DS >---------------------------------------
+// ----------------------------------------------------------< Delete Element From DS >----------------------------------------------------
 
 app.delete('/deleteElement', async (req, res) => {
 
@@ -2493,7 +2569,7 @@ app.delete('/deleteElement', async (req, res) => {
 
 })
 
-// ----------------------------< Delete Saved Design System >---------------------------------------
+// -----------------------------------------------< Delete Saved Design System >------------------------------------------------------------
 
 app.delete('/deleteSystem', async (req, res) =>{
    const {username, id} = req.body;

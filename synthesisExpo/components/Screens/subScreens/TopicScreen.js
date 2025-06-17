@@ -45,30 +45,53 @@ import { useNavigation } from '@react-navigation/native'
 const TopicScreen = ({route}) => {
 
   const {topic} = route.params;
-  const { username, getUpdatedUsername } = useAuth();
+  const { 
+    username, 
+    getUpdatedUsername, 
+    setSelectedElements, 
+    selectedElements, 
+    createSystem, 
+    errorMessage, 
+    setErrorMessage, 
+    toggleSelection,
+    handleViewElement,
+    handleIconElement,
+    handleTypoElement,
+    handleCompElement,
+  
+  } = useAuth();
 
   const [data, setData] = useState(null);
   const [serverFonts, setServerFonts] = useState([]);
-  const [errorMessage, setErrorMessage] = useState("")
   const [isChecked, setIsChecked] = useState(false);
-  const [selectedElements, setSelectedElements] = useState({
-    fonts: [],
-    gradients: [],
-    typography: [],
-    icons: [],
-    comp: [],
-    name: [],
-    about: [],
-  });
 
- 
+  
+  // You cannot update state during the rendering phase of a different component. has to be in a useEffect
+  useEffect(() => {
+
+    setErrorMessage('');
+    
+    setSelectedElements({
+      fonts: [],
+      gradients: [],
+      typography: [],
+      icons: [],
+      comp: [],
+      name: [],
+      about: [],
+    });
+
+  }, []);
+
+
+
   // console.log('typography:', data.typography);
 
   // console.log('topic screen username: ', username)
   // console.log('topic screen data', JSON.stringify(data, null, 2))
 
  useEffect(() => {
-  console.log("Selected Elements:\n", JSON.stringify(selectedElements, null, 2));
+  console.log("Selected Elements on topic screen(logContext):\n", JSON.stringify(selectedElements, null, 2));
  }, [selectedElements])
 
 
@@ -76,7 +99,20 @@ const TopicScreen = ({route}) => {
    useEffect(() => {
      getUpdatedUsername();
    }, [])
- 
+
+
+
+
+const handleCreate = async () => {
+  const success = await createSystem();
+  if (success) {
+    
+    setTimeout(() => {
+      navigation.navigate('Tabs', { screen: 'Project' });
+    }, 1000); 
+
+  }
+};
 
 
 
@@ -90,102 +126,6 @@ const TopicScreen = ({route}) => {
   //  console.log('topic screen comp data:', data?.styledComponents)
 
 
-
- // ------------------------------< Handle Elements >------------------------------------------
-
-   const handleViewElement = (element, type) => {
-      navigation.navigate('Element',{
-        element, 
-        type
-      }) 
-      console.log('topic screen type:', type)
-   }
-
-   const handleIconElement = (iconType, type) => {
-      navigation.navigate('Element', {
-        iconType,
-        type
-      });
-    }
-
-// this here converts the passed data to the element screen so that it ius the same structures as whats being displayed form the design screen
-  const handleTypoElement = (type) => {
-    navigation.navigate('Element', {
-      type,
-      data: [data.typography],
-      screenType: "topic" 
-    });
-  
-    console.log('topic screen type:', type);
-    // console.log('topic screen data:', JSON.stringify(data, null, 2));
-  };
-
-  const handleCompElement = (type) => {
-    navigation.navigate('Element', { 
-      type,
-      data: data.styledComponents, 
-    });
- 
-    console.log('topic screen type:', type)
-  };
-
-  // ------------------------------< Toggle Selection >------------------------------------------
-
-  const toggleSelection = (type, element) => {
-   // Checks if the new selection is identical to the current state (same length and same labels at each index).
-   // If it's identical, clear the selection (toggle off).
-   // If it's different, update the selection with the new items.
-
-    setSelectedElements((prevState) => {
-      // For name & about (always string)
-      if (type === 'name' || type === 'about') {
-        return { ...prevState, [type]: [element] };
-      }
-      
-      // basically below, it’s comparing the current selected state (element) with the stored previous state (prevState[type]).
-      // so every time it runs false it means there is a discrepancy between both arrays
-      
-      if (Array.isArray(element)) {
-          // Check if the current selected items (prevState[type]) match the new selection (element)
-          // checks if every item at each index has the same label.
-          // Then it checks if each item at the same position (index) in both arrays has the same label value.
-        const isSameAsCurrent = prevState[type].length === element.length && prevState[type].every((item, index) => item.label === element[index].label);
-        
-         // If the new selection matches the old one exactly, it interprets that as a “deselect”so it clears the selection by returning an empty array [].
-        // Otherwise, replace the current selection with the new one
-        return {
-          ...prevState,
-          [type]: isSameAsCurrent ? [] : [...element],
-        };
-      }
-  
-      // For single element toggle
-      // 	.some() — returns true if any element in the array matches the current one.
-      // 	If both item and element have a .label, compare those. Else, if they have .name, compare those.
-      const isSelected = prevState[type].some((item) => (item.label && element.label && item.label === element.label) || (item.name && element.name && item.name === element.name));
-  
-      // [type] dynamic key (used to overwrite this one part of the state)
-      // this  ...prevState ----> 
-      // {
-      //  gradients: [...],
-      //  icons: [...],
-      //  fonts: [...],
-      //   etc: ...
-      //   }
-
-      //this [type]: ... ----> gradients: ...
-      // ----->  isSelected checks if it was already selected before the click. <------
-
-      //example adding a element
-      // type = "gradients"
-      // isSelected = false
-      // if both these above pass like this it adds a gradient to the selectedItems gradient object state 
-     
-      return {
-        ...prevState, [type]: isSelected ? prevState[type].filter((item) => item.label !== element.label) : [...prevState[type], element],
-      };
-    });
-  };
    
 
   const fetchUrl = `${apiUrl}/elements?type=${topic}`;
@@ -223,71 +163,6 @@ const TopicScreen = ({route}) => {
 useEffect(() => {
     fetchCorroData();
 }, []);
-
-
-// -----------------------------------< Create/Cancel System >------------------------------------------  
-
-const createSystem = async () =>{
-
-  // console.log('typography:', selectedElements.typography);
-  
-  // console.log('name:', selectedElements.name.length);
-
-  console.log('helloooooo ???')
-  console.log('username:', username)
-
-  if(selectedElements.comp.length >= 1 && selectedElements.fonts.length >= 1 && selectedElements.gradients.length >= 1 && selectedElements.icons.length >= 1 && selectedElements.typography.length >= 1 && selectedElements.name.length >= 1){
-    
-  
-    const fetchUrl = `${apiUrl}/saveDesignSystem`; 
-
-      // Clean data structure correctly
-  const cleanElements = {
-    comp: selectedElements.comp,
-    fonts: selectedElements.fonts,
-    gradients: selectedElements.gradients,
-    icons: selectedElements.icons,
-    typography: selectedElements.typography.flat(),
-    name: selectedElements.name[0] || 'Untitled', // Always just the first name string
-    about: selectedElements.about?.[0] || '',     // Always just the first about string 
-  };
-    
-
-    const fetchOptions = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' }, 
-      mode: 'cors',
-      body: JSON.stringify({ data: cleanElements, username }),
-     
-    };
-
-    try {
-      
-      const response = await fetch(fetchUrl, fetchOptions);
-
-   
-      // if (!response.ok) {
-      //   setErrorMessage(`Server responded with status ${response.status}`)
-      // }
-
-       const data = await response.json();
-
-       setErrorMessage(data.message); 
-
-       setTimeout(() => {
-         navigation.navigate('Tabs', {
-          screen: 'Project',
-        });
-       }, 1000);
-      
-    } catch (err) {
-      console.error('Error saving design system:', err);
-      setErrorMessage('Failed to save design system. Please try again.');
-    }
-  } else {
-    setErrorMessage('Make sure you have selected at least 1 element in every section.');
-  }
-}
 
 
 const cancelSystem = () => {
@@ -346,7 +221,7 @@ const cancelSystem = () => {
                     </Pressable>
                 </View>
                 {/*Instead of passing a reference to the function (handleViewElement(element)), you’re calling it during the render phase, causing it to execute immediately and navigate without waiting for a user click.*/}
-                  <Pressable onPress={() => handleViewElement(element, "font")}  style={globalStyles.screenStyles.viewBtn}>
+                  <Pressable onPress={() => handleViewElement(navigation, element, "font")}  style={globalStyles.screenStyles.viewBtn}>
                     <Text >View</Text>
                   </Pressable>
                </View>
@@ -395,7 +270,7 @@ const cancelSystem = () => {
                  
                   </LinearGradient>
                  </Pressable>
-                <Pressable onPress={() => handleViewElement(element, "color")}   style={globalStyles.screenStyles.viewBtn}>
+                <Pressable onPress={() => handleViewElement(navigation, element, "color")}   style={globalStyles.screenStyles.viewBtn}>
                     <Text >View</Text>
                   </Pressable>
                </View>
@@ -435,7 +310,7 @@ const cancelSystem = () => {
                       </View>
                     </Pressable>
                         
-                    <Pressable onPress={() => handleTypoElement("typography")} style={globalStyles.screenStyles.viewBtn}>
+                    <Pressable onPress={() => handleTypoElement(navigation, "typography", data.typography)} style={globalStyles.screenStyles.viewBtn}>
                       <Text>View</Text>
                     </Pressable>
                </View>  
@@ -465,7 +340,7 @@ const cancelSystem = () => {
                          <Text >Feather Icons</Text>
                     </Pressable>
                 </View>
-                  <Pressable onPress={() => handleIconElement('feather', "icons")}   style={globalStyles.screenStyles.viewBtn}>
+                  <Pressable onPress={() => handleIconElement(navigation, 'feather', "icons")}   style={globalStyles.screenStyles.viewBtn}>
                     <Text >View</Text>
                   </Pressable>
                </View>
@@ -482,7 +357,7 @@ const cancelSystem = () => {
                          <Text >Evil Icons</Text>
                     </Pressable>
                 </View>
-                  <Pressable onPress={() => handleIconElement('evil', "icons")}  style={globalStyles.screenStyles.viewBtn}>
+                  <Pressable onPress={() => handleIconElement(navigation, 'evil', "icons")}  style={globalStyles.screenStyles.viewBtn}>
                     <Text >View</Text>
                   </Pressable>
                </View>
@@ -499,7 +374,7 @@ const cancelSystem = () => {
                          <Text >SimpleLine Icons</Text>
                     </Pressable>
                 </View>
-                  <Pressable onPress={() => handleIconElement('simple', "icons")}   style={globalStyles.screenStyles.viewBtn}>
+                  <Pressable onPress={() => handleIconElement(navigation, 'simple', "icons")}   style={globalStyles.screenStyles.viewBtn}>
                     <Text >View</Text>
                   </Pressable>
                </View>
@@ -516,7 +391,7 @@ const cancelSystem = () => {
                          <Text >Octicons Icons</Text>
                     </Pressable>
                 </View>
-                  <Pressable onPress={() => handleIconElement('octicons', "icons")}   style={globalStyles.screenStyles.viewBtn}>
+                  <Pressable onPress={() => handleIconElement(navigation, 'octicons', "icons")}   style={globalStyles.screenStyles.viewBtn}>
                     <Text >View</Text>
                   </Pressable>
                </View>
@@ -533,7 +408,7 @@ const cancelSystem = () => {
                          <Text >Ionicons</Text>
                     </Pressable>
                 </View>
-                  <Pressable onPress={() => handleIconElement('ionicons', "icons")}    style={globalStyles.screenStyles.viewBtn}>
+                  <Pressable onPress={() => handleIconElement(navigation, 'ionicons', "icons")}    style={globalStyles.screenStyles.viewBtn}>
                     <Text >View</Text>
                   </Pressable>
                </View>
@@ -550,7 +425,7 @@ const cancelSystem = () => {
                   <Text >Fontawesome Icons</Text>
                     </Pressable>
                 </View>
-                  <Pressable onPress={() => handleIconElement('Fontawesome', "icons")}   style={globalStyles.screenStyles.viewBtn}>
+                  <Pressable onPress={() => handleIconElement(navigation, 'Fontawesome', "icons")}   style={globalStyles.screenStyles.viewBtn}>
                     <Text >View</Text>
                   </Pressable>
                </View>
@@ -567,7 +442,7 @@ const cancelSystem = () => {
                          <Text >Material Icons</Text>
                     </Pressable>
                 </View>
-                  <Pressable onPress={() => handleIconElement('material', "icons")}  style={globalStyles.screenStyles.viewBtn}>
+                  <Pressable onPress={() => handleIconElement(navigation, 'material', "icons")}  style={globalStyles.screenStyles.viewBtn}>
                     <Text >View</Text>
                   </Pressable>
                </View>
@@ -606,7 +481,7 @@ const cancelSystem = () => {
                            ))}
                          </Pressable>
                        </View>
-                       <Pressable onPress={() => handleCompElement('component')} style={globalStyles.screenStyles.viewBtn}>
+                       <Pressable onPress={() => handleCompElement(navigation, 'component', data.styledComponents)} style={globalStyles.screenStyles.viewBtn}>
                          <Text>View</Text>
                        </Pressable >
                      </View>
@@ -643,9 +518,12 @@ const cancelSystem = () => {
             </TextInput>
 
           </View>
-          <Text style={{color: 'white'}}>
-               {errorMessage}
+          
+          {errorMessage ? (
+            <Text style={{ color: 'white', textAlign: 'center', marginVertical: 10 }}>
+                {errorMessage}
              </Text>
+            ) : null}
 
   {/* -----------------------------------------------< CREATE && CANCEL BTNS >-----------------------------------------------  */} 
 
@@ -655,7 +533,7 @@ const cancelSystem = () => {
                     <Text>Cancel</Text>
                   </Pressable>
 
-                  <Pressable onPress={createSystem} style={[globalStyles.screenStyles.btn1, {backgroundColor: 'orange', color: 'white'}]}>
+                  <Pressable onPress={handleCreate} style={[globalStyles.screenStyles.btn1, {backgroundColor: 'orange', color: 'white'}]}>
                     <Text>Create</Text>
                   </Pressable>
              

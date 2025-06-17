@@ -14,6 +14,8 @@ import ElementScreen from '../Screens/subScreens/ElementScreen';
 import MyDesignScreen from '../Screens/subScreens/MyDesignScreen';
 import AccountChangeScreen from '../Screens/subScreens/ChangeAccount';
 import PickElementScreen from '../Screens/subScreens/pickElementScreen';
+import CustomDesignScreen from '../Screens/subScreens/CustomDesignScreen';
+import DisplayCategory from '../Screens/subScreens/DisplayCategory';
 
 
 
@@ -125,6 +127,19 @@ const StackNavigator = ({ username }) => {
         component={PickElementScreen} 
          
         />
+
+      <Stack.Screen name="CustomDesignScreen" 
+        component={CustomDesignScreen} 
+         
+        /> 
+
+     <Stack.Screen name="DisplayCategory" 
+        component={DisplayCategory} 
+        options={({ route }) => ({
+          title: route.params?.category || 'Category', 
+        })}
+         
+        /> 
 
       </Stack.Navigator>
     </NavigationContainer>

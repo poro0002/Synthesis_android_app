@@ -32,7 +32,17 @@ import Icon from './subScreens/Icon'
 
 const ProjectScreen = () => {
 
-  const { designSystemData, getDesignSystem, checkFavorites, favData } = useAuth();
+  const { 
+    designSystemData, 
+    getDesignSystem, 
+    checkFavorites, 
+    favData,
+    handleViewElement,
+    handleIconElement,
+    handleTypoElement,
+    handleCompElement,
+
+  } = useAuth();
  
   const navigation = useNavigation();
   
@@ -53,44 +63,6 @@ const ProjectScreen = () => {
   );
 
 
-  // --------< remember, on this screen these functions and the favorites returned JSX are grabbing form the * --favData-- * >---------
-
-  const handleViewElement = (element, type) => {
-    navigation.navigate('Element',{
-      element,
-      type,
-    }) 
-    console.log('project screen type:', type)
- }
-
- const handleIconElement = (iconType, type) => {
-  navigation.navigate('Element', {
-    iconType,
-    type
-  });
-}
-
-// this is where problems happened because the data returned was different from firebase 
-
-const handleTypoElement = (type, element) => {
-  console.log('project screen handle typo element:', element)
-  console.log('project screen handle typo type:', type)
-  navigation.navigate('Element', {
-    type,
-    data: [element], // <--- maybe send the sanitized data if it needs to be 
-    screenType: 'project',
-  });
-  
-}
-
-const handleCompElement = (type, item) => {
-  navigation.navigate('Element', { 
-    type,
-    data: item, // <--- maybe send the sanitized data if it needs to be 
-  });
-
-  console.log('project screen type:', type)
-};
 
   // useEffect(() => {
   //   console.log('Updated designSystemData:', designSystemData);
@@ -244,7 +216,7 @@ const handleCompElement = (type, item) => {
 
                 </View>
                 {/*Instead of passing a reference to the function (handleViewElement(element)), you’re calling it during the render phase, causing it to execute immediately and navigate without waiting for a user click.*/}
-                  <Pressable onPress={() => handleViewElement(element, "font")}  style={globalStyles.screenStyles.viewBtn}>
+                  <Pressable onPress={() => handleViewElement(navigation, element, "font")}  style={globalStyles.screenStyles.viewBtn}>
                     <Text >View</Text>
                   </Pressable>
                </View>
@@ -282,7 +254,7 @@ const handleCompElement = (type, item) => {
                  
                   </LinearGradient>
                 
-                <Pressable onPress={() => handleViewElement(element, "color")}   style={globalStyles.screenStyles.viewBtn}>
+                <Pressable onPress={() => handleViewElement(navigation, element, "color")}   style={globalStyles.screenStyles.viewBtn}>
                     <Text >View</Text>
                   </Pressable>
                </View>
@@ -309,11 +281,11 @@ const handleCompElement = (type, item) => {
                   return(
                            <View key={index}>
                                   <View style={globalStyles.screenStyles.box}>
-                                    <Text>Typography Scale</Text>
+                                    <Text style={{ fontWeight: 'bold' }}>Typography Scale</Text>
                                     <Text>{element.name}</Text>
                                   </View>
 
-                                <Pressable onPress={() => handleTypoElement("typography", element)} style={globalStyles.screenStyles.viewBtn}>
+                                <Pressable onPress={() => handleTypoElement(navigation, "typography", element)} style={globalStyles.screenStyles.viewBtn}>
                                   <Text>View</Text>
                                 </Pressable>
                            </View>  
@@ -339,7 +311,7 @@ const handleCompElement = (type, item) => {
             <Text style={{ color: 'black' }}>{icon.iconType}</Text>
           </View>
           <Pressable
-            onPress={() => handleIconElement(icon.iconType)}
+            onPress={() => handleIconElement(navigation, icon.iconType)}
             style={globalStyles.screenStyles.viewBtn}
           >
             <Text>View</Text>
@@ -370,7 +342,7 @@ const handleCompElement = (type, item) => {
             <Text style={{ color: 'black' }}>{item.package}</Text>
           </View>
           <Pressable
-            onPress={() => handleCompElement(item.type, item)}
+            onPress={() => handleCompElement(navigation, item.type, item)}
             style={globalStyles.screenStyles.viewBtn}
           >
             <Text>View</Text>
