@@ -54,7 +54,7 @@ const CompComp = ({ compData }) =>{
     return(
       <View style={{marginBottom: 50}}>
         <Text style={[globalStyles.screenStyles.h2, {textAlign: 'center'}]}>
-          Tap To Add Typo Scale
+          Tap To Add Component Style
         </Text>
         {compData && compData.map((element, index) => (
              <View key={index}>
@@ -62,10 +62,12 @@ const CompComp = ({ compData }) =>{
                 onPress={() => toggleSelection('comp', element)}
                   style={{
                     marginTop: 50,
-                    backgroundColor: '#f8f8f8',
+                    backgroundColor: 'transparent',
                     borderRadius: 5,
                     padding: 20,
                     alignItems: 'center',
+                    borderColor: 'white',
+                    borderWidth: 1,
                   }}>
                     
                     <View style={globalStyles.screenStyles.checkCircle}>
@@ -74,19 +76,19 @@ const CompComp = ({ compData }) =>{
                             )}
                     </View>
 
-                    <Text style={{color: 'black', fontSize:  30, fontFamily: element.name }}>{element.package}</Text>
+                    <Text style={{color: 'white', fontSize:  20, fontFamily: element.name }}>{element.package}</Text>
                   
                   
                 </Pressable>
                 <Pressable style={{ 
                     marginTop: 10,
-                    backgroundColor: '#f8f8f8',
+                    backgroundColor: 'royalblue',
                     borderRadius: 5,
                     paddingVertical: 10,
                     paddingHorizontal: 20,
                     alignItems: 'center',}} 
                     onPress={()=> handleCompElement(navigation, 'component', element )  }>
-                  <Text>
+                  <Text style={{color: 'white'}}>
                     View
                   </Text>
                 </Pressable>

@@ -62,8 +62,10 @@ const TypoComp = ({ compData }) =>{
                 onPress={() => toggleSelection('typography', element)}
                   style={{
                     marginTop: 50,
-                    backgroundColor: '#f8f8f8',
+                    backgroundColor: 'transparent',
                     borderRadius: 5,
+                    borderColor: 'white',
+                    borderWidth: 1,
                     padding: 20,
                     alignItems: 'center',
                   }}>
@@ -74,19 +76,19 @@ const TypoComp = ({ compData }) =>{
                             )}
                     </View>
 
-                    <Text style={{color: 'black', fontSize:  30, fontFamily: element.name }}>{element.name}</Text>
+                    <Text style={{color: 'white', fontSize:  30, fontFamily: element.name }}>{element.name}</Text>
                   
                   
                 </Pressable>
                 <Pressable style={{ 
                     marginTop: 10,
-                    backgroundColor: '#f8f8f8',
+                    backgroundColor: 'royalblue',
                     borderRadius: 5,
                     paddingVertical: 10,
                     paddingHorizontal: 20,
                     alignItems: 'center',}} 
                     onPress={()=> handleTypoElement(navigation, 'typography', element )  }>
-                  <Text>
+                  <Text style={{color: 'white'}}>
                     View
                   </Text>
                 </Pressable>

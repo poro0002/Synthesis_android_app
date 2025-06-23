@@ -65,6 +65,8 @@ const ColorComp = ({ compData }) =>{
                         marginTop: 50,
                         borderRadius: 5,
                         overflow: 'hidden', // ensures child corners match
+                        borderColor: 'white',
+                        borderWidth: 1,
                       }}
                     >
                     <Pressable 
@@ -82,20 +84,23 @@ const ColorComp = ({ compData }) =>{
                            )}
                    </View>
 
-                   <Text style={{color: 'black', fontSize:  30,  }}>{element.name}</Text>
-                   <Text style={{color: 'black', fontSize:  10, }}>{element.createdAt}</Text>
+                   <Text style={{color: 'white', fontSize:  30,  }}>{element.name}</Text>
+                   <Text style={{color: 'white', fontSize:  10, }}>{element.colors[0]}</Text>
+                   <Text style={{color: 'white', fontSize:  10, }}>{element.colors[1]}</Text>
                  
                  </Pressable>
                </LinearGradient>
                <Pressable style={{ 
                    marginTop: 10,
-                   backgroundColor: '#f8f8f8',
+                   backgroundColor: 'transparent',
+                   borderColor: 'white',
+                   borderWidth: 1,
                    borderRadius: 5,
                    paddingVertical: 10,
                    paddingHorizontal: 20,
                    alignItems: 'center',}} 
                    onPress={()=> handleViewElement(navigation, element, 'color')  }>
-                 <Text>
+                 <Text style={{color: 'white'}}>
                    View
                  </Text>
                </Pressable>

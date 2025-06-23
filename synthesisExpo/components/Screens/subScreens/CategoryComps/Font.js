@@ -62,8 +62,10 @@ const FontComp = ({ compData }) =>{
                 onPress={() => toggleSelection('fonts', element)}
                   style={{
                     marginTop: 50,
-                    backgroundColor: '#f8f8f8',
+                    backgroundColor: 'transparent',
                     borderRadius: 5,
+                    borderColor: 'white',
+                    borderWidth: 1,
                     padding: 20,
                     alignItems: 'center',
                   }}>
@@ -74,20 +76,22 @@ const FontComp = ({ compData }) =>{
                             )}
                     </View>
 
-                    <Text style={{color: 'black', fontSize:  30, fontFamily: element.name }}>{element.name}</Text>
-                    <Text style={{color: 'black', fontSize:  10, fontFamily: element.name }}>{element.category}</Text>
-                    <Text style={{color: 'black', fontSize:  15, fontFamily: element.name }}>{element.designer}</Text>
+                    <Text style={{color: 'white', fontSize:  30, fontFamily: element.name }}>{element.name}</Text>
+                    <Text style={{color: 'white', fontSize:  10, fontFamily: element.name }}>{element.category}</Text>
+                    <Text style={{color: 'white', fontSize:  15, fontFamily: element.name }}>{element.designer}</Text>
                   
                 </Pressable>
                 <Pressable style={{ 
                     marginTop: 10,
-                    backgroundColor: '#f8f8f8',
+                    backgroundColor: 'royalblue',
+                    borderColor: 'white',
+                    borderWidth: 1,
                     borderRadius: 5,
                     paddingVertical: 10,
                     paddingHorizontal: 20,
                     alignItems: 'center',}} 
                     onPress={()=> handleViewElement(navigation, element, 'font')  }>
-                  <Text>
+                  <Text style={{color: 'white'}}>
                     View
                   </Text>
                 </Pressable>

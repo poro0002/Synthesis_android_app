@@ -15,15 +15,48 @@ import {
   Pressable // Import Pressable for user interactions
 } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
+import { DevSettings } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import VideoBackground from './Bkgd/VideoBackground'; 
+
 
 import { useAuth } from '../../LogContext';
+import { useHeaderHeight } from '@react-navigation/elements';
 
 const SettingScreen = ({ route }) => {
   const [selectedSetting, setSelectedSetting] = useState('default');
-//   here is logout function deconstructed from the params property that is in the route 
+  const [isAB, setIsAB] = useState(false); // state to control the switch (on/off)
+  const headerHeight = useHeaderHeight();
+  const { setIsLoggedIn, setUsername, setFavData, setErrorMessage, setDesignSystemData, setSelectedElements } = useAuth();
   console.log(selectedSetting);
 
-  const [isAB, setIsAB] = useState(false); // state to control the switch (on/off)
+
+
+
+  const logout = async () => {
+    console.log('logging out')
+  
+    await AsyncStorage.clear();
+  
+    await AsyncStorage.removeItem('username');
+    setUsername(null);
+    setIsLoggedIn(false);
+    setFavData([]);
+    setErrorMessage("");
+    setDesignSystemData([]);
+    setSelectedElements({
+      fonts: [],
+      gradients: [],
+      typography: [],
+      icons: [],
+      comp: [],
+      name: [],
+      about: [],
+    });
+  }
+   
+
+
 
   // Handle toggle switch change
   const toggleSwitch = () => setIsAB((previousState) => !previousState);
@@ -36,7 +69,6 @@ const SettingScreen = ({ route }) => {
     </View>
   );
 
-  const { logout } = useAuth();
 
 
   const [feedbackData, setFeedbackData] = useState({
@@ -53,15 +85,19 @@ const SettingScreen = ({ route }) => {
 
   return (
  
-    <View style={[globalStyles.screenStyles.container, {alignItems: 'center'}]}>
+   
+        <View style={{flex: 1, position: 'relative', alignItems: 'center', zIndex: 0}}>
+               <VideoBackground pointerEvents="none" source={require('../../assets/gradient5.mp4')} />
+          
+               <View style={{ flex: 1, zIndex: 1 }}>
         <ScrollView   
-                  contentContainerStyle={{  flexDirection: 'column'}}
+                  contentContainerStyle={{  flexDirection: 'column', paddingTop: headerHeight, paddingBottom: headerHeight, paddingHorizontal: 20}}
                   keyboardShouldPersistTaps="handled"
           >
       {selectedSetting === 'default' && (
         <View>
-         <View style={[{ alignItems: 'center' }]}>
-           <MaterialIcons name="settings" size={85} color="orange" />
+         <View style={[{ alignItems: 'center', marginTop: 25 }]}>
+           <MaterialIcons name="settings" size={65} color="royalblue" />
         </View>
           <View style={globalStyles.screenStyles.column}>
             <Pressable onPress={() => setSelectedSetting('account')} style={globalStyles.screenStyles.settingsComp}>
@@ -187,6 +223,7 @@ const SettingScreen = ({ route }) => {
       )}
 
        </ScrollView>
+    </View>
     </View>
  
   );

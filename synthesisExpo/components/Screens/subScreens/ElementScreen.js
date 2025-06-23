@@ -34,6 +34,8 @@ import Constants from 'expo-constants';
 const apiUrl = Constants.expoConfig.extra.API_URL; 
 
 import { useNavigation } from '@react-navigation/native'
+import VideoBackground from '../Bkgd/VideoBackground'; 
+import { useHeaderHeight } from '@react-navigation/elements';
 
 
 const ElementScreen = ({ route }) => {
@@ -41,27 +43,19 @@ const ElementScreen = ({ route }) => {
   let { element, type, iconType, data, screenType } = route.params;
 
    const navigation = useNavigation();
+   const headerHeight = useHeaderHeight();
+
 
   //  console.log('element screen data', JSON.stringify(data, null, 2))
-
   //  console.log('element screen element', JSON.stringify(element, null, 2))
+  // console.log('element screen element:', element) // font, 
+  // console.log(' element screen iconType:', iconType)
+  // console.log('element screen  type:', type)
+  // console.log('element screen data:', data)
 
   const { username, getUpdatedUsername, checkFavorites, getPayloadData } = useAuth();
   // theoretically, this needs to fetch check if the current element is already in the favorites or not because choosing what is true of false
   const [selectedFavBtn, setSelectedFavBtn] = useState(null);
-  
-  
-  // const currentData = data?.typography ? data : typoData?.data ? { ...typoData, typography: typoData.data } : typoData; // Convert from favorite structure to topic-style
-
-
-  // this handles the typography data coming from different screens. from project screen its typoData
-  // const typographyData = currentData?.typography || currentData?.data || [];
-  // const fontFamily = currentData?.fontFamily || 'System';
-  // const fontWeight = currentData?.fontWeight?.match(/\d{3}/)?.[0] || '400';
-  // const lineHeight = currentData?.lineHeight || undefined;
-
-  // console.log('Element Screen typographyData:', typographyData)
-
 
   
   // icon isn't initially changed through the params so if thats whats being displayed it needs to be manually set 
@@ -69,18 +63,13 @@ const ElementScreen = ({ route }) => {
     type = "icon";
   }
 
-  // console.log('element screen element:', element) // font, 
-  // console.log(' element screen iconType:', iconType)
-  // console.log('element screen  type:', type)
-  // console.log('element screen data:', data)
-
 
   useEffect(() => {
     getUpdatedUsername();
   }, [])
 
 
-  
+
 
 
   // check favorites needs to return true or false so the icon can fill or not
@@ -233,11 +222,17 @@ const removeFav = async (data, element) => {
   // ---------------------------------------------------------< RETURN JSX >---------------------------------------------------------
 
   return (
-    <View style={globalStyles.screenStyles.centerContainer}>
+     <View style={{flex: 1, position: 'relative', alignItems: 'center', padding: 20, zIndex: 0}}>
+       <VideoBackground source={require('../../../assets/gradient2.mp4')} />
+         <View style={{ flex: 1, zIndex: 1 }}>
+        
         <ScrollView   
-                  contentContainerStyle={{  flexDirection: 'column'}}
+                  contentContainerStyle={{  flexDirection: 'column', paddingTop: headerHeight, paddingBottom: headerHeight,}}
                   keyboardShouldPersistTaps="handled"
+                  showsVerticalScrollIndicator={false} 
+                  showsHorizontalScrollIndicator={false}
                   >
+      
       <View style={{ flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', marginTop: 10 }}>   
       <Pressable onPress={ async () => { 
            
@@ -250,10 +245,10 @@ const removeFav = async (data, element) => {
           }
            }}>
             {selectedFavBtn ? (
-               <MaterialIcons name='favorite' size={50} color='orange'></MaterialIcons>
+               <MaterialIcons name='favorite' size={50} color='royalblue'></MaterialIcons>
             ):
             (
-              <MaterialIcons name='favorite-border' size={50} color='orange'></MaterialIcons>
+              <MaterialIcons name='favorite-border' size={50} color='royalblue'></MaterialIcons>
             )
           }
             
@@ -261,28 +256,28 @@ const removeFav = async (data, element) => {
       </View>
       {type === "font" && (
          <View style={globalStyles.screenStyles.centerColumn}>
-          <View>
+          <View style={{marginBottom: 15 }}>
              <Text style={[{ color: 'white', fontSize:  30, fontFamily: element.name }]}>{element.name}</Text>
              <Text style={[{ color: 'white', fontSize:  20 }]}>Example</Text>
              
 
           </View>
 
-          <View style={[{backgroundColor: '#f8f8f8', borderRadius: 5, padding:  20, margin: 5 }]}>
-          <Text style={{fontSize:  18, fontWeight: 'bold'}}>All Characters: </Text>
-                <Text style={[{ color: 'black', fontSize:  20, fontFamily: element.name }]}> {alpha}</Text>
+          <View style={globalStyles.screenStyles.fontCard}>
+                <Text style={{fontSize:  18, fontWeight: 'bold', color: 'white', marginBottom: 15}}>All Characters: </Text>
+                <Text style={[{ color: 'white', fontSize:  20, fontFamily: element.name }]}> {alpha}</Text>
              </View>
 
-             <View style={[{backgroundColor: '#f8f8f8', borderRadius: 5, padding: 20, margin: 5 }]}>
-                <Text style={[{ color: 'black', fontSize:  15, fontFamily: element.name }]}><Text style={{fontSize:  18, fontWeight: 'bold'}}>Example Text: </Text> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+             <View style={globalStyles.screenStyles.fontCard}>
+                <Text style={[{ color: 'white', fontSize:  15, fontFamily: element.name }]}><Text style={{fontSize:  18, fontWeight: 'bold'}}>Example Text: </Text> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
                 </Text>
              </View>
 
 
-             <View style={[{backgroundColor: '#f8f8f8', borderRadius: 5, padding: 20, margin: 5 }]}>
-                <Text style={[{ color: 'black', marginBottom: 10, fontSize:  15  }]}><Text style={{fontSize:  18, fontWeight: 'bold'}}>Designer: </Text> {element.designer}</Text>
-                <Text style={[{ color: 'black', fontSize:  15, marginBottom: 10  }]}> <Text style={{fontSize:  18, fontWeight: 'bold'}}>Info: </Text>  {element.description}</Text>
-                <Text style={[{ color: 'black', fontSize:  15, marginBottom: 10 }]}><Text style={[{fontWeight: 'bold'}]}>CSS URI:</Text> {element.uri}</Text>
+             <View style={globalStyles.screenStyles.fontCard}>
+                <Text style={[{ color: 'white', marginBottom: 10, fontSize:  15  }]}><Text style={{fontSize:  18, fontWeight: 'bold'}}>Designer: </Text> {element.designer}</Text>
+                <Text style={[{ color: 'white', fontSize:  15, marginBottom: 10  }]}> <Text style={{fontSize:  18, fontWeight: 'bold'}}>Info: </Text>  {element.description}</Text>
+                <Text style={[{ color: 'white', fontSize:  15, marginBottom: 10 }]}><Text style={[{fontWeight: 'bold'}]}>CSS URI:</Text> {element.uri}</Text>
                
                
              </View>
@@ -587,6 +582,7 @@ const removeFav = async (data, element) => {
       )}
 
       </ScrollView>
+      </View>
     </View>
   );
 };

@@ -27,6 +27,7 @@ import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import Octicons from 'react-native-vector-icons/Octicons';
 import { MaterialIcons } from '@expo/vector-icons';
+import { useHeaderHeight } from '@react-navigation/elements';
 
 import Icon from './Icon';
 import { useAuth } from '../../../LogContext'; 
@@ -49,6 +50,7 @@ const DisplayCategory = ({ route }) => {
     const { fetchCategoryData, compData, setCompData, loading, handleIconElement, selectedElements, toggleSelection } = useAuth();
 
     const navigation = useNavigation();
+    const headerHeight = useHeaderHeight();
 
     const allIconTypes = [
         { key: 'feather', label: 'Feather Icons', Component: Feather, icon: 'folder' },
@@ -66,8 +68,14 @@ const DisplayCategory = ({ route }) => {
         
     },[category]);
 
-    console.log('display category comp data:', compData)
-    console.log(category)
+    useEffect(()=>{
+      console.log(category)
+      console.log('display category screen compData:', compData)
+      
+    })
+
+   
+   
 
     if ((loading || !compData) && category !== 'icon') {
         return (
@@ -83,7 +91,7 @@ const DisplayCategory = ({ route }) => {
     <View style={globalStyles.screenStyles.centerContainer}>
        
        <ScrollView   
-          contentContainerStyle={{  flexDirection: 'column'}}
+          contentContainerStyle={{  flexDirection: 'column', paddingTop: headerHeight, paddingBottom: headerHeight,}}
           keyboardShouldPersistTaps="handled"
         >
             {category === 'fonts' && compData[0].designer && compData.length > 0 && (
@@ -106,10 +114,12 @@ const DisplayCategory = ({ route }) => {
                                      <Pressable  
                                        style={{
                                             marginTop: 50,
-                                            backgroundColor: '#f8f8f8',
+                                            backgroundColor: 'transparent',
                                             borderRadius: 5,
                                             padding: 20,
                                             alignItems: 'center',
+                                            borderColor: 'white',
+                                            borderWidth: 1,
                                        }}
                                         onPress={() => toggleSelection('icons', { name: key })}
                                         >
@@ -118,21 +128,21 @@ const DisplayCategory = ({ route }) => {
                                            <View style={globalStyles.screenStyles.filledCircle}></View>
                                          )}
                                        </View>
-                                       <Component name={icon} size={50} color="orange" />
-                                       <Text>{label}</Text>
+                                       <Component style={{marginTop: 10}} name={icon} size={50} color="royalblue" />
+                                       <Text style={{color: 'white', marginTop: 10}}>{label}</Text>
                                      </Pressable>
                                    </View>
                                    <Pressable
                                      onPress={() => handleIconElement(navigation, key, "icons")}
                                      style={{ 
                                         marginTop: 10,
-                                        backgroundColor: '#f8f8f8',
+                                        backgroundColor: 'royalblue',
                                         borderRadius: 5,
                                         paddingVertical: 10,
                                         paddingHorizontal: 20,
                                         alignItems: 'center',}} 
                                    >
-                                     <Text>View</Text>
+                                     <Text style={{color: 'white'}}>View</Text>
                                    </Pressable>
                                  </View>
                          ))}

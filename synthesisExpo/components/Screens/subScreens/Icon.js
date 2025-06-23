@@ -127,7 +127,7 @@ const Icon = ({ type, minimal = false  }) => {
   <View style={{ alignItems: 'center' }}>
     { minimal || route.name === 'MyDesignScreen' ? (
       // Render this if coming from "MyDesignScreen"
-        <IconComponent size={30} name='folder' style={styles.icon} color="orange" />
+        <IconComponent size={30} name='folder' style={styles.icon} color="royalblue" />
     ) : (
       // Else render this
       <View>
@@ -139,7 +139,7 @@ const Icon = ({ type, minimal = false  }) => {
         ))}
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.iconContainer}>
           {['search', 'home', 'folder', 'settings', 'user'].map((icon, index) => ( 
-            <IconComponent key={index} name={icon} size={50} style={styles.icon} color="orange" />
+            <IconComponent key={index} name={icon} size={50} style={styles.icon} color="royalblue" />
           ))}
         </ScrollView>
       </View>

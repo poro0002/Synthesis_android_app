@@ -52,9 +52,20 @@ const globalStyles = StyleSheet.create({
             flex: 1,
             alignItems: 'flex-start',
             justifyContent: 'flex-start',
-            backgroundColor: 'black',
+            
           
           
+        },
+        mainView: {
+           flex: 1,
+            position: 'absolute', 
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            zIndex: 0,  
+                
+           
         },
         centerContainer: {
           flex: 1,
@@ -69,14 +80,23 @@ const globalStyles = StyleSheet.create({
           alignItems: 'center',
           justifyContent: 'flex-start',
           flexDirection: 'column',
-          backgroundColor: 'black',
+          
+        },
+        fontCard:{
+          backgroundColor: 'transparent', 
+          borderRadius: 10, 
+          padding: 20, 
+          margin: 15,
+          borderColor: 'white',
+          borderWidth: 1,
+
         },
         centerRow: {
           flex: 1,
           alignItems: 'center',
           justifyContent: 'center',
           flexDirection: 'row',
-          backgroundColor: 'black',
+         
         },
           h1: {
             fontSize: 32,
@@ -105,6 +125,7 @@ const globalStyles = StyleSheet.create({
             color: 'white',
             marginVertical: 4,
             marginBottom: 10,
+            
           },
 
         text: {
@@ -138,11 +159,11 @@ const globalStyles = StyleSheet.create({
         topicComp:{
             flex: 1,
             margin: 5,
-            fontSize: 15,
             marginHorizontal: 5,
-            backgroundColor: 'white',
+            backgroundColor: 'transparent',
+            borderColor: 'white',
+            borderWidth: 1, 
             borderRadius: 30,
-            color: 'black',
             alignItems: 'center',
             justifyContent: 'center',
             paddingTop: 9,
@@ -153,27 +174,27 @@ const globalStyles = StyleSheet.create({
 
         },
           topicText: {
-            fontSize: 14, // Text size for readability
-            color: "black", // Bold text
+            fontSize: 12, // Text size for readability
+            color: "white", // Bold text
             fontFamily: 'AbrilFatface-Regular',
           },
 
         popularComp:{
-            fontSize: 24,
-            backgroundColor: 'white',
+            backgroundColor: 'transparent',
             marginHorizontal: 5,
             borderRadius: 5,
-            color: 'black',
+            borderColor: 'white',
+            borderWidth: 1, 
             paddingTop: 10,
             paddingBottom: 10,
             paddingLeft: 10,
             paddingRight: 10,
-            width:125,
-            height:125,
+            width: 125,
+            height: 125,
         },
         input: {
           height: 40,
-          borderColor: 'gray',
+          borderColor: 'white',
           borderWidth: 1,
           color: 'white',
           width: 200,
@@ -182,13 +203,13 @@ const globalStyles = StyleSheet.create({
         },
 
         recentlyComp: {
-            fontSize: 24,
-            backgroundColor: 'white',
+            backgroundColor: 'transparent',
+            borderColor: 'white',
+            borderWidth: 1, 
             borderRadius: 85,
             flex: 1,
             justifyContent: 'center',
             alignItems: 'center',
-            color: 'black',
             paddingTop: 20,
             paddingBottom: 20,
             paddingLeft: 20,
@@ -204,9 +225,10 @@ const globalStyles = StyleSheet.create({
           margin: 5,
           fontSize: 15,
           marginHorizontal: 5,
-          backgroundColor: 'white',
+          backgroundColor: 'transparent',
           borderRadius: 30,
-          color: 'black',
+          borderColor: 'white',
+          borderWidth: 1,
           alignItems: 'center',
           justifyContent: 'center',
           paddingTop: 7,
@@ -216,11 +238,13 @@ const globalStyles = StyleSheet.create({
         },
         viewBtn:{
           height: 30,
-          backgroundColor: 'white',
+          backgroundColor: 'transparent',
           justifyContent: 'center',
           alignItems: 'center',
           margin:5,
           borderRadius: 3,
+          borderWidth: 1,
+          borderColor: 'white',
         },
         fab: {
           position: 'absolute', // Position it absolute to the container
@@ -267,11 +291,11 @@ const globalStyles = StyleSheet.create({
           height: 120,
           borderRadius: 10,
           margin:5,
-          borderWidth: 2,
-          borderColor: 'black',
+          borderWidth: 1,
+          borderColor: 'white',
           justifyContent: 'center',
           alignItems: 'center',
-          backgroundColor: 'white',
+          backgroundColor: 'transparent',
           position: 'relative', // For positioning the circle in the corner
         },
         checkCircle: {
@@ -292,7 +316,7 @@ const globalStyles = StyleSheet.create({
           width: 12,
           height: 12,
           borderRadius: 6,
-          backgroundColor: 'orange', // orange fill when checked
+          backgroundColor: 'royalblue', // orange fill when checked
           zIndex: 1
         },
 

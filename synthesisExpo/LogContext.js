@@ -14,12 +14,21 @@ export const LogProvider = ({ children }) => {
   // global use states as the log provider is wrapped around the app 
   const [designSystemData, setDesignSystemData] = useState([]);
   const [username, setUsername] = useState(null); // Add if needed
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // Optional
+  const [isLoggedIn, setIsLoggedIn] = useState(false); 
   const [favData, setFavData] = useState([]);
   const [compData, setCompData] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const [errorMessage, setErrorMessage] = useState("");
+
+  console.log('isLoggedIn on context pattern:', isLoggedIn)
+
+
+  useEffect(() => {
+    setErrorMessage("");
+  }, [isLoggedIn]);
+
+
+const [errorMessage, setErrorMessage] = useState("");
 
 const [selectedElements, setSelectedElements] = useState({
   fonts: [],
@@ -35,23 +44,22 @@ const [selectedElements, setSelectedElements] = useState({
 
 const apiUrl = Constants.expoConfig.extra.API_URL; 
 
-const logout = async () => {
-  await AsyncStorage.removeItem('username');
-  setUsername(null);
-  setIsLoggedIn(false);
-  setFavData([]);
-  setErrorMessage("");
-  setDesignSystemData([]);
-  setSelectedElements({
-    fonts: [],
-    gradients: [],
-    typography: [],
-    icons: [],
-    comp: [],
-    name: [],
-    about: [],
-  });
+const checkLogin = async () => {
+  const loggedInStatus = await AsyncStorage.getItem('isLoggedIn');
+  if (loggedInStatus === 'true') {
+    setIsLoggedIn(true);
+    const storedUsername = await AsyncStorage.getItem('username');
+    setUsername(storedUsername);
+  }
 };
+
+
+
+useEffect(() => {
+  checkLogin();
+}, []);
+
+
 
   // get the saved design systems from the backend
   // designSystemData gets set every time this function runs
@@ -376,7 +384,6 @@ const handleCompElement = (navigation, type, data) => {
   return (
     <LogContext.Provider
       value={{ // these values are the children 
-        logout,
         username,
         setUsername,
         isLoggedIn,
@@ -402,6 +409,7 @@ const handleCompElement = (navigation, type, data) => {
         compData,
         setCompData,
         loading,
+        
 
       }}
     >

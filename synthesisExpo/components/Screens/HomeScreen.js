@@ -2,6 +2,8 @@
 import globalStyles from '../../styles';
 import React, { useState, useEffect, useCallback, useLayoutEffect } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
+import { useHeaderHeight } from '@react-navigation/elements';
+
 
 import {
   View, // A container that supports layout with flexbox
@@ -24,51 +26,62 @@ import { useAuth } from '../../LogContext'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native'
 import { MaterialIcons } from '@expo/vector-icons'; // Import Expo vector icons
+import VideoBackground from './Bkgd/VideoBackground'; 
+import { Video } from 'expo-av';
+import { BlurView } from 'expo-blur';
 
-const HomeScreen = ({username}) => {
+
+
+
+const HomeScreen = () => {
 
      const [topic, setTopic] = useState("home");
      const navigation = useNavigation();
-     const [storedUsername, setUsername] = useState("");
-     const { setSelectedElements } = useAuth();
-
+    
+     const { setSelectedElements, username } = useAuth();
+    
+     const headerHeight = useHeaderHeight();
 
      // selected elements state var is used on multiple screens so if canceled(returns to home) they need to be cleared so it doesn't interfere
-     useFocusEffect(  // runs whenever a screen is navigated to
+
+     // In React, every call to setState  triggers a re-render, even if you’re “re-setting” the same data. 
+     // so this code below basically compares the previous data to the current state
+     // and if its runs true it returns the prev state, and if false it updates
+    
+     useFocusEffect(
           useCallback(() => {
-            setSelectedElements({
-              fonts: [],
-              gradients: [],
-              typography: [],
-              icons: [],
-              comp: [],
-              name: [],
-              about: [],
+            setSelectedElements(prev => {
+              const isAlreadyCleared = Object.values(prev).every(arr => Array.isArray(arr) && arr.length === 0); // compares
+              return isAlreadyCleared ? prev : {
+                fonts: [],
+                gradients: [],
+                typography: [],
+                icons: [],
+                comp: [],
+                name: [],
+                about: [],
+              };
             });
           }, [setSelectedElements])
         );
-      
 
-     const getUsername = async ()=> {
-          let username1 = await AsyncStorage.getItem('username');
-          setUsername(username1);
-     }
 
+        useEffect(() => {
+          console.log('🔁 HomeScreen rendered');
+        }, []);
+
+ 
      const handleTopic = async (selectedTopic) => {
          setTopic(selectedTopic);
          console.log(selectedTopic)
         
-         navigation.navigate('Topic', { topic: selectedTopic, username: storedUsername });
+         navigation.navigate('Topic', { topic: selectedTopic, username: username });
      }
 
   // this code makes it so when the navigation stack says that you are currently on this screen it rerenders the getUsername function 
-     useFocusEffect(
-          useCallback(() => {
-            getUsername();
-          }, [])
-        );
-
+  
 const handleCustomDesign = () => {
+     console.log('handleCustomDesign clicked !')
      navigation.navigate('CustomDesignScreen');
 }
 
@@ -77,7 +90,7 @@ useLayoutEffect(() => {
        headerRight: () => (
          <Pressable onPress={handleCustomDesign} style={{ marginRight: 16}}>
          
-           <MaterialIcons name="add" size={35} color="orange" />
+           <MaterialIcons name="add" size={35} color="blue" />
           
          </Pressable>
        ),
@@ -88,13 +101,16 @@ useLayoutEffect(() => {
 
   return (
   <SafeAreaView style={{ flex: 1, backgroundColor: 'black' }}>
-    <View style={globalStyles.screenStyles.container}>
+     <View style={{flex: 1, position: 'relative', alignItems: 'center', zIndex: 0}}>
+     <VideoBackground pointerEvents="none" source={require('../../assets/gradient5.mp4')} />
+
+     <View style={{ flex: 1, zIndex: 1 }}>
        <ScrollView   
-                 contentContainerStyle={{  flexDirection: 'column'}}
+                 contentContainerStyle={{  flexDirection: 'column', paddingTop: headerHeight, paddingBottom: headerHeight, paddingHorizontal: 20}}
                  keyboardShouldPersistTaps="handled"
                  >
         
-               <Text style={globalStyles.screenStyles.h1}>Welcome {storedUsername}</Text>
+               <Text style={[globalStyles.screenStyles.h1, {textAlign: 'center'}]}>Welcome {username}</Text>
              
          
         <Text style={globalStyles.screenStyles.text}>What are you Looking For ?</Text>
@@ -182,6 +198,7 @@ useLayoutEffect(() => {
 
         </ScrollView>
 
+      </View>
       </View>
  </SafeAreaView>     
   );

@@ -27,6 +27,8 @@ import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import Octicons from 'react-native-vector-icons/Octicons';
 import { MaterialIcons } from '@expo/vector-icons';
+import VideoBackground from '../Bkgd/VideoBackground'; 
+import { useHeaderHeight } from '@react-navigation/elements';
 
 import Icon from './Icon';
 import DisplayScreen from './DisplayCategory'
@@ -50,6 +52,7 @@ import { useNavigation } from '@react-navigation/native'
 const CustomDesignScreen = ({ route }) => {
 
     const navigation = useNavigation();
+    const headerHeight = useHeaderHeight();
 
     const { 
         selectedElements, 
@@ -67,6 +70,8 @@ const CustomDesignScreen = ({ route }) => {
     setErrorMessage('');
 
   },[])
+
+  
     const handleViewCategory = (category) =>{
         navigation.navigate('DisplayCategory', {category})
        
@@ -96,10 +101,15 @@ const CustomDesignScreen = ({ route }) => {
     
 
     return(
-    <View style={globalStyles.screenStyles.centerContainer}>
+     <View style={{flex: 1, position: 'relative', alignItems: 'center', zIndex: 0}}>
+          <VideoBackground pointerEvents="none" source={require('../../../assets/gradient4.mp4')} />
+              
+           <View style={{ flex: 1, zIndex: 1 }}>
         <ScrollView   
-            contentContainerStyle={{  flexDirection: 'column'}}
+            contentContainerStyle={{  flexDirection: 'column', paddingTop: headerHeight, paddingBottom: headerHeight,}}
             keyboardShouldPersistTaps="handled"
+            showsVerticalScrollIndicator={false} 
+            showsHorizontalScrollIndicator={false}
             >
               
                 <Text style={[globalStyles.screenStyles.h2, {marginBottom: 50, marginTop: 20}]}>
@@ -114,7 +124,7 @@ const CustomDesignScreen = ({ route }) => {
                          </Text>
                         
                          {selectedElements.fonts.length > 0 && (
-                             <Text style={[globalStyles.screenStyles.h5, {color: 'orange'}]}>
+                             <Text style={[globalStyles.screenStyles.h5, {color: 'lightskyblue'}]}>
                                 {selectedElements.fonts.length} Selected Items
                             </Text>
                           )}
@@ -136,7 +146,7 @@ const CustomDesignScreen = ({ route }) => {
                             </Text>
 
                             {selectedElements.gradients.length > 0 && (
-                             <Text style={[globalStyles.screenStyles.h5, {color: 'orange'}]}>
+                             <Text style={[globalStyles.screenStyles.h5, {color: 'lightskyblue'}]}>
                                 {selectedElements.gradients.length} Selected Items
                             </Text>
                           )}
@@ -154,7 +164,7 @@ const CustomDesignScreen = ({ route }) => {
                             </Text>
 
                           {selectedElements.typography.length > 0 && (
-                             <Text style={[globalStyles.screenStyles.h5, {color: 'orange'}]}>
+                             <Text style={[globalStyles.screenStyles.h5, {color: 'lightskyblue'}]}>
                                 {selectedElements.typography.length} Selected Items
                             </Text>
                           )}
@@ -171,7 +181,7 @@ const CustomDesignScreen = ({ route }) => {
                           Icons
                       </Text>   
                          {selectedElements.icons.length > 0 && (
-                             <Text style={[globalStyles.screenStyles.h5, {color: 'orange'}]}>
+                             <Text style={[globalStyles.screenStyles.h5, {color: 'lightskyblue'}]}>
                                 {selectedElements.icons.length} Selected Items
                             </Text>
                           )}
@@ -187,7 +197,7 @@ const CustomDesignScreen = ({ route }) => {
                                 Components
                              </Text>
                           {selectedElements.comp.length > 0 && (
-                             <Text style={[globalStyles.screenStyles.h5, {color: 'orange'}]}>
+                             <Text style={[globalStyles.screenStyles.h5, {color: 'lightskyblue'}]}>
                                 {selectedElements.comp.length} Selected Items
                             </Text>
                           )}
@@ -245,7 +255,7 @@ const CustomDesignScreen = ({ route }) => {
    <Text>Cancel</Text>
  </Pressable>
 
- <Pressable onPress={handleCreate} style={[globalStyles.screenStyles.btn1, {backgroundColor: 'orange', color: 'white'}]}>
+ <Pressable onPress={handleCreate} style={[globalStyles.screenStyles.btn1, {backgroundColor: 'royalblue', color: 'white'}]}>
    <Text>Create</Text>
  </Pressable>
 
@@ -255,6 +265,7 @@ const CustomDesignScreen = ({ route }) => {
 
         </ScrollView>
      </View>   
+     </View>  
     )
 
 }

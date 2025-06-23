@@ -1774,6 +1774,7 @@ app.get('/pickElement', async (req, res) => {
     }
 
     else if(category === 'comp' || category === 'component'){
+    
       return res.json(styledComponents)
     }
 });
@@ -2123,6 +2124,11 @@ app.post('/getPfp', async (req, res) => {
       });
 
     }
+
+    if(!userData.profilePicture){
+      console.log('no profile picrture was found for that user')
+      return res.status(500).json({message: 'no profile picrture was found for that user', success: false })
+    }
   
 
   } catch(err) {
@@ -2139,7 +2145,9 @@ app.post('/getPfp', async (req, res) => {
 app.post('/savePfp', async (req, res) => {
   const { username, profilePicture } = req.body;
 
-  console.log('savePfp called with:', { username, profilePicture });  // Log incoming data
+  console.log('Received username:', username);
+  console.log('Received profilePicture:', profilePicture);
+  
 
 
   try {

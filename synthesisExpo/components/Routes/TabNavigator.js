@@ -16,8 +16,8 @@ import AccountChangeScreen from '../Screens/subScreens/ChangeAccount';
 import PickElementScreen from '../Screens/subScreens/pickElementScreen';
 import CustomDesignScreen from '../Screens/subScreens/CustomDesignScreen';
 import DisplayCategory from '../Screens/subScreens/DisplayCategory';
-
-
+import { BlurView } from 'expo-blur';
+import { View, StyleSheet } from 'react-native';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -33,9 +33,33 @@ const HomeWrapper = (props) => {
   return <HomeScreen {...props} username={username} />;
 };
 
+function BlurTabBackground() {
+  return (
+    <BlurView tint="dark" intensity={130} style={StyleSheet.absoluteFill} />
+  );
+}
+
 
   return (
-  <Tab.Navigator>
+    <Tab.Navigator
+    screenOptions={{
+      headerTransparent: true,
+      headerBackground: () => (
+        <BlurView tint="dark" intensity={130} style={StyleSheet.absoluteFill} />
+      ),
+      headerTitleStyle: { color: 'white' },
+      headerTintColor: 'white',
+      tabBarStyle: {
+        position: 'absolute',
+        backgroundColor: 'transparent',
+        borderTopWidth: 0,
+        elevation: 0,
+      },
+      tabBarBackground: () => <BlurView tint="dark" intensity={130} style={StyleSheet.absoluteFill} />,
+      tabBarActiveTintColor: 'white',
+      tabBarInactiveTintColor: '#aaa',
+    }}
+  >
       <Tab.Screen
         name="Home"
         component={HomeWrapper} 
@@ -80,7 +104,16 @@ const HomeWrapper = (props) => {
 const StackNavigator = ({ username }) => {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator
+  screenOptions={{
+    headerTransparent: true,
+    headerBackground: () => (
+      <BlurView tint="dark" intensity={130} style={StyleSheet.absoluteFill} />
+    ),
+    headerTitleStyle: { color: 'white' },
+    headerTintColor: 'white',
+  }}
+>
         <Stack.Screen
           name="Tabs"
           children={() => <TabNavigator username={username}/>}
@@ -125,6 +158,9 @@ const StackNavigator = ({ username }) => {
 
         <Stack.Screen name="PickElementScreen" 
         component={PickElementScreen} 
+        options={({ route }) => ({
+          title: route.params?.category || 'Category', 
+        })}
          
         />
 

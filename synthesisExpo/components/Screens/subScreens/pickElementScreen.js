@@ -32,7 +32,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native'
 import { CommonActions } from '@react-navigation/native';
-
+import VideoBackground from '../Bkgd/VideoBackground'; 
 
 
 import Icon from './Icon'
@@ -157,10 +157,18 @@ const PickElementScreen = ({route}) => {
     return(
       
        <SafeAreaView style={{ flex: 1, backgroundColor: 'black' }}>
+
+          <View style={{flex: 1, position: 'relative', alignItems: 'center', padding: 20}}>
+        
+                   <VideoBackground source={require('../../../assets/gradient2.mp4')} />
+                   
+             <View style={{ flex: 1, zIndex: 1,}}>
      
          <ScrollView   
             contentContainerStyle={{  flexDirection: 'column', flexWrap: 'wrap', paddingBottom: 50}}
             keyboardShouldPersistTaps="handled"
+            showsVerticalScrollIndicator={false} 
+            showsHorizontalScrollIndicator={false}
             >
         <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' }}>
 
@@ -170,13 +178,16 @@ const PickElementScreen = ({route}) => {
                     return(
                         <View key={index} >
                         <View style={globalStyles.screenStyles.box}>
-                          <Text style={[{ fontFamily: element.name, color: 'black', fontSize: 40 }]}>T t</Text>
-                          <Text style={{ fontFamily: element.name }}>{element.name}</Text>
+                          <Text style={[{ fontFamily: element.name, color: 'white', fontSize: 40 }]}>T t</Text>
+                          <Text style={{ fontFamily: element.name, color: 'white', }}>{element.name}</Text>
       
                           </View>
                            <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
                            <Pressable onPress={() => addNewElement(element, "fonts")} style={globalStyles.screenStyles.viewBtn}>
-                             <Text>Add</Text>
+                              <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                                <MaterialIcons name="add" size={20} color="royalblue" />
+                                <Text style={{ color: 'white', marginLeft: 5 }}>Add</Text>
+                              </View>
                            </Pressable>
                         
                          </View>
@@ -184,10 +195,8 @@ const PickElementScreen = ({route}) => {
                       </View>
                        )
                     })
-                ):(
-                    <Text>
-                      something went wrong displaying fonts
-                    </Text>
+                ):category === "fonts" && (
+                  <Text style={{ color: 'white' }}>Loading fonts...</Text>
                 )}
 
             {category === "gradients" ? (
@@ -204,17 +213,18 @@ const PickElementScreen = ({route}) => {
                          </LinearGradient>
                          <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
                            <Pressable onPress={() => addNewElement(element, "gradients")} style={globalStyles.screenStyles.viewBtn}>
-                             <Text>Add</Text>
+                              <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                                <MaterialIcons name="add" size={20} color="royalblue" />
+                                <Text style={{ color: 'white', marginLeft: 5 }}>Add</Text>
+                              </View>
                            </Pressable>
                         
                          </View>
                        </View>
                        )
                     })
-                ):(
-                    <Text>
-                      something went wrong displaying gradients
-                    </Text>
+                ):category === "gradients" && (
+                  <Text style={{ color: 'white' }}>Loading gradients...</Text>
                 )}
 
             {category === "typography" ? (
@@ -224,52 +234,61 @@ const PickElementScreen = ({route}) => {
                      <View key={index} style={{ marginRight: 20, marginBottom: 20 }}>
                
                       <View style={globalStyles.screenStyles.box}>
-                        <Text >Typography Scale</Text>
-                        <Text style={[{fontWeight: 'bold'}]}>
-                          {element[0].name}
+                        <Text style={{color: 'white'}}>Typography Scale</Text>
+                        <Text style={[{fontWeight: 'bold', color: 'white'}]}>
+                          {element.name}
                         </Text>
                       </View>
 
                          <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
                            <Pressable onPress={() => addNewElement(element, "typography")} style={globalStyles.screenStyles.viewBtn}>
-                             <Text>Add</Text>
+                              <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                                <MaterialIcons name="add" size={20} color="royalblue" />
+                                <Text style={{ color: 'white', marginLeft: 5 }}>Add</Text>
+                              </View>
                            </Pressable>
                         
                          </View>
                        </View>
                        )
                     })
-                ):(
-                    <Text>
-                      something went wrong displaying typography
-                    </Text>
-                )} 
+                ): category === "typography" && (
+                  <Text style={{ color: 'white' }}>Loading typography...</Text>
+                )}
 
           {category === "icons" ? (
-               <>
+               <View style={{alignItems: 'center'}}>
                  <Text style={[globalStyles.screenStyles.h4, {color: 'white'}]}>Icons</Text>
                  
-                     
+                 <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' }}>
+                      
+                    
                       <View>
                          <View style={globalStyles.screenStyles.box}>
                         
-                              <Feather name="folder" size={50} color="orange" />
-                                <Text >Feather Icons</Text>
+                              <Feather name="folder" size={50} color="royalblue" />
+                                <Text style={{color: 'white'}}>Feather Icons</Text>
                     
                        </View>
                           <Pressable onPress={() => addNewElement("feather", "icons")} style={globalStyles.screenStyles.viewBtn}>
-                             <Text>Add</Text>
+                             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                                <MaterialIcons name="add" size={20} color="royalblue" />
+                                <Text style={{ color: 'white', marginLeft: 5 }}>Add</Text>
+                              </View>
                            </Pressable>
                       </View>
        
                       <View>
                          <View style={globalStyles.screenStyles.box}>
 
-                              <EvilIcons name="search" size={50} height={50} color="orange" />
-                                <Text >Evil Icons</Text>
+                              <EvilIcons name="search" size={50} height={50} color="royalblue" />
+                                <Text style={{color: 'white'}}>Evil Icons</Text>
                        </View>
                           <Pressable onPress={() => addNewElement("evil", "icons")} style={globalStyles.screenStyles.viewBtn}>
-                             <Text>Add</Text>
+                             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                                <MaterialIcons name="add" size={20} color="royalblue" />
+                                <Text style={{ color: 'white', marginLeft: 5 }}>Add</Text>
+                              </View>
                            </Pressable>
                       </View>
        
@@ -277,12 +296,15 @@ const PickElementScreen = ({route}) => {
                          <View style={globalStyles.screenStyles.box}>
                 
                     
-                              <SimpleLineIcons name="folder" size={50} height={50} color="orange" />
-                                <Text >SimpleLine Icons</Text>
+                              <SimpleLineIcons name="folder" size={50} height={50} color="royalblue" />
+                                <Text style={{color: 'white'}}>SimpleLine Icons</Text>
                     
                             </View>
                            <Pressable onPress={() => addNewElement('simple', "icons")} style={globalStyles.screenStyles.viewBtn}>
-                             <Text>Add</Text>
+                              <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                                <MaterialIcons name="add" size={20} color="royalblue" />
+                                <Text style={{ color: 'white', marginLeft: 5 }}>Add</Text>
+                              </View>
                            </Pressable>
                       </View>
        
@@ -290,71 +312,82 @@ const PickElementScreen = ({route}) => {
                          <View style={globalStyles.screenStyles.box}>
                         
                          
-                            </View>
-                              <Octicons name="repo" size={50} height={50} color="orange" />
-                                <Text >Octicons Icons</Text>
-                         
+                          
+                             <Octicons name="repo" size={50} color="royalblue" />
+                                <Text style={{color: 'white'}}>Octicons Icons</Text>
+                          </View>
                        
                        <Pressable onPress={() => addNewElement('octicons', "icons")} style={globalStyles.screenStyles.viewBtn}>
-                             <Text>Add</Text>
+                              <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                                <MaterialIcons name="add" size={20} color="royalblue" />
+                                <Text style={{ color: 'white', marginLeft: 5 }}>Add</Text>
+                              </View>
                            </Pressable>
                       </View>
        
                       <View>
                          <View style={globalStyles.screenStyles.box}>
-                            <Ionicons name='folder' width={50} height={50} fill="orange" />
-                                <Text >Ionicons</Text>
+                            <Ionicons name="folder" size={50} color="royalblue" /> 
+                                <Text style={{color: 'white'}}>Ionicons</Text>
                          
                        </View>
                         <Pressable onPress={() => addNewElement('ionicons', "icons")} style={globalStyles.screenStyles.viewBtn}>
-                             <Text>Add</Text>
+                            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                                <MaterialIcons name="add" size={20} color="royalblue" />
+                                <Text style={{ color: 'white', marginLeft: 5 }}>Add</Text>
+                              </View>
                            </Pressable>
                       </View>
        
                       <View>
                          <View style={globalStyles.screenStyles.box}>
  
-                         <FontAwesome5 name="folder" size={50} color="orange" />
-                         <Text >Fontawesome Icons</Text>
+                         <FontAwesome5 name="folder" size={50} color="royalblue" />
+                         <Text style={{color: 'white'}}>Fontawesome Icons</Text>
                           
                        </View>
                        <Pressable onPress={() => addNewElement('Fontawesome', "icons")} style={globalStyles.screenStyles.viewBtn}>
-                             <Text>Add</Text>
+                             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                                <MaterialIcons name="add" size={20} color="royalblue" />
+                                <Text style={{ color: 'white', marginLeft: 5 }}>Add</Text>
+                              </View>
                            </Pressable>
                       </View>
        
                       <View>
                          <View style={globalStyles.screenStyles.box}>
        
-                              <MaterialIcons name="folder" width={50} height={50} fill="orange"/>
-                                <Text >Material Icons</Text>
+                         <MaterialIcons name="folder" size={50} color="royalblue" />
+                                <Text style={{color: 'white'}}>Material Icons</Text>
                        </View>
                          <Pressable onPress={() => addNewElement('material', "icons")} style={globalStyles.screenStyles.viewBtn}>
-                             <Text>Add</Text>
+                             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                                <MaterialIcons name="add" size={20} color="royalblue" />
+                                <Text style={{ color: 'white', marginLeft: 5 }}>Add</Text>
+                              </View>
                            </Pressable>
                       </View>
-                      
+                     </View>  
                    
-                    </>
+                    </View>
        
-                ):(
-                    <Text>
-                      something went wrong displaying icons
-                    </Text>
-                )} 
+                ):category === "icons" && (
+                  <Text style={{ color: 'white' }}>something went wrong displaying icons</Text>
+                )}
 
 
 
          {category === "comp" ? (
+          
               corroData && corroData.map((element, index) => (
                 <View key={index}>
                   <View style={globalStyles.screenStyles.box}>
-                    <Text style={{ fontWeight: 'bold', color: 'black' }}>
+                    <Text style={{ fontWeight: 'bold', color: 'white' }}>
                       {element.package}
                     </Text>
-                    <Text style={{ color: 'black' }}>Includes components:</Text>
+                    <Text style={{ color: 'white' }}>Includes components:</Text>
                     {Object.keys(element.components).map((componentName) => (
-                      <Text key={componentName} style={{ color: 'orange' }}>
+                      <Text key={componentName} style={{ color: 'royalblue' }}>
                         {componentName}
                       </Text>
                     ))}
@@ -363,12 +396,15 @@ const PickElementScreen = ({route}) => {
                     onPress={() => addNewElement(element, "comp")}
                     style={globalStyles.screenStyles.viewBtn}
                   >
-                    <Text>Add</Text>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                                <MaterialIcons name="add" size={20} color="royalblue" />
+                                <Text style={{ color: 'white', marginLeft: 5 }}>Add</Text>
+                              </View>
                   </Pressable>
                 </View>
               ))
-            ) : (
-              <Text>Something went wrong displaying components</Text>
+            ) : category === "comp" && (
+              <Text style={{ color: 'white' }}>Loading components...</Text>
             )}
 
       
@@ -377,7 +413,8 @@ const PickElementScreen = ({route}) => {
 
             </View>
             </ScrollView>
-     
+            </View>
+        </View>
        </SafeAreaView>
      
     

@@ -20,6 +20,7 @@ import Constants from 'expo-constants';
 const apiUrl = Constants.expoConfig.extra.API_URL; 
 
 import * as Font from 'expo-font';
+import { Asset } from 'expo-asset';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -27,7 +28,8 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import StackNavigator from './components/Routes/TabNavigator';
 
 import ErrorBoundary from './ErrorBoundary';
-import { LogProvider } from './LogContext'; 
+import { LogProvider} from './LogContext'; 
+import LoginRegScreen from './components/Screens/LoginRegScreens/LoginRegScreen';
 
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -80,19 +82,27 @@ import 'react-native-gesture-handler';
   
 
 function App() {
-  // States to manage whether login or register is clicked
-  const [logClicked, setLogClicked] = useState(false);
-  const [regClicked, setRegClicked] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-
-  // Separate state objects for login and register form data
-  const [logData, setLogData] = useState({ username: '', pass: '' });
-  const [regData, setRegData] = useState({ username: '', pass: '', email: '' });
-  const [errorMessage, setErrorMessage] = useState('');
-  const [username, setUsername] = useState('');
 
   const [fontsLoaded, setFontsLoaded] = useState(false);
+
+  // ----------------------------------------------------< Load Fonts/Video >--------------------------------------------------------
+  
+  
+  const loadVideos = async () => {
+    try {
+      await Asset.loadAsync([
+        require('./assets/gradient1.mp4'),
+        require('./assets/gradient2.mp4'),
+        require('./assets/gradient3.mp4'),
+        require('./assets/gradient4.mp4'),
+        require('./assets/gradient5.mp4'),
+      ]);
+      console.log('Videos preloaded successfully');
+    } catch (error) {
+      console.error('Error preloading videos:', error);
+    }
+  };
+
 
 
   // Load all fonts with expo-font
@@ -146,284 +156,14 @@ function App() {
     }
   };
 
-  useEffect(() => {
-    loadFonts(); // Load fonts when the app starts
-  }, []);
-
-
-
-
-
-  // Handle input change directly for login or register forms
-  const handleLogInputChange = (name, value) => {
-    setLogData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
-
-  const handleRegInputChange = (name, value) => {
-    setRegData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
-
-  function handleLog() {
-    setLogClicked(true);
-    setRegClicked(false);
-  }
-
-  function handleReg() {
-    setRegClicked(true);
-    setLogClicked(false);
-  }
-
-
-//   ----------------------------< useEffect >--------------------------------------
-
-// this checks the Async storage for a isLoggedIn Boolean as well as a username
-//  this just checks the truthy and falsy of the variable so the app can cahnge accordingly
 useEffect(() => {
-        const checkUserLogged = async () =>{
-                const loggedInStatus = await AsyncStorage.getItem('isLoggedIn');
-                if (loggedInStatus === 'true') {
-                       setIsLoggedIn(true)
-                       const storedUsername = await AsyncStorage.getItem('username')
-                       setUsername(storedUsername || "")
-                    }
-            }
-        checkUserLogged()
-    }, []);
+  const loadAssets = async () => {
+    await loadFonts();
+    await loadVideos();
+  };
 
-// this constantly sets the username and isLogged in variable and sets it so its updated in the storage
-
-  useEffect(() => {
-    // Save login status to AsyncStorage whenever isLoggedIn state changes
-    const storeLoginStatus = async () => {
-      await AsyncStorage.setItem('isLoggedIn', isLoggedIn.toString());
-      if (isLoggedIn)  {
-            await AsyncStorage.setItem('username', username);
-
-          }
-    };
-    storeLoginStatus();
-  }, [isLoggedIn, username]);
-
-
-
-
-     useEffect(() => {
-          console.log('Login data:', logData);
-      }, [logData]);
-
-      useEffect(() => {
-          console.log('Register data:', regData);
-      }, [regData]);
-
-     useEffect(() => {
-            console.log('error changed', errorMessage);
-        }, [errorMessage]);
-
-
-  // register rules conditions
-  // username needs to be at least 8 char
-  // password needs to have uppercase, lowercase, number & symbol, at least 8 char long
-  // email must finish with gmail.com, outlook.com, hotmail.com, algonquinlive.com
-
- const registerRules = [
-     {username: [
-         { condition: value => value.length >= 8, message: `username needs to be at least 8 characters` },
-         { condition: value => /[a-z]/.test(value), message: `username needs to have at least 1 lowercase letter` },
-         { condition: value => /[A-Z]/.test(value), message: `username needs to have at least 1 uppercase letter` },
-        ]
-     },
-  {password:[
-          { condition: value => value.length >= 8, message: `password needs to be at least 8 characters` },
-          { condition: value => /[a-z]/.test(value), message: `password needs to have at least 1 lowercase letter` },
-          { condition: value => /[A-Z]/.test(value), message: `password needs to have at least 1 uppercase letter` },
-          { condition: value => /[0-9]/.test(value), message: `password needs to have at least one number` },
-          ]
-      },
-    {email:  [{ condition: value => /@(gmail\.com|outlook\.com|hotmail\.com)$/.test(value), message: `Please use a valid email.` }]
-    }
-
- ];
-
-// ------------< Register input value test functions >-------------------------
-
-function testUsername(data){
-
-    setErrorMessage("")
-
-        const allPassed = registerRules[0].username.every(rule => {
-          if (!rule.condition(data.username)) {
-
-            setErrorMessage(rule.message); // Log error message if a condition fails
-            console.log(rule.message);
-            return false; // Stop on the first failed condition
-          }
-          return true;
-        });
-    return allPassed;
-    }
-
-
-function testPassword(data){
-    setErrorMessage("")
-        const allPassed = registerRules[1].password.every(rule => {
-          if (!rule.condition(data.pass)) {
-
-            setErrorMessage(rule.message); // Log error message if a condition fails
-            console.log(rule.message);
-            return false; // Stop on the first failed condition
-          }
-          return true;
-        });
-    return allPassed;
-    }
-
-
-function testEmail(data) {
-    setErrorMessage("");
-    const emailRule = registerRules[2].email[0];
-
-    // Check the email condition
-    if (!emailRule.condition(data.email)) {
-        setErrorMessage(emailRule.message);
-        console.log(emailRule.message);
-        return false;
-    } else {
-        return true;
-    }
-}
-
-
-// ----------------------------< Handle Register >--------------------------------------
-
- const regSubmit = async () => {
-
-    console.log('regSubmit fired', regData)
-// the regData data needs to checkout against the rules before the api fetch is made
-
-
-  if(testUsername(regData) && testPassword(regData) && testEmail(regData)){
-
-      const registerURL = `${apiUrl}/register`; 
-      const regHeaders = new Headers({'Content-Type': 'application/json'});
-
-      const regOptions = {
-           method: 'POST',
-           headers: regHeaders,
-           mode: 'cors',
-           body: JSON.stringify(regData)
-         }
-
-        try {
-            const response = await fetch(registerURL, regOptions);
-
-             // Check if the response was successful
-             //  if (!response.ok) {
-             //  throw new Error('There was a problem with the register fetch');
-             //   }
-
-          // Parse the response body
-            const data = await response.json();
-
-          // Handle the data returned from the server
-            if(data.message === 'Account successfully created'){
-                  setLogClicked(true)
-                  setRegClicked(false)
-                  setErrorMessage(data.message)
-                  console.log(data.message)
-                } else if(data.message === 'there is another user with that username or email'){
-                       setErrorMessage(data.message)
-                       console.log(data.message)
-                    }
-
-        } catch (error) {
-            console.error('Error during registration:', error);
-        }
-    } else {
-        console.log('Validation failed');
-    }
-
-
-
-// the fetch to the api to create the user in the mongo database needs to be done here
-// error handling from the front end and displaying any errors from the response object
-
-}
-
-// ----------------------------< Handle Login >--------------------------------------
-
-const logSubmit = async () => {
-
-
-    console.log('logSubmit fired', logData)
-
- // do a fetch to the server side log route that includes a body with the log input values
-
-      const logURL = `${apiUrl}/login`
-      const logHeaders = new Headers({'Content-Type': 'application/json'});
-
-      const logOptions = {
-            method: 'POST',
-            headers: logHeaders,
-            mode: 'cors',
-            body: JSON.stringify(logData)
-          }
-
-      try{
-          const response = await fetch(logURL, logOptions)
-//
-//              if (!response.ok) {
-//                         throw new Error('There was a problem with the register fetch');
-//                          }
-
-          const data = await response.json();
-
-         if(data.message === 'User successfully logged in'){
-              setErrorMessage(data.message);
-              setIsLoggedIn(true);
-              setLogClicked(false)
-             // store req.body.username <------
-              setUsername(data.username)
-              AsyncStorage.setItem('email', data.email)
-              // save the received data from the database or body to a storage so it can be used on the client side
-              // load the user profile component ? redirect ?
-             }
-          else if(data.message === 'Invalid username'){
-                setErrorMessage(data.message)
-
-              }else if(data.message === 'Invalid password'){
-                  setErrorMessage(data.message)
-                  } else{
-                      setErrorMessage('Error logging in user')
-                      }
-
-          }
-      catch(error){
-        console.error('Error during login:', error);
-         }
-
- // the log server route will test those values in the mongo database
- // make sure to lof the potential errors or response messages accordingly
- // redirect the user to their user profile after the successful login
- // make plans for whats next ?
-
-    }
-
-
-const logout = async () => {
-    try {
-        await AsyncStorage.clear();
-        setIsLoggedIn(false);
-        DevSettings.reload();
-    } catch (e) {
-        console.error('Error clearing AsyncStorage:', e);
-    }
-};
+  loadAssets();
+}, []);
 
 
   // If fonts aren't loaded, show a loading indicator
@@ -431,97 +171,20 @@ const logout = async () => {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <ActivityIndicator size="large" color="orange" />
-        <Text>Loading Fonts...</Text>
+        <Text>Loading Assets...</Text>
       </View>
     );
   }
 
 
-// ----------------------------< Returned JSX >--------------------------------------
+// ----------------------------------------------------< Returned JSX >------------------------------------------------------------------
+
 return (
  <>
 
 <LogProvider>
  <ErrorBoundary>
-    {isLoggedIn ? (
-      <StackNavigator/>
-    ) : (
-      <View style={styles.container}>
-        {!logClicked && !regClicked ? (
-          <View style={styles.container}>
-            <Pressable onPress={handleLog} style={({ pressed }) => [styles.logBtn, pressed && styles.pressed]}>
-              <Text style={styles.buttonText}>Login</Text>
-            </Pressable>
-            <Pressable onPress={handleReg} style={({ pressed }) => [styles.regBtn, pressed && styles.pressed]}>
-              <Text style={styles.buttonText}>Register</Text>
-            </Pressable>
-          </View>
-        ) : null}
-
-        {logClicked && (
-          <>
-            <Text style={styles.header}>Login Form</Text>
-            <Text style={styles.inputTag}>{errorMessage}</Text>
-            <Text style={styles.inputTag}>Username</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Username"
-              value={logData.username}
-              onChangeText={(value) => handleLogInputChange('username', value)}
-            />
-            <Text style={styles.inputTag}>Password</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Password"
-              secureTextEntry
-              value={logData.pass}
-              onChangeText={(value) => handleLogInputChange('pass', value)}
-            />
-            <Pressable onPress={logSubmit} style={({ pressed }) => [styles.submitBtn, pressed && styles.pressed]}>
-              <Text style={styles.buttonText}>Submit Login</Text>
-            </Pressable>
-            <Pressable onPress={handleReg} style={({ pressed }) => [styles.buttonText, pressed && styles.pressed]}>
-              <Text style={styles.buttonText}>Don't have an Account? Register</Text>
-            </Pressable>
-          </>
-        )}
-
-        {regClicked && (
-          <>
-            <Text style={styles.header}>Register Form</Text>
-            <Text style={styles.inputTag}>{errorMessage}</Text>
-            <Text style={styles.inputTag}>Username</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Username"
-              value={regData.username}
-              onChangeText={(value) => handleRegInputChange('username', value)}
-            />
-            <Text style={styles.inputTag}>Password</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Password"
-              secureTextEntry
-              value={regData.pass}
-              onChangeText={(value) => handleRegInputChange('pass', value)}
-            />
-          <Text style={styles.inputTag}>Email</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Email"
-              value={regData.email}
-              onChangeText={(value) => handleRegInputChange('email', value)}
-            />
-            <Pressable onPress={regSubmit} style={({ pressed }) => [styles.submitBtn, pressed && styles.pressed]}>
-              <Text style={styles.buttonText}>Submit Registration</Text>
-            </Pressable>
-            <Pressable onPress={handleLog} style={({ pressed }) => [styles.buttonText, pressed && styles.pressed]}>
-              <Text style={styles.buttonText}>Already have an Account? Login</Text>
-            </Pressable>
-          </>
-        )}
-      </View>
-    )}
+      <LoginRegScreen />
     </ErrorBoundary>
   </LogProvider>
   </>
@@ -531,65 +194,6 @@ return (
 // Export the component
 export default App;
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'black',
-  },
-  logBtn: {
-    paddingTop: 20,
-    paddingBottom: 20,
-    paddingLeft: 40,
-    paddingRight: 40,
-    backgroundColor: 'orange',
-    borderRadius: 7,
-  },
-  regBtn: {
-     paddingTop: 20,
-     paddingBottom: 20,
-     paddingLeft: 40,
-     paddingRight: 40,
-    borderWidth: 3,
-    backgroundColor: 'transparent',
-    borderColor: 'white',
-    marginTop: 30,
-    color: 'white',
-    borderRadius: 7,
-  },
-  submitBtn: {
-    marginTop: 20,
-    backgroundColor: 'transparent',
-     borderColor: 'orange',
-      borderWidth: 3,
-    padding: 10,
-    borderRadius: 7,
-  },
-  buttonText: {
-    color: 'white',
-  },
-  header: {
-    marginTop: 20,
-    color: 'white',
-    fontSize: 18,
-  },
-  inputTag: {
-        marginTop: 15,
-         color: 'white',
-         fontSize: 13,
-      },
-
-  input: {
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    color: 'white',
-    width: 200,
-    marginTop: 10,
-    paddingLeft: 10,
-  },
-});
 
 
 

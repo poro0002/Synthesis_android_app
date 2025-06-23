@@ -12,6 +12,8 @@ import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import Octicons from 'react-native-vector-icons/Octicons';
 
+import VideoBackground from '../Bkgd/VideoBackground'; 
+import { useHeaderHeight } from '@react-navigation/elements';
 
 // Constants makes it so i can access the app.config file in my project from anywhere 
 import Constants from 'expo-constants';
@@ -60,6 +62,8 @@ const TopicScreen = ({route}) => {
     handleCompElement,
   
   } = useAuth();
+
+   const headerHeight = useHeaderHeight();
 
   const [data, setData] = useState(null);
   const [serverFonts, setServerFonts] = useState([]);
@@ -174,10 +178,12 @@ const cancelSystem = () => {
  {/* -----------------------------------------------< RETURN JSX >-----------------------------------------------  */} 
     return(
     <SafeAreaView style={{ flex: 1, backgroundColor: 'black' }}>
-      <View style={globalStyles.screenStyles.container}>
+      <View style={{flex: 1, position: 'relative', alignItems: 'center', zIndex: 0}}>
+        <VideoBackground source={require('../../../assets/gradient2.mp4')} />
+       <View style={{ flex: 1, zIndex: 1 }}>
         <ScrollView 
          
-         contentContainerStyle={{  flexDirection: 'column', paddingBottom: 50}}
+         contentContainerStyle={{  flexDirection: 'column', paddingTop: headerHeight, paddingBottom: headerHeight,}}
          keyboardShouldPersistTaps="handled"
          
         >
@@ -214,15 +220,15 @@ const cancelSystem = () => {
                         <View style={globalStyles.screenStyles.filledCircle} />
                         )}
                     </View>
-                    <Text style={[{ fontFamily: matchingFont, color: 'black', fontSize: 40 }]}>T t</Text>
+                    <Text style={[{ fontFamily: matchingFont, color: 'white', fontSize: 40 }]}>T t</Text>
                    
-                    <Text style={{ fontFamily: matchingFont }}>{element.name}</Text>
+                    <Text style={{ fontFamily: matchingFont, color: 'white', }}>{element.name}</Text>
 
                     </Pressable>
                 </View>
                 {/*Instead of passing a reference to the function (handleViewElement(element)), you’re calling it during the render phase, causing it to execute immediately and navigate without waiting for a user click.*/}
                   <Pressable onPress={() => handleViewElement(navigation, element, "font")}  style={globalStyles.screenStyles.viewBtn}>
-                    <Text >View</Text>
+                    <Text style={{  color: 'white'}}>View</Text>
                   </Pressable>
                </View>
                     );
@@ -271,7 +277,7 @@ const cancelSystem = () => {
                   </LinearGradient>
                  </Pressable>
                 <Pressable onPress={() => handleViewElement(navigation, element, "color")}   style={globalStyles.screenStyles.viewBtn}>
-                    <Text >View</Text>
+                     <Text style={{  color: 'white'}}>View</Text>
                   </Pressable>
                </View>
                 );
@@ -303,15 +309,15 @@ const cancelSystem = () => {
                             <View style={globalStyles.screenStyles.filledCircle}></View>
                           )}
                         </View>
-                        <Text>Typography Scale</Text>
-                        <Text style={[{fontWeight: 'bold'}]}>
+                        <Text style={{  color: 'white'}}>Typography Scale</Text>
+                        <Text style={[{fontWeight: 'bold', color: 'white'}]}>
                             {data.typography.name}
                         </Text>
                       </View>
                     </Pressable>
                         
                     <Pressable onPress={() => handleTypoElement(navigation, "typography", data.typography)} style={globalStyles.screenStyles.viewBtn}>
-                      <Text>View</Text>
+                       <Text style={{  color: 'white'}}>View</Text>
                     </Pressable>
                </View>  
                
@@ -336,12 +342,12 @@ const cancelSystem = () => {
                          <View style={globalStyles.screenStyles.filledCircle}></View>
                        )}
                      </View>
-                       <Feather name="folder" size={50} color="orange" />
-                         <Text >Feather Icons</Text>
+                       <Feather name="folder" size={50} color="royalblue" />
+                         <Text style={{  color: 'white'}}>Feather Icons</Text>
                     </Pressable>
                 </View>
                   <Pressable onPress={() => handleIconElement(navigation, 'feather', "icons")}   style={globalStyles.screenStyles.viewBtn}>
-                    <Text >View</Text>
+                        <Text style={{  color: 'white'}}>View</Text>
                   </Pressable>
                </View>
 
@@ -353,12 +359,12 @@ const cancelSystem = () => {
                          <View style={globalStyles.screenStyles.filledCircle}></View>
                        )}
                      </View>
-                       <EvilIcons name="search" size={50} height={50} color="orange" />
-                         <Text >Evil Icons</Text>
+                       <EvilIcons name="search" size={50} height={50} color="royalblue" />
+                         <Text style={{  color: 'white'}}>Evil Icons</Text>
                     </Pressable>
                 </View>
                   <Pressable onPress={() => handleIconElement(navigation, 'evil', "icons")}  style={globalStyles.screenStyles.viewBtn}>
-                    <Text >View</Text>
+                    <Text style={{  color: 'white'}}>View</Text>
                   </Pressable>
                </View>
 
@@ -370,12 +376,12 @@ const cancelSystem = () => {
                          <View style={globalStyles.screenStyles.filledCircle}></View>
                        )}
                      </View>
-                       <SimpleLineIcons name="folder" size={50} height={50} color="orange" />
-                         <Text >SimpleLine Icons</Text>
+                       <SimpleLineIcons name="folder" size={50} height={50} color="royalblue" />
+                         <Text style={{  color: 'white'}}>SimpleLine Icons</Text>
                     </Pressable>
                 </View>
                   <Pressable onPress={() => handleIconElement(navigation, 'simple', "icons")}   style={globalStyles.screenStyles.viewBtn}>
-                    <Text >View</Text>
+                       <Text style={{  color: 'white'}}>View</Text>
                   </Pressable>
                </View>
 
@@ -387,12 +393,12 @@ const cancelSystem = () => {
                          <View style={globalStyles.screenStyles.filledCircle}></View>
                        )}
                      </View>
-                       <Octicons name="repo" size={50} height={50} color="orange" />
-                         <Text >Octicons Icons</Text>
+                       <Octicons name="repo" size={50} height={50} color="royalblue" />
+                         <Text style={{  color: 'white'}}>Octicons Icons</Text>
                     </Pressable>
                 </View>
                   <Pressable onPress={() => handleIconElement(navigation, 'octicons', "icons")}   style={globalStyles.screenStyles.viewBtn}>
-                    <Text >View</Text>
+                    <Text style={{  color: 'white'}}>View</Text>
                   </Pressable>
                </View>
 
@@ -404,12 +410,12 @@ const cancelSystem = () => {
                          <View style={globalStyles.screenStyles.filledCircle}></View>
                        )}
                      </View>
-                     <Ionicons name='folder' width={50} height={50} fill="orange" />
-                         <Text >Ionicons</Text>
+                     <Ionicons name="folder" size={50} color="royalblue" />
+                         <Text style={{  color: 'white'}}>Ionicons</Text>
                     </Pressable>
                 </View>
                   <Pressable onPress={() => handleIconElement(navigation, 'ionicons', "icons")}    style={globalStyles.screenStyles.viewBtn}>
-                    <Text >View</Text>
+                     <Text style={{  color: 'white'}}>View</Text>
                   </Pressable>
                </View>
 
@@ -421,12 +427,12 @@ const cancelSystem = () => {
                          <View style={globalStyles.screenStyles.filledCircle}></View>
                        )}
                      </View>
-                  <FontAwesome5 name="folder" size={50} color="orange" />
-                  <Text >Fontawesome Icons</Text>
+                  <FontAwesome5 name="folder" size={50} color="royalblue" />
+                  <Text style={{  color: 'white'}}>Fontawesome Icons</Text>
                     </Pressable>
                 </View>
                   <Pressable onPress={() => handleIconElement(navigation, 'Fontawesome', "icons")}   style={globalStyles.screenStyles.viewBtn}>
-                    <Text >View</Text>
+                     <Text style={{  color: 'white'}}>View</Text>
                   </Pressable>
                </View>
 
@@ -438,12 +444,12 @@ const cancelSystem = () => {
                          <View style={globalStyles.screenStyles.filledCircle}></View>
                        )}
                      </View>
-                       <MaterialIcons name="folder" width={50} height={50} fill="orange"/>
-                         <Text >Material Icons</Text>
+                     <MaterialIcons name="folder" size={50} color="royalblue" />
+                         <Text style={{  color: 'white'}}>Material Icons</Text>
                     </Pressable>
                 </View>
                   <Pressable onPress={() => handleIconElement(navigation, 'material', "icons")}  style={globalStyles.screenStyles.viewBtn}>
-                    <Text >View</Text>
+                     <Text style={{  color: 'white'}}>View</Text>
                   </Pressable>
                </View>
                
@@ -470,19 +476,19 @@ const cancelSystem = () => {
                             <View style={globalStyles.screenStyles.filledCircle}></View>
                             )}
                            </View>
-                           <Text style={{ fontWeight: 'bold', color: 'black' }}>
+                           <Text style={{ fontWeight: 'bold', color: 'white' }}>
                              {data.styledComponents.package}
                            </Text>
-                           <Text style={{ color: 'black' }}>Includes components:</Text>
+                           <Text style={{ color: 'white' }}>Includes components:</Text>
                            {Object.keys(data.styledComponents.components).map((componentName) => (
-                             <Text key={componentName} style={{ color: 'orange' }}>
+                             <Text key={componentName} style={{ color: 'royalblue' }}>
                                {componentName}
                              </Text>
                            ))}
                          </Pressable>
                        </View>
                        <Pressable onPress={() => handleCompElement(navigation, 'component', data.styledComponents)} style={globalStyles.screenStyles.viewBtn}>
-                         <Text>View</Text>
+                           <Text style={{  color: 'white'}}>View</Text>
                        </Pressable >
                      </View>
                    </ScrollView>
@@ -533,13 +539,14 @@ const cancelSystem = () => {
                     <Text>Cancel</Text>
                   </Pressable>
 
-                  <Pressable onPress={handleCreate} style={[globalStyles.screenStyles.btn1, {backgroundColor: 'orange', color: 'white'}]}>
+                  <Pressable onPress={handleCreate} style={[globalStyles.screenStyles.btn1, {backgroundColor: 'royalblue', color: 'white'}]}>
                     <Text>Create</Text>
                   </Pressable>
              
           </View>
 
          </ScrollView>
+         </View>
       </View>
   </SafeAreaView>  
     )

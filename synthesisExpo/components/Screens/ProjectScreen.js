@@ -24,6 +24,8 @@ import { MaterialIcons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native'
+import { useHeaderHeight } from '@react-navigation/elements';
+import VideoBackground from './Bkgd/VideoBackground'; 
 
 import { useAuth } from '../../LogContext'; // Adjust path as needed
 import Icon from './subScreens/Icon'
@@ -45,6 +47,7 @@ const ProjectScreen = () => {
   } = useAuth();
  
   const navigation = useNavigation();
+  const headerHeight = useHeaderHeight();
   
   const editDesignSystem = (element) => {
     console.log('designSystemData length on press:', designSystemData.length)
@@ -105,14 +108,18 @@ const ProjectScreen = () => {
 
 
   return (
-    <View style={[globalStyles.screenStyles.container, {alignItems: 'center'}]}>
+    <View style={{flex: 1, position: 'relative', alignItems: 'center'}}>
+      <VideoBackground source={require('../../assets/gradient1.mp4')} />
+      
+        
+      <View style={globalStyles.screenStyles.mainView}>
      <ScrollView   
-        contentContainerStyle={{  flexDirection: 'column'}}
+        contentContainerStyle={{  flexDirection: 'column', paddingTop: headerHeight, paddingBottom: headerHeight, paddingHorizontal: 20}}
         keyboardShouldPersistTaps="handled"
         >
        <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'left', }}>
           <Text style={[globalStyles.screenStyles.h2, {marginRight: 20}]}>My Projects</Text>
-          <MaterialIcons name="folder-special" size={85} color="orange" />
+          <MaterialIcons name="folder-special" size={50} color="royalblue" />
        </View>
 
       {designSystemData.length > 0 ? (
@@ -129,6 +136,8 @@ const ProjectScreen = () => {
                   shadowOpacity: 1, // Shadow opacity
                   shadowRadius: 3, // Shadow radius
                   elevation: 5, // Android shadow
+                  borderColor: 'white',
+                  borderWidth: 1,
                   
                 }}
               >
@@ -143,19 +152,19 @@ const ProjectScreen = () => {
                 >
                   <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                     <View style={{ flexDirection: 'row' }}>
-                      <Text style={{ color: 'black', fontWeight: 'bold', fontSize: 18 }}>
+                      <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 18 }}>
                         {element.name}
                       </Text>
-                      <Text style={{ color: 'black' }}>{element.about}</Text>
+                      <Text style={{ color: 'white' }}>{element.about}</Text>
                     </View>
                     <View style={{ flexDirection: 'row' }}>
-                      <MaterialIcons name="palette" size={32} color="black" />
-                      <MaterialIcons name="brush" size={32} color="black" />
+                      <MaterialIcons name="palette" size={32} color="white" />
+                      <MaterialIcons name="brush" size={32} color="white" />
                     </View>
                   </View>
               
                   <View style={{ flexDirection: 'row' }}>
-                    <Text style={{ color: 'black' }}>{element.createdAt}</Text>
+                    <Text style={{ color: 'white' }}>{element.createdAt}</Text>
                   </View>
                 </LinearGradient>
              
@@ -171,7 +180,7 @@ const ProjectScreen = () => {
 
       <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'left' }}>
           <Text style={[globalStyles.screenStyles.h3, {marginRight: 20}]}> Favorites</Text>
-            <MaterialIcons name="favorite" size={30} color="orange" />
+            <MaterialIcons name="favorite" size={30} color="royalblue" />
           
       </View>
 
@@ -210,14 +219,14 @@ const ProjectScreen = () => {
                   <View style={globalStyles.screenStyles.box}>
               
                   
-                    <Text style={[{ fontFamily: matchingFont, color: 'black', fontSize: 40 }]}>T t</Text>
+                    <Text style={[{ fontFamily: matchingFont, color: 'white', fontSize: 40 }]}>T t</Text>
                    
-                    <Text style={{ fontFamily: matchingFont }}>{element.name}</Text>
+                    <Text style={{ fontFamily: matchingFont, color: 'white' }}>{element.name}</Text>
 
                 </View>
                 {/*Instead of passing a reference to the function (handleViewElement(element)), you’re calling it during the render phase, causing it to execute immediately and navigate without waiting for a user click.*/}
                   <Pressable onPress={() => handleViewElement(navigation, element, "font")}  style={globalStyles.screenStyles.viewBtn}>
-                    <Text >View</Text>
+                    <Text style={{color: 'white'}}>View</Text>
                   </Pressable>
                </View>
                     );
@@ -255,7 +264,7 @@ const ProjectScreen = () => {
                   </LinearGradient>
                 
                 <Pressable onPress={() => handleViewElement(navigation, element, "color")}   style={globalStyles.screenStyles.viewBtn}>
-                    <Text >View</Text>
+                     <Text style={{color: 'white'}}>View</Text>
                   </Pressable>
                </View>
                 );
@@ -281,12 +290,12 @@ const ProjectScreen = () => {
                   return(
                            <View key={index}>
                                   <View style={globalStyles.screenStyles.box}>
-                                    <Text style={{ fontWeight: 'bold' }}>Typography Scale</Text>
-                                    <Text>{element.name}</Text>
+                                    <Text style={{ color: 'white' }}>Typography Scale</Text>
+                                    <Text style={{fontWeight: 'bold', color: 'white'}}>{element.name}</Text>
                                   </View>
 
                                 <Pressable onPress={() => handleTypoElement(navigation, "typography", element)} style={globalStyles.screenStyles.viewBtn}>
-                                  <Text>View</Text>
+                                <Text style={{color: 'white'}}>View</Text>
                                 </Pressable>
                            </View>  
                           )})}
@@ -308,13 +317,13 @@ const ProjectScreen = () => {
         <View key={`${icon.id}-${index}`} style={{ marginRight: 10 }}>
           <View style={globalStyles.screenStyles.box}>
             <Icon type={icon.iconType} minimal />
-            <Text style={{ color: 'black' }}>{icon.iconType}</Text>
+            <Text style={{ color: 'white' }}>{icon.iconType}</Text>
           </View>
           <Pressable
             onPress={() => handleIconElement(navigation, icon.iconType)}
             style={globalStyles.screenStyles.viewBtn}
           >
-            <Text>View</Text>
+             <Text style={{color: 'white'}}>View</Text>
           </Pressable>
         </View>
       ))}
@@ -336,16 +345,16 @@ const ProjectScreen = () => {
       {favoriteComp.map((item, index) => (
         <View key={`${item.id}-${index}`} style={{ marginRight: 10 }}>
           <View style={globalStyles.screenStyles.box}>
-        <Text style={{ fontWeight: 'bold' }}>
+        <Text style={{ fontWeight: 'bold', color: 'white' }}>
            Component
         </Text>
-            <Text style={{ color: 'black' }}>{item.package}</Text>
+            <Text style={{ color: 'white' }}>{item.package}</Text>
           </View>
           <Pressable
             onPress={() => handleCompElement(navigation, item.type, item)}
             style={globalStyles.screenStyles.viewBtn}
           >
-            <Text>View</Text>
+            <Text style={{color: 'white'}}>View</Text>
           </Pressable>
         </View>
       ))}
@@ -357,6 +366,7 @@ const ProjectScreen = () => {
 
       </View>
       </ScrollView>   
+      </View>
     </View>
   );
 };

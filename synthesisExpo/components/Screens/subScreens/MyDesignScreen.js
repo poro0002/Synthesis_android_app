@@ -24,6 +24,8 @@ import { MaterialIcons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native'
+import VideoBackground from '../Bkgd/VideoBackground'; 
+import { useHeaderHeight } from '@react-navigation/elements';
 
 import Icon from './Icon'
 import { useAuth } from '../../../LogContext'; 
@@ -56,6 +58,7 @@ const MyDesignScreen = ({route}) => {
  
 
   const navigation = useNavigation();
+  const headerHeight = useHeaderHeight();
 
 
 useFocusEffect(
@@ -193,43 +196,50 @@ const addElement = (category, systemId) =>{
 
  return(
   <SafeAreaView style={{ flex: 1, backgroundColor: 'black' }}>
-    <View style={[globalStyles.screenStyles.container, {alignItems: 'center'}]}>
+     <View style={{flex: 1, position: 'relative', alignItems: 'center', padding: 20, zIndex: 0}}>
+
+           <VideoBackground source={require('../../../assets/gradient2.mp4')} />
+           
+        <View style={{ flex: 1, zIndex: 1,}}>
          <ScrollView   
-            contentContainerStyle={{  flexDirection: 'column', paddingBottom: 50}}
+            contentContainerStyle={{  flexDirection: 'column', paddingTop: headerHeight, paddingBottom: headerHeight, }}
             keyboardShouldPersistTaps="handled"
+            showsVerticalScrollIndicator={false} 
+            showsHorizontalScrollIndicator={false}
             >
 
-{currentSystem?.name && (
-  <>
-  <Text style={[globalStyles.screenStyles.h3, {color: 'white', textAlign: 'center'}]}>
-    {currentSystem.name}
-  </Text>
-  <Text style={[globalStyles.screenStyles.h5, {color: 'white', textAlign: 'center'}]}>
-    {currentSystem.username}
-  </Text>
-  </>
-)}
+      {currentSystem?.name && (
+        <View style={{marginTop: 20, marginBottom: 50}}>
+        <Text style={[globalStyles.screenStyles.h3, {color: 'white', textAlign: 'center'}]}>
+          {currentSystem.name}
+        </Text>
+        <Text style={[globalStyles.screenStyles.h5, {color: 'white', textAlign: 'center'}]}>
+          {currentSystem.username}
+        </Text>
+        </View>
+      )}
 
     {/* ----------------------------------------------------< FONTS >--------------------------------------------------- */} 
 
     <Text style={[globalStyles.screenStyles.h4, {color: 'white'}]}>Fonts</Text>
 
     <ScrollView   
-      contentContainerStyle={{ flexDirection: 'row' }} // horizontal scroll
+      contentContainerStyle={{ flexDirection: 'row', marginBottom: 40 }} // horizontal scroll
       keyboardShouldPersistTaps="handled"
       horizontal
+      
     >
       {/* Check if currentSystem exists and has fonts */}
       {currentSystem?.fonts?.length > 0 ? (
         currentSystem.fonts.map((element, fontIndex) => (
           <View key={`${currentSystem.id}-${fontIndex}`} style={{ marginRight: 20 }}>
             <View style={globalStyles.screenStyles.box}>
-              <Text style={[{ fontFamily: element.name, color: 'black', fontSize: 40 }]}>T t</Text>
-              <Text style={{ fontFamily: element.name }}>{element.name}</Text>
+              <Text style={[{ fontFamily: element.name, color: 'white', fontSize: 40 }]}>T t</Text>
+              <Text style={{ fontFamily: element.name, color: 'white' }}>{element.name}</Text>
             </View>
             <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
               <Pressable onPress={() => handleViewElement(navigation, element, "font")} style={globalStyles.screenStyles.viewBtn}>
-                <Text>View</Text>
+                <Text style={{color: 'white'}}>View</Text>
               </Pressable>
               <Pressable onPress={() => deleteElement(element, "fonts", currentSystem.id, fontIndex)} style={[globalStyles.screenStyles.viewBtn, { backgroundColor: 'red' }]}>
                 <Text>Delete</Text>
@@ -239,7 +249,7 @@ const addElement = (category, systemId) =>{
         ))
       ) : (
          <Pressable onPress={() => addElement("fonts", currentSystem.id)} style={globalStyles.screenStyles.centerRow}>
-           <MaterialIcons name="add" size={30} color="orange" />
+           <MaterialIcons name="add" size={30} color="royalblue" />
            <Text style={globalStyles.screenStyles.text}>
               Add Element
             </Text>
@@ -252,7 +262,7 @@ const addElement = (category, systemId) =>{
     <Text style={[globalStyles.screenStyles.h4, {color: 'white'}]}>Color Gradients</Text>
     
           <ScrollView   
-            contentContainerStyle={{ flexDirection: 'row' }} // row for horizontal scroll
+            contentContainerStyle={{ flexDirection: 'row', marginBottom: 40  }} // row for horizontal scroll
             keyboardShouldPersistTaps="handled"
             horizontal
            >
@@ -270,7 +280,7 @@ const addElement = (category, systemId) =>{
                   </LinearGradient>
                   <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
                     <Pressable onPress={() => handleViewElement(navigation, element, "color")} style={globalStyles.screenStyles.viewBtn}>
-                      <Text>View</Text>
+                    <Text style={{color: 'white'}}>View</Text>
                     </Pressable>
                     <Pressable onPress={() => deleteElement(element, "gradients", currentSystem.id, gradientIndex)} style={[globalStyles.screenStyles.viewBtn, { backgroundColor: 'red' }]}>
                       <Text>Delete</Text>
@@ -280,7 +290,7 @@ const addElement = (category, systemId) =>{
               ))
             ) : (
               <Pressable onPress={() => addElement("gradients", currentSystem.id)} style={globalStyles.screenStyles.centerRow}>
-                 <MaterialIcons name="add" size={30} color="orange" />
+                 <MaterialIcons name="add" size={30} color="royalblue" />
                  <Text style={globalStyles.screenStyles.text}>
                     Add Element
                   </Text>
@@ -292,15 +302,15 @@ const addElement = (category, systemId) =>{
     <Text style={[globalStyles.screenStyles.h4, { color: 'white' }]}>Typography</Text>
           
     <ScrollView
-      contentContainerStyle={{ flexDirection: 'row' }}
+      contentContainerStyle={{ flexDirection: 'row', marginBottom: 40 }}
       keyboardShouldPersistTaps="handled"
       horizontal
     >
       {currentSystem?.typography?.length > 0 ? (
         <View key={`${currentSystem.id}-typography`} style={{ marginRight: 20 }}>
           <View style={globalStyles.screenStyles.box}>
-            <Text>Typography Scale</Text>
-            <Text style={[{fontWeight: 'bold'}]}>
+            <Text style={{color: 'white'}}>Typography Scale</Text>
+            <Text style={[{fontWeight: 'bold', color: 'white'}]}>
                 {currentSystem.typography[0].name}
              </Text>
           </View>
@@ -309,7 +319,7 @@ const addElement = (category, systemId) =>{
               onPress={() => handleTypoElement(navigation, "typography", currentSystem.typography[0])}
               style={globalStyles.screenStyles.viewBtn}
             >
-              <Text>View</Text>
+              <Text style={{color: 'white'}}>View</Text>
             </Pressable>
             <Pressable
               onPress={() => deleteElement(null, "typography", currentSystem.id)}
@@ -321,7 +331,7 @@ const addElement = (category, systemId) =>{
         </View>
       ) : (
         <Pressable onPress={() => addElement("typography", currentSystem.id)} style={globalStyles.screenStyles.centerRow}>
-                 <MaterialIcons name="add" size={30} color="orange" />
+                 <MaterialIcons name="add" size={30} color="royalblue" />
                  <Text style={globalStyles.screenStyles.text}>
                     Add Element
                   </Text>
@@ -333,7 +343,7 @@ const addElement = (category, systemId) =>{
     
     <Text style={[globalStyles.screenStyles.h4, { color: 'white' }]}>Icons</Text>
           <ScrollView
-            contentContainerStyle={{ flexDirection: 'row' }}
+            contentContainerStyle={{ flexDirection: 'row', marginBottom: 40 }}
             keyboardShouldPersistTaps="handled"
             horizontal
           >
@@ -342,14 +352,14 @@ const addElement = (category, systemId) =>{
                 <View key={`${icon.id}-${index}`} style={{ marginRight: 10 }}>
                   <View style={globalStyles.screenStyles.box}>
                     <Icon type={icon.name} />
-                    <Text>{icon.name}</Text>
+                    <Text style={{color: 'white'}}>{icon.name}</Text>
                   </View>
                   <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
                     <Pressable  
                       onPress={() => handleIconElement(navigation, icon.name, "icons")} 
                       style={globalStyles.screenStyles.viewBtn}
                     >
-                      <Text>View</Text>
+                     <Text style={{color: 'white'}}>View</Text>
                     </Pressable>
                     <Pressable
                       onPress={() => deleteElement(icon, 'icons', currentSystem.id, index)}
@@ -362,7 +372,7 @@ const addElement = (category, systemId) =>{
               ))
             ) : (
                 <Pressable onPress={() => addElement("icons", currentSystem.id)} style={globalStyles.screenStyles.centerRow}>
-                    <MaterialIcons name="add" size={30} color="orange" />
+                    <MaterialIcons name="add" size={30} color="royalblue" />
                     <Text style={globalStyles.screenStyles.text}>
                        Add Element
                      </Text>
@@ -374,7 +384,7 @@ const addElement = (category, systemId) =>{
     <Text style={[globalStyles.screenStyles.h4, { color: 'white' }]}>Styled Components</Text>
           
           <ScrollView   
-            contentContainerStyle={{ flexDirection: 'column' }} 
+            contentContainerStyle={{ flexDirection: 'column', marginBottom: 40 }} 
             keyboardShouldPersistTaps="handled"
             horizontal
           >
@@ -384,7 +394,7 @@ const addElement = (category, systemId) =>{
                 return (
                 <View key={index}>
                   <View style={globalStyles.screenStyles.box}>
-                    <Text>{element.package}</Text>
+                    <Text style={{color: 'white'}}>{element.package}</Text>
                   </View>
               
                   <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
@@ -392,7 +402,7 @@ const addElement = (category, systemId) =>{
                       onPress={() => handleCompElement(navigation, "component", element)}
                       style={globalStyles.screenStyles.viewBtn}
                     >
-                      <Text>View</Text>
+                      <Text style={{color: 'white'}}>View</Text>
                     </Pressable>
                     <Pressable
                       onPress={() => deleteElement(element, "comp", currentSystem.id, index)}
@@ -406,7 +416,7 @@ const addElement = (category, systemId) =>{
             })
             ) : (
                 <Pressable onPress={() => addElement("comp", currentSystem.id)} style={globalStyles.screenStyles.centerRow}>
-                  <MaterialIcons name="add" size={30} color="orange" />
+                  <MaterialIcons name="add" size={30} color="royalblue" />
                   <Text style={globalStyles.screenStyles.text}>
                      Add Element
                    </Text>
@@ -427,7 +437,7 @@ const addElement = (category, systemId) =>{
           
           
         </ScrollView>
-          
+        </View>
       </View>
    </SafeAreaView>
       )
