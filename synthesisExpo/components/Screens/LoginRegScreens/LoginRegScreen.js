@@ -23,7 +23,7 @@ const apiUrl = Constants.expoConfig.extra.API_URL;
 
 import StackNavigator from '../../Routes/TabNavigator';
 import { useAuth } from '../../../LogContext';
-
+import VideoBackground from '../Bkgd/VideoBackground'; 
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { enableScreens } from 'react-native-screens';
@@ -312,7 +312,10 @@ return(
   ) : (
     // login/register form JSX here
  
-  <View style={styles.container}>
+   <View style={{flex: 1, position: 'relative', alignItems: 'center', zIndex: 0}}>
+          <VideoBackground source={require('../../../assets/jelly4.mp4')} />
+         <View style={{ flex: 1, zIndex: 1 }}>
+
   {!logClicked && !regClicked ? (
     <View style={styles.container}>
       <Pressable onPress={handleLog} style={({ pressed }) => [styles.logBtn, pressed && styles.pressed]}>
@@ -325,8 +328,8 @@ return(
   ) : null}
 
   {logClicked && (
-    <>
-      <Text style={styles.header}>Login Form</Text>
+   <View style={styles.container}>
+      <Text style={styles.header}>Login</Text>
       <Text style={styles.inputTag}>{errorMessage}</Text>
       <Text style={styles.inputTag}>Username</Text>
      
@@ -338,6 +341,7 @@ return(
         placeholder="Username"
         value={logData.username}
         onChangeText={(value) => handleLogInputChange('username', value)}
+        placeholderTextColor={'grey'}
       />
       <Text style={styles.inputTag}>Password</Text>
       <TextInput
@@ -346,21 +350,22 @@ return(
         secureTextEntry
         value={logData.pass}
         onChangeText={(value) => handleLogInputChange('pass', value)}
+        placeholderTextColor={'grey'}
       />
       </KeyboardAvoidingView>
      
-      <Pressable onPress={logSubmit} style={({ pressed }) => [styles.submitBtn, pressed && styles.pressed]}>
-        <Text style={styles.buttonText}>Submit Login</Text>
+      <Pressable onPress={logSubmit} style={styles.submitBtn}>
+        <Text style={styles.buttonText}>Login</Text>
       </Pressable>
-      <Pressable onPress={handleReg} style={({ pressed }) => [styles.buttonText, pressed && styles.pressed]}>
+      <Pressable onPress={handleReg} style={styles.buttonText}>
         <Text style={[styles.buttonText, {marginTop: 50, textDecorationLine: 'underline'}]}>Don't have an Account?  Register Here</Text>
       </Pressable>
-    </>
+    </View>
   )}
 
   {regClicked && (
-    <>
-      <Text style={styles.header}>Register Form</Text>
+    <View style={styles.container}>
+      <Text style={styles.header}>Register</Text>
       <Text style={styles.inputTag}>{errorMessage}</Text>
       <Text style={styles.inputTag}>Username</Text>
       <TextInput
@@ -368,6 +373,7 @@ return(
         placeholder="Username"
         value={regData.username}
         onChangeText={(value) => handleRegInputChange('username', value)}
+        placeholderTextColor={'grey'}
       />
       <Text style={styles.inputTag}>Password</Text>
       <TextInput
@@ -375,7 +381,8 @@ return(
         placeholder="Password"
         secureTextEntry
         value={regData.pass}
-        onChangeText={(value) => handleRegInputChange('pass', value)}
+        onChangeText={(value) => handleRegInputChange('pass', value)} 
+        placeholderTextColor={'grey'}
       />
     <Text style={styles.inputTag}>Email</Text>
       <TextInput
@@ -383,15 +390,17 @@ return(
         placeholder="Email"
         value={regData.email}
         onChangeText={(value) => handleRegInputChange('email', value)}
+        placeholderTextColor={'grey'}
       />
-      <Pressable onPress={regSubmit} style={({ pressed }) => [styles.submitBtn, pressed && styles.pressed]}>
-        <Text style={styles.buttonText}>Submit Registration</Text>
+      <Pressable onPress={regSubmit} style={styles.submitBtn}>
+        <Text style={styles.buttonText}>Register</Text>
       </Pressable>
-      <Pressable onPress={handleLog} style={({ pressed }) => [styles.buttonText, pressed && styles.pressed]}>
+      <Pressable onPress={handleLog} style={styles.buttonText}>
         <Text style={[styles.buttonText, {marginTop: 50, textDecorationLine: 'underline'}]}>Already have an Account? Login</Text>
       </Pressable>
-    </>
+    </View>
   )}
+</View>
 </View>
  )
 )
@@ -409,7 +418,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'black',
+ 
   },
   logBtn: {
     paddingTop: 20,
@@ -418,6 +427,13 @@ const styles = StyleSheet.create({
     paddingRight: 40,
     backgroundColor: 'royalblue',
     borderRadius: 7,
+    shadowColor: '#000',
+          shadowOffset: { width: 2, height: 4 },
+          shadowOpacity: 0.3,
+          shadowRadius: 5,
+
+          // Android Shadow
+          elevation: 6,
   },
   regBtn: {
      paddingTop: 20,
@@ -430,17 +446,28 @@ const styles = StyleSheet.create({
     marginTop: 30,
     color: 'white',
     borderRadius: 7,
+    shadowColor: '#000',
+          shadowOffset: { width: 2, height: 4 },
+          shadowOpacity: 0.3,
+          shadowRadius: 5,
+
+          // Android Shadow
+          elevation: 6,
   },
   submitBtn: {
-    marginTop: 20,
+    justifyContent: 'center',
+    marginTop: 50,
+    width: '85%',
+    height: '8%',
     backgroundColor: 'transparent',
-     borderColor: 'royalblue',
-      borderWidth: 3,
+    borderColor: 'royalblue',
+    borderWidth: 3,
     padding: 10,
     borderRadius: 7,
   },
   buttonText: {
     color: 'white',
+    textAlign: 'center',
   },
   header: {
     marginTop: 20,
@@ -451,11 +478,12 @@ const styles = StyleSheet.create({
         marginTop: 15,
          color: 'white',
          fontSize: 13,
+         textAlign: 'center'
       },
 
   input: {
     height: 40,
-    borderColor: 'gray',
+    borderColor: 'white',
     borderWidth: 1,
     color: 'white',
     width: 200,

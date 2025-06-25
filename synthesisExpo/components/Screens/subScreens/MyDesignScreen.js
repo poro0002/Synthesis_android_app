@@ -51,6 +51,9 @@ const MyDesignScreen = ({route}) => {
 
   const [selectedIndex, setSelectedIndex] = useState(0); // Defaults to showing the first design system
   const [currentSystem, setCurrentSystem] = useState(data); // keep this
+  const [loading, setLoading] = useState(false);
+
+
 
   // console.log('design screen current system', currentSystem)
 
@@ -122,7 +125,7 @@ const addElement = (category, systemId) =>{
           index: index,
         })
     }
-
+    setLoading(true);
     try{
         let response = await fetch(fetchURL, fetchOptions);
 
@@ -143,6 +146,8 @@ const addElement = (category, systemId) =>{
        
     }catch(err){
         console.log("there was an error with the fetch", err)
+    } finally {
+      setLoading(false);
     }
  }
 
@@ -196,6 +201,23 @@ const addElement = (category, systemId) =>{
 
  return(
   <SafeAreaView style={{ flex: 1, backgroundColor: 'black' }}>
+     
+      {loading && (
+          <Modal transparent={true} animationType="fade">
+            <View style={{
+              flex: 1,
+              backgroundColor: 'rgba(0,0,0,0.5)',
+              justifyContent: 'center',
+              alignItems: 'center',
+              zIndex: 1000
+            }}>
+              <ActivityIndicator size="large" color="white" />
+              <Text style={{ color: 'white', marginTop: 10 }}>Processing...</Text>
+            </View>
+          </Modal>
+      )}
+
+
      <View style={{flex: 1, position: 'relative', alignItems: 'center', padding: 20, zIndex: 0}}>
 
            <VideoBackground source={require('../../../assets/gradient2.mp4')} />
@@ -210,7 +232,7 @@ const addElement = (category, systemId) =>{
 
       {currentSystem?.name && (
         <View style={{marginTop: 20, marginBottom: 50}}>
-        <Text style={[globalStyles.screenStyles.h3, {color: 'white', textAlign: 'center'}]}>
+        <Text style={[globalStyles.screenStyles.h3, globalStyles.screenStyles.textShadow,  {color: 'white', textAlign: 'center'}]}>
           {currentSystem.name}
         </Text>
         <Text style={[globalStyles.screenStyles.h5, {color: 'white', textAlign: 'center'}]}>
@@ -221,7 +243,7 @@ const addElement = (category, systemId) =>{
 
     {/* ----------------------------------------------------< FONTS >--------------------------------------------------- */} 
 
-    <Text style={[globalStyles.screenStyles.h4, {color: 'white'}]}>Fonts</Text>
+    <Text style={[globalStyles.screenStyles.h4, {color: 'white'}]}>Fonts ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯</Text>
 
     <ScrollView   
       contentContainerStyle={{ flexDirection: 'row', marginBottom: 40 }} // horizontal scroll
@@ -259,7 +281,7 @@ const addElement = (category, systemId) =>{
     
     {/* ----------------------------------------------------< COLORS >---------------------------------------------------  */}  
     
-    <Text style={[globalStyles.screenStyles.h4, {color: 'white'}]}>Color Gradients</Text>
+    <Text style={[globalStyles.screenStyles.h4, {color: 'white'}]}>Color Gradients ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯</Text>
     
           <ScrollView   
             contentContainerStyle={{ flexDirection: 'row', marginBottom: 40  }} // row for horizontal scroll
@@ -299,7 +321,7 @@ const addElement = (category, systemId) =>{
           </ScrollView>
     {/* ----------------------------------------------------< TYPOGRAPHY >---------------------------------------------------  */}           
           
-    <Text style={[globalStyles.screenStyles.h4, { color: 'white' }]}>Typography</Text>
+    <Text style={[globalStyles.screenStyles.h4, { color: 'white' }]}>Typography ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯</Text>
           
     <ScrollView
       contentContainerStyle={{ flexDirection: 'row', marginBottom: 40 }}
@@ -341,7 +363,7 @@ const addElement = (category, systemId) =>{
     
     {/* ----------------------------------------------------< ICONS >---------------------------------------------------  */} 
     
-    <Text style={[globalStyles.screenStyles.h4, { color: 'white' }]}>Icons</Text>
+    <Text style={[globalStyles.screenStyles.h4, { color: 'white' }]}>Icons ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯</Text>
           <ScrollView
             contentContainerStyle={{ flexDirection: 'row', marginBottom: 40 }}
             keyboardShouldPersistTaps="handled"
@@ -381,7 +403,7 @@ const addElement = (category, systemId) =>{
           </ScrollView>
           
     {/* ----------------------------------------------------< COMPONENTS >---------------------------------------------------  */} 
-    <Text style={[globalStyles.screenStyles.h4, { color: 'white' }]}>Styled Components</Text>
+    <Text style={[globalStyles.screenStyles.h4, { color: 'white' }]}>Styled Components ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯</Text>
           
           <ScrollView   
             contentContainerStyle={{ flexDirection: 'column', marginBottom: 40 }} 

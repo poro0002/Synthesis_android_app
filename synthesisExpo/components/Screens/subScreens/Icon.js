@@ -16,6 +16,8 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { useRoute } from '@react-navigation/native';
 import { useNavigationState } from '@react-navigation/native';
 
+import globalStyles from '../../../styles';
+
 const iconData = {
   feather: {
     title: 'Feather Icons',
@@ -130,9 +132,9 @@ const Icon = ({ type, minimal = false  }) => {
         <IconComponent size={30} name='folder' style={styles.icon} color="royalblue" />
     ) : (
       // Else render this
-      <View>
+      <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
         <Image source={data.image} style={styles.logo} />
-        <Text style={styles.title}>{data.title}</Text>
+        <Text style={[styles.title, globalStyles.screenStyles.textShadow]}>{data.title}</Text>
         <Text style={styles.subtitle}>Why use them?{"\n"}</Text>
         {data.description.map((bullet, index) => (
           <Text key={index} style={styles.description}>{bullet}</Text>

@@ -188,7 +188,7 @@ const cancelSystem = () => {
          
         >
         <View>
-          <Text style={globalStyles.screenStyles.h2}>{topic}</Text>
+          <Text style={[globalStyles.screenStyles.h2, globalStyles.screenStyles.textShadow, {textTransform: 'uppercase'}]}>{topic}</Text>
         </View>
         <Text style={globalStyles.screenStyles.h3}>Recommended Element Styles:</Text>
         <View>
@@ -197,7 +197,7 @@ const cancelSystem = () => {
        
       {data && data.fonts && data.fonts.length > 0 && (
       <>
-        <Text style={[globalStyles.screenStyles.h4, {color: 'white'}]}>Fonts</Text>
+        <Text style={[globalStyles.screenStyles.h4, {color: 'white'}]}>Fonts ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯</Text>
           <ScrollView 
                 horizontal // Enables horizontal scrolling
                 showsHorizontalScrollIndicator={false} // Hides the scroll indicator
@@ -247,7 +247,7 @@ const cancelSystem = () => {
 
   {data && data.gradients && data.gradients.length > 0 && (
       <>
-        <Text style={[globalStyles.screenStyles.h4, {color: 'white'}]}>Color Gradients</Text>
+        <Text style={[globalStyles.screenStyles.h4, {color: 'white'}]}>Color Gradients ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯</Text>
           <ScrollView 
                horizontal // Enables horizontal scrolling
                 showsHorizontalScrollIndicator={false} // Hides the scroll indicator
@@ -294,7 +294,7 @@ const cancelSystem = () => {
    {data && data.typography && data.typography.styles && data.typography.styles.length > 0 && (
          
       <>
-        <Text style={[globalStyles.screenStyles.h4, {color: 'white'}]}>Typography</Text>
+        <Text style={[globalStyles.screenStyles.h4, {color: 'white'}]}>Typography ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯</Text>
           <ScrollView 
                horizontal // Enables horizontal scrolling
                 showsHorizontalScrollIndicator={false} // Hides the scroll indicator
@@ -309,7 +309,7 @@ const cancelSystem = () => {
                             <View style={globalStyles.screenStyles.filledCircle}></View>
                           )}
                         </View>
-                        <Text style={{  color: 'white'}}>Typography Scale</Text>
+                        <Text style={{  color: 'white', fontSize: 12}}>Typography Scale</Text>
                         <Text style={[{fontWeight: 'bold', color: 'white'}]}>
                             {data.typography.name}
                         </Text>
@@ -327,7 +327,7 @@ const cancelSystem = () => {
 
 {/* -----------------------------------------------< ICONS >-----------------------------------------------  */}
        <>
-        <Text style={[globalStyles.screenStyles.h4, {color: 'white'}]}>Icons</Text>
+        <Text style={[globalStyles.screenStyles.h4, {color: 'white'}]}>Icons ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯</Text>
           <ScrollView 
                horizontal // Enables horizontal scrolling
                 showsHorizontalScrollIndicator={false} // Hides the scroll indicator
@@ -461,7 +461,7 @@ const cancelSystem = () => {
         {data && data.styledComponents && (
                  <>
                    <Text style={[globalStyles.screenStyles.h4, { color: 'white' }]}>
-                     Styled Components
+                     Styled Components ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
                    </Text>
                    <ScrollView
                      horizontal
@@ -479,7 +479,7 @@ const cancelSystem = () => {
                            <Text style={{ fontWeight: 'bold', color: 'white' }}>
                              {data.styledComponents.package}
                            </Text>
-                           <Text style={{ color: 'white' }}>Includes components:</Text>
+                           <Text style={{ color: 'white', fontSize: 12 }}>Includes components:</Text>
                            {Object.keys(data.styledComponents.components).map((componentName) => (
                              <Text key={componentName} style={{ color: 'royalblue' }}>
                                {componentName}
@@ -502,7 +502,7 @@ const cancelSystem = () => {
             <TextInput
                 onChangeText={(value) => toggleSelection('name', value)}
                 value={selectedElements.name}
-                style={[globalStyles.screenStyles.input, {width: '85%' }]}
+                style={[globalStyles.screenStyles.input, {width: '85%', borderColor: 'white', }]}
                 placeholder="System Name"
                 placeholderTextColor="gray"
                 maxLength={15}
@@ -515,10 +515,11 @@ const cancelSystem = () => {
             <TextInput
               onChangeText={(value) => toggleSelection('about', value)}
               value={selectedElements.about}
-              style={[globalStyles.screenStyles.input, {width: '85%' }]}
+              style={[globalStyles.screenStyles.input, {width: '85%', borderColor: 'white', }]}
               placeholder="About ( optional )"
               placeholderTextColor="gray"
               maxLength={30}
+             
             >
 
             </TextInput>
@@ -533,13 +534,13 @@ const cancelSystem = () => {
 
   {/* -----------------------------------------------< CREATE && CANCEL BTNS >-----------------------------------------------  */} 
 
-          <View style={[{flexDirection: 'row', justifyContent: 'center', alignItems:'center'}]}>
+          <View style={[{flexDirection: 'row', justifyContent: 'center', alignItems:'center', marginTop: 50, marginBottom: 50}]}>
 
-                 <Pressable onPress={cancelSystem}  style={[globalStyles.screenStyles.btn1, {backgroundColor: 'white', color: 'black'}]}>
+                 <Pressable onPress={cancelSystem}  style={[globalStyles.screenStyles.btn1, globalStyles.screenStyles.btnShadow, {backgroundColor: 'white', color: 'black', marginRight: 20}]}>
                     <Text>Cancel</Text>
                   </Pressable>
 
-                  <Pressable onPress={handleCreate} style={[globalStyles.screenStyles.btn1, {backgroundColor: 'royalblue', color: 'white'}]}>
+                  <Pressable onPress={handleCreate} style={[globalStyles.screenStyles.btn1, globalStyles.screenStyles.btnShadow, {backgroundColor: 'royalblue', color: 'white'}]}>
                     <Text>Create</Text>
                   </Pressable>
              

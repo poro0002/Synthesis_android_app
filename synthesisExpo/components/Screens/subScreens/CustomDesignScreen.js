@@ -119,7 +119,7 @@ const CustomDesignScreen = ({ route }) => {
            <View>
                 <Pressable onPress={() => handleViewCategory("fonts")} style={globalStyles.screenStyles.row}>
                     <View>
-                         <Text style={globalStyles.screenStyles.h3}>
+                         <Text style={[globalStyles.screenStyles.h3, globalStyles.screenStyles.textShadow]}>
                             Fonts
                          </Text>
                         
@@ -141,7 +141,7 @@ const CustomDesignScreen = ({ route }) => {
         
                 <Pressable onPress={() => handleViewCategory("color")} style={globalStyles.screenStyles.row}>
                         <View>
-                            <Text style={globalStyles.screenStyles.h3}>
+                            <Text style={[globalStyles.screenStyles.h3, globalStyles.screenStyles.textShadow]}>
                               Color Gradients
                             </Text>
 
@@ -159,7 +159,7 @@ const CustomDesignScreen = ({ route }) => {
             </View>
                 <Pressable onPress={() => handleViewCategory("typography")} style={globalStyles.screenStyles.row}>
                          <View>
-                            <Text style={globalStyles.screenStyles.h3}>
+                            <Text style={[globalStyles.screenStyles.h3, globalStyles.screenStyles.textShadow]}>
                                 Typography Scales
                             </Text>
 
@@ -177,7 +177,7 @@ const CustomDesignScreen = ({ route }) => {
               
                 <Pressable onPress={() => handleViewCategory("icon")} style={globalStyles.screenStyles.row}>
                 <View>
-                      <Text style={globalStyles.screenStyles.h3}>
+                      <Text style={[globalStyles.screenStyles.h3, globalStyles.screenStyles.textShadow]}>
                           Icons
                       </Text>   
                          {selectedElements.icons.length > 0 && (
@@ -193,7 +193,7 @@ const CustomDesignScreen = ({ route }) => {
            <View>
                 <Pressable onPress={() => handleViewCategory("component")} style={globalStyles.screenStyles.row}>
                         <View>
-                             <Text style={globalStyles.screenStyles.h3}>
+                             <Text style={[globalStyles.screenStyles.h3, globalStyles.screenStyles.textShadow]}>
                                 Components
                              </Text>
                           {selectedElements.comp.length > 0 && (
@@ -212,11 +212,11 @@ const CustomDesignScreen = ({ route }) => {
              {/* -----------------------------------------------< NAMING THE SYSTEM >-----------------------------------------------  */} 
 
           <View style={[{ justifyContent: 'center', alignItems:'flex-start', marginTop: 20}]}>
-             <Text style={[globalStyles.screenStyles.h4, {color: 'white'}]}>Name Your Design System</Text>
+             <Text style={[globalStyles.screenStyles.h4, globalStyles.screenStyles.textShadow, {color: 'white'}]}>Name Your Design System</Text>
             <TextInput
                 onChangeText={(value) => toggleSelection('name', value)}
                 value={selectedElements.name}
-                style={[globalStyles.screenStyles.input, {width: '85%' }]}
+                style={[globalStyles.screenStyles.input, {width: '85%', borderColor: 'white', }]}
                 placeholder="System Name"
                 placeholderTextColor="gray"
                 maxLength={15}
@@ -224,12 +224,12 @@ const CustomDesignScreen = ({ route }) => {
 
             </TextInput>
 
-            <Text style={[globalStyles.screenStyles.h4, {color: 'white', marginTop: 20}]}>Describe Your Design System</Text>
+            <Text style={[globalStyles.screenStyles.h4, globalStyles.screenStyles.textShadow, {color: 'white', marginTop: 20}]}>Describe Your Design System</Text>
 
             <TextInput
               onChangeText={(value) => toggleSelection('about', value)}
               value={selectedElements.about}
-              style={[globalStyles.screenStyles.input, {width: '85%' }]}
+              style={[globalStyles.screenStyles.input, {width: '85%', borderColor: 'white', }]}
               placeholder="About ( optional )"
               placeholderTextColor="gray"
               maxLength={30}
@@ -249,17 +249,17 @@ const CustomDesignScreen = ({ route }) => {
 
   {/* -----------------------------------------------< CREATE && CANCEL BTNS >-----------------------------------------------  */} 
 
-          <View style={[{flexDirection: 'row', justifyContent: 'center', alignItems:'center', marginTop: 20, marginBottom: 50}]}>
+  <View style={[{flexDirection: 'row', justifyContent: 'center', alignItems:'center', marginTop: 50, marginBottom: 50}]}>
 
-<Pressable onPress={cancelSystem}  style={[globalStyles.screenStyles.btn1, {backgroundColor: 'white', color: 'black'}]}>
-   <Text>Cancel</Text>
- </Pressable>
+    <Pressable onPress={cancelSystem}  style={[globalStyles.screenStyles.btn1, globalStyles.screenStyles.btnShadow, {backgroundColor: 'white', color: 'black', marginRight: 20}]}>
+       <Text>Cancel</Text>
+     </Pressable>
 
- <Pressable onPress={handleCreate} style={[globalStyles.screenStyles.btn1, {backgroundColor: 'royalblue', color: 'white'}]}>
-   <Text>Create</Text>
- </Pressable>
+     <Pressable onPress={handleCreate} style={[globalStyles.screenStyles.btn1, globalStyles.screenStyles.btnShadow, {backgroundColor: 'royalblue', color: 'white'}]}>
+       <Text>Create</Text>
+     </Pressable>
 
-</View>
+  </View>
 
     
 

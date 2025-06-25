@@ -69,7 +69,7 @@ const DisplayCategory = ({ route }) => {
     },[category]);
 
     useEffect(()=>{
-      console.log(category)
+      
       console.log('display category screen compData:', compData)
       
     })
@@ -79,9 +79,18 @@ const DisplayCategory = ({ route }) => {
 
     if ((loading || !compData) && category !== 'icon') {
         return (
-          <View style={globalStyles.screenStyles.centerContainer}>
-            <Text>Loading category data...</Text>
+          <Modal transparent={true} animationType="fade">
+          <View style={{
+            flex: 1,
+            backgroundColor: 'rgba(0,0,0,0.5)',
+            justifyContent: 'center',
+            alignItems: 'center',
+            zIndex: 1000
+          }}>
+            <ActivityIndicator size="large" color="white" />
+            <Text style={{ color: 'white', marginTop: 10 }}>Loading assets...</Text>
           </View>
+        </Modal>
         );
       }
     
@@ -91,7 +100,7 @@ const DisplayCategory = ({ route }) => {
     <View style={globalStyles.screenStyles.centerContainer}>
        
        <ScrollView   
-          contentContainerStyle={{  flexDirection: 'column', paddingTop: headerHeight, paddingBottom: headerHeight,}}
+          contentContainerStyle={{  flexDirection: 'column', paddingTop: headerHeight, paddingBottom: headerHeight, backgroundColor: 'black'}}
           keyboardShouldPersistTaps="handled"
         >
             {category === 'fonts' && compData[0].designer && compData.length > 0 && (

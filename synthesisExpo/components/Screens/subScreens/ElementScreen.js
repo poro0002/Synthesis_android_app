@@ -245,10 +245,10 @@ const removeFav = async (data, element) => {
           }
            }}>
             {selectedFavBtn ? (
-               <MaterialIcons name='favorite' size={50} color='royalblue'></MaterialIcons>
+               <MaterialIcons name='favorite' style={globalStyles.screenStyles.iconShadow} size={50} color='royalblue'></MaterialIcons>
             ):
             (
-              <MaterialIcons name='favorite-border' size={50} color='royalblue'></MaterialIcons>
+              <MaterialIcons name='favorite-border' style={globalStyles.screenStyles.iconShadow} size={50} color='royalblue'></MaterialIcons>
             )
           }
             
@@ -257,8 +257,8 @@ const removeFav = async (data, element) => {
       {type === "font" && (
          <View style={globalStyles.screenStyles.centerColumn}>
           <View style={{marginBottom: 15 }}>
-             <Text style={[{ color: 'white', fontSize:  30, fontFamily: element.name }]}>{element.name}</Text>
-             <Text style={[{ color: 'white', fontSize:  20 }]}>Example</Text>
+             <Text style={[globalStyles.screenStyles.textShadow,{ color: 'white', fontSize:  40, fontFamily: element.name }]}>{element.name}</Text>
+             <Text style={[{ color: 'white', fontSize:  20, textAlign: 'center' }]}>Example</Text>
              
 
           </View>
@@ -292,9 +292,10 @@ const removeFav = async (data, element) => {
         // then do an about section for the gradient 
 
         <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{  flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-             <View>
-                <Text style={[{ color: 'white' }]}>{element.name}</Text>
+             <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+                <Text style={[globalStyles.screenStyles.textShadow, { color: 'white', fontStyle: 'italic', fontSize: 40, marginBottom: 15, }]}>{element.name}</Text>
                 <Text  style={[{ color: 'white', fontSize:  20 }]}>Example</Text>
+                <Text style={{backgroundColor: 'transparent', borderRadius: 5, padding: 20, color: 'white', textAlign: 'center'}}>{element.description}</Text>
               </View>
 
               <LinearGradient
@@ -333,9 +334,6 @@ const removeFav = async (data, element) => {
                       
              </View>
 
-             <Text style={{backgroundColor: '#f8f8f8', borderRadius: 5, padding: 20, marginTop: 50,  }}>{element.description}</Text>
-           
-
           </ScrollView>
 
 
@@ -353,11 +351,25 @@ const removeFav = async (data, element) => {
     }}
   >
     <View style={{ alignItems: 'center' }}>
-      <Text style={{ color: 'white', fontSize: 35 }}>Typography Scale</Text>
-      <Text style={{ color: 'white', fontSize: 20, marginTop: 20 }}>Examples</Text>
-      <Text style={{ color: 'white', fontSize: 20, marginTop: 20 }}>
+    <Text style={[globalStyles.screenStyles.textShadow, { color: 'white', fontSize: 40, marginTop: 20, fontStyle: 'italic' }]}>
           {data[0].name}
       </Text>
+     
+      <Text style={{ color: 'white', fontSize: 20, marginTop: 20 }}>Examples</Text>
+     
+
+    <Text
+      style={{
+        color: 'white',
+        fontSize: 13,
+        textAlign: 'center',
+        backgroundColor: 'transparent',
+        borderRadius: 5,
+        padding: 20,
+      }}
+    >
+      Typography scales are essential in UI/UX design because they establish a clear visual hierarchy, ensuring that users can quickly distinguish between elements like headings, subheadings, and body text. This structured approach enhances readability and guides the user’s eye naturally through the interface.
+    </Text>
     </View>
 
     {data?.[0]?.styles?.map((element, index) => (
@@ -365,15 +377,17 @@ const removeFav = async (data, element) => {
     key={`${element.label}-${index}`}
     style={{
       marginTop: 50,
-      backgroundColor: '#f8f8f8',
-      borderRadius: 5,
+      backgroundColor: 'transparent',
+      borderRadius: 10,
       padding: 20,
       alignItems: 'center',
+      borderWidth: 1,
+      borderColor: 'white',
     }}
   >
     <Text
       style={{
-        color: 'black',
+        color: 'white',
         fontSize: element.size,
         textAlign: 'center',
       }}
@@ -383,7 +397,7 @@ const removeFav = async (data, element) => {
 
     <Text
       style={{
-        color: 'black',
+        color: 'white',
         fontSize: element.size,
         textAlign: 'center',
       }}
@@ -393,19 +407,6 @@ const removeFav = async (data, element) => {
   </View>
 ))}
 
-    <Text
-      style={{
-        color: 'black',
-        fontSize: 13,
-        textAlign: 'center',
-        marginTop: 30,
-        backgroundColor: '#f8f8f8',
-        borderRadius: 5,
-        padding: 20,
-      }}
-    >
-      Typography hierarchy is crucial in design systems because it helps organize content...
-    </Text>
   </ScrollView>
 )}
 
@@ -471,12 +472,9 @@ const removeFav = async (data, element) => {
       */}
       {(type === "component" || type === "styledComponents") && (
 
-        <View >
-          <Text style={{ color: 'white' }}>Package: {packageName}</Text>
-          {/* Card Style */}
-          <Text style={[{ color: 'white', fontSize:  20, margin: 20, fontWeight: 'bold' }]}>
-               Card Component
-          </Text>
+        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+          <Text style={[globalStyles.screenStyles.textShadow, { color: 'white', fontStyle: 'italic', fontSize: 40 }]}>{packageName}</Text>
+      
           < View>
           <View style={{ flexDirection: 'row', marginBottom: 5 }}>
               <Text style={{ color: 'white', fontWeight: 'bold', marginRight: 15 }}>cardBorder:</Text>

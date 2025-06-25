@@ -97,7 +97,7 @@ const SettingScreen = ({ route }) => {
       {selectedSetting === 'default' && (
         <View>
          <View style={[{ alignItems: 'center', marginTop: 25 }]}>
-           <MaterialIcons name="settings" size={65} color="royalblue" />
+           <MaterialIcons style={globalStyles.screenStyles.iconShadow} name="settings" size={65} color="royalblue" />
         </View>
           <View style={globalStyles.screenStyles.column}>
             <Pressable onPress={() => setSelectedSetting('account')} style={globalStyles.screenStyles.settingsComp}>

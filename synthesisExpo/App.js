@@ -84,11 +84,14 @@ import 'react-native-gesture-handler';
 function App() {
 
   const [fontsLoaded, setFontsLoaded] = useState(false);
+   const [loading, setLoading] = useState(false);
 
   // ----------------------------------------------------< Load Fonts/Video >--------------------------------------------------------
   
   
   const loadVideos = async () => {
+
+    setLoading(true)
     try {
       await Asset.loadAsync([
         require('./assets/gradient1.mp4'),
@@ -96,10 +99,13 @@ function App() {
         require('./assets/gradient3.mp4'),
         require('./assets/gradient4.mp4'),
         require('./assets/gradient5.mp4'),
+        require('./assets/jelly4.mp4'),
       ]);
       console.log('Videos preloaded successfully');
     } catch (error) {
       console.error('Error preloading videos:', error);
+    }finally{
+      setLoading(false)
     }
   };
 
@@ -184,6 +190,20 @@ return (
 
 <LogProvider>
  <ErrorBoundary>
+    {loading && fontsLoaded && (
+            <Modal transparent={true} animationType="fade">
+              <View style={{
+                flex: 1,
+                backgroundColor: 'rgba(0,0,0,0.5)',
+                justifyContent: 'center',
+                alignItems: 'center',
+                zIndex: 1000
+              }}>
+                <ActivityIndicator size="large" color="white" />
+                <Text style={{ color: 'white', marginTop: 10 }}>Loading assets...</Text>
+              </View>
+            </Modal>
+        )}
       <LoginRegScreen />
     </ErrorBoundary>
   </LogProvider>

@@ -273,7 +273,7 @@ const globalStyles = StyleSheet.create({
           width: 150,
           height: 50,
           borderRadius: 10,
-          margin: 20
+          
         },
         scrollContainer: {
           flexDirection: 'row', // Layout items in a row for horizontal scrolling
@@ -290,13 +290,14 @@ const globalStyles = StyleSheet.create({
           width: 120,
           height: 120,
           borderRadius: 10,
-          margin:5,
+          margin: 5,
           borderWidth: 1,
           borderColor: 'white',
           justifyContent: 'center',
           alignItems: 'center',
           backgroundColor: 'transparent',
           position: 'relative', // For positioning the circle in the corner
+        
         },
         checkCircle: {
           width: 20,
@@ -319,6 +320,26 @@ const globalStyles = StyleSheet.create({
           backgroundColor: 'royalblue', // orange fill when checked
           zIndex: 1
         },
+        iconShadow:{
+          textShadowColor: 'rgba(0, 0, 0, 0.6)', 
+          textShadowOffset: { width: 2, height: 2 },
+          textShadowRadius: 4,
+        },
+        textShadow: {
+           textShadowColor: 'rgba(0, 0, 0, 0.75)',
+           textShadowOffset: { width: 2, height: 2 }, 
+           textShadowRadius: 5, 
+        },
+        btnShadow:{
+          shadowColor: '#000',
+          shadowOffset: { width: 2, height: 4 },
+          shadowOpacity: 0.3,
+          shadowRadius: 5,
+
+          // Android Shadow
+          elevation: 6,
+        },
+
 
     }, // screen styles end
   

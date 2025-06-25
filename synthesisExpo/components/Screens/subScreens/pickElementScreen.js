@@ -33,6 +33,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native'
 import { CommonActions } from '@react-navigation/native';
 import VideoBackground from '../Bkgd/VideoBackground'; 
+import { useHeaderHeight } from '@react-navigation/elements';
 
 
 import Icon from './Icon'
@@ -51,9 +52,11 @@ const PickElementScreen = ({route}) => {
 
     const [corroData, setCorroData] = useState();
     const { getDesignSystem, username } = useAuth();
+    const [loading, setLoading] = useState(false);
+
 
      const navigation = useNavigation();
-
+     const headerHeight = useHeaderHeight();
     
 
 
@@ -111,7 +114,7 @@ const PickElementScreen = ({route}) => {
      }
 
      console.log("category", category)
- 
+    setLoading(true)
      try{
          let response = await fetch(fetchURL, fetchOptions);
  
@@ -132,6 +135,8 @@ const PickElementScreen = ({route}) => {
         
      }catch(err){
          console.log("there was an error with the fetch", err)
+     }finally{
+      setLoading(false)
      }
       
    }
@@ -158,14 +163,30 @@ const PickElementScreen = ({route}) => {
       
        <SafeAreaView style={{ flex: 1, backgroundColor: 'black' }}>
 
-          <View style={{flex: 1, position: 'relative', alignItems: 'center', padding: 20}}>
+         {loading && (
+                  <Modal transparent={true} animationType="fade">
+                    <View style={{
+                      flex: 1,
+                      backgroundColor: 'rgba(0,0,0,0.5)',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      zIndex: 1000
+                    }}>
+                      <ActivityIndicator size="large" color="white" />
+                      <Text style={{ color: 'white', marginTop: 10 }}>Processing...</Text>
+                    </View>
+                  </Modal>
+              )}
+        
+
+          <View style={{flex: 1, position: 'relative', alignItems: 'center', padding: 20, zIndex: 0}}>
         
                    <VideoBackground source={require('../../../assets/gradient2.mp4')} />
                    
              <View style={{ flex: 1, zIndex: 1,}}>
      
          <ScrollView   
-            contentContainerStyle={{  flexDirection: 'column', flexWrap: 'wrap', paddingBottom: 50}}
+            contentContainerStyle={{  flexDirection: 'column', flexWrap: 'wrap', paddingTop: headerHeight, paddingBottom: headerHeight,}}
             keyboardShouldPersistTaps="handled"
             showsVerticalScrollIndicator={false} 
             showsHorizontalScrollIndicator={false}

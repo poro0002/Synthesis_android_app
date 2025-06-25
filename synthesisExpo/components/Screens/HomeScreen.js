@@ -90,7 +90,7 @@ useLayoutEffect(() => {
        headerRight: () => (
          <Pressable onPress={handleCustomDesign} style={{ marginRight: 16}}>
          
-           <MaterialIcons name="add" size={35} color="blue" />
+           <MaterialIcons style={globalStyles.screenStyles.iconShadow} name="add" size={35} color="blue" />
           
          </Pressable>
        ),
@@ -110,7 +110,7 @@ useLayoutEffect(() => {
                  keyboardShouldPersistTaps="handled"
                  >
         
-               <Text style={[globalStyles.screenStyles.h1, {textAlign: 'center'}]}>Welcome {username}</Text>
+               <Text style={[globalStyles.screenStyles.h1, globalStyles.screenStyles.textShadow, {textAlign: 'center'}]}>Welcome {username}</Text>
              
          
         <Text style={globalStyles.screenStyles.text}>What are you Looking For ?</Text>

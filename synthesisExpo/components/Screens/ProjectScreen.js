@@ -117,9 +117,9 @@ const ProjectScreen = () => {
         contentContainerStyle={{  flexDirection: 'column', paddingTop: headerHeight, paddingBottom: headerHeight, paddingHorizontal: 20}}
         keyboardShouldPersistTaps="handled"
         >
-       <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'left', }}>
+       <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'left', marginTop: 35 }}>
           <Text style={[globalStyles.screenStyles.h2, {marginRight: 20}]}>My Projects</Text>
-          <MaterialIcons name="folder-special" size={50} color="royalblue" />
+          <MaterialIcons style={globalStyles.screenStyles.iconShadow}  name="folder-special" size={30} color="royalblue" />
        </View>
 
       {designSystemData.length > 0 ? (
@@ -131,7 +131,7 @@ const ProjectScreen = () => {
                   borderRadius: 5,
                   flexDirection: 'column',
                   width: 300,
-                  shadowColor: 'white', // Shadow color
+                  shadowColor: 'black', // Shadow color
                   shadowOffset: { width: 2, height: 2 }, // Shadow offset
                   shadowOpacity: 1, // Shadow opacity
                   shadowRadius: 3, // Shadow radius
@@ -142,7 +142,7 @@ const ProjectScreen = () => {
                 }}
               >
                 <LinearGradient
-                   colors={(element.gradients?.[0]?.colors && element.gradients[0].colors.length > 0) ? element.gradients[0].colors : ['white', 'white']}
+                   colors={(element.gradients?.[0]?.colors && element.gradients[0].colors.length > 0) ? element.gradients[0].colors : ['black', 'black']}
                   start={{ x: 1, y: 1 }}
                   end={{ x: 0, y: 0 }}
                   style={{
@@ -152,14 +152,14 @@ const ProjectScreen = () => {
                 >
                   <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                     <View style={{ flexDirection: 'row' }}>
-                      <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 18 }}>
+                      <Text style={[globalStyles.screenStyles.textShadow, { color: 'white', fontWeight: 'bold', fontSize: 18,}]}>
                         {element.name}
                       </Text>
                       <Text style={{ color: 'white' }}>{element.about}</Text>
                     </View>
                     <View style={{ flexDirection: 'row' }}>
-                      <MaterialIcons name="palette" size={32} color="white" />
-                      <MaterialIcons name="brush" size={32} color="white" />
+                      <MaterialIcons  style={globalStyles.screenStyles.iconShadow} name="palette" size={32} color="white" />
+                      <MaterialIcons style={globalStyles.screenStyles.iconShadow}  name="brush" size={32} color="white" />
                     </View>
                   </View>
               
@@ -170,7 +170,7 @@ const ProjectScreen = () => {
              
               </Pressable>
 
-                 <MaterialIcons name='arrow-forward'size={32} color="white" />
+                 <MaterialIcons style={[globalStyles.screenStyles.iconShadow, {marginLeft: 20}]} name='arrow-forward'size={32} color="white" />
     
             </View>
   ))
@@ -178,9 +178,9 @@ const ProjectScreen = () => {
   <Text>No design systems found or loading...</Text>
 )} 
 
-      <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'left' }}>
-          <Text style={[globalStyles.screenStyles.h3, {marginRight: 20}]}> Favorites</Text>
-            <MaterialIcons name="favorite" size={30} color="royalblue" />
+      <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'left', marginTop: 35 }}>
+          <Text style={[globalStyles.screenStyles.h2, {marginRight: 20}]}> Favorites</Text>
+            <MaterialIcons style={globalStyles.screenStyles.iconShadow}  name="favorite" size={30} color="royalblue" />
           
       </View>
 
@@ -200,7 +200,7 @@ const ProjectScreen = () => {
        
   {favoriteFonts && favoriteFonts.length > 0 && (
       <>
-        <Text style={[globalStyles.screenStyles.h4, {color: 'white'}]}>Fonts</Text>
+        <Text style={[globalStyles.screenStyles.h4, {color: 'white'}]}>Fonts ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯</Text>
           <ScrollView 
                 horizontal // Enables horizontal scrolling
                 showsHorizontalScrollIndicator={false} // Hides the scroll indicator
@@ -215,7 +215,7 @@ const ProjectScreen = () => {
                      }
        
                 return (
-                  <View key={index} >
+                <View key={index} >
                   <View style={globalStyles.screenStyles.box}>
               
                   
@@ -241,7 +241,7 @@ const ProjectScreen = () => {
 
   {favoriteColors && favoriteColors.length > 0 && (
       <>
-        <Text style={[globalStyles.screenStyles.h4, {color: 'white'}]}>Color Gradients</Text>
+        <Text style={[globalStyles.screenStyles.h4, {color: 'white'}]}>Color Gradients ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯</Text>
           <ScrollView 
                horizontal // Enables horizontal scrolling
                 showsHorizontalScrollIndicator={false} // Hides the scroll indicator
@@ -280,7 +280,7 @@ const ProjectScreen = () => {
    {favoriteTypo && favoriteTypo.length > 0 && (
          
          <>
-           <Text style={[globalStyles.screenStyles.h4, {color: 'white'}]}>Typography</Text>
+           <Text style={[globalStyles.screenStyles.h4, {color: 'white'}]}>Typography ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯</Text>
              <ScrollView 
                   horizontal // Enables horizontal scrolling
                    showsHorizontalScrollIndicator={false} // Hides the scroll indicator
@@ -307,7 +307,7 @@ const ProjectScreen = () => {
 
 {favoriteIcons && favoriteIcons.length > 0 && (
   <>
-    <Text style={[globalStyles.screenStyles.h4, { color: 'white' }]}>Icons</Text>
+    <Text style={[globalStyles.screenStyles.h4, { color: 'white' }]}>Icons ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯</Text>
     <ScrollView
       horizontal
       showsHorizontalScrollIndicator={false}
@@ -336,7 +336,7 @@ const ProjectScreen = () => {
 
 {favoriteComp && favoriteComp.length > 0 && (
   <>
-    <Text style={[globalStyles.screenStyles.h4, { color: 'white' }]}>Components</Text>
+    <Text style={[globalStyles.screenStyles.h4, { color: 'white' }]}>Components ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯</Text>
     <ScrollView
       horizontal
       showsHorizontalScrollIndicator={false}
