@@ -20,6 +20,8 @@ import {
   SafeAreaView
 } from 'react-native';
 
+import { ImageBackground } from 'react-native';
+
 import { LinearGradient } from 'expo-linear-gradient';
 import { Feather, FontAwesome5 } from 'react-native-vector-icons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -64,6 +66,8 @@ const CustomDesignScreen = ({ route }) => {
 
     } = useAuth();
 
+      const gradientColors = selectedElements.gradients.length > 0 ? selectedElements.gradients[0].colors : ['#4c4c66', '#1a1a2e']; 
+
 
   useEffect(() => {
 
@@ -102,7 +106,28 @@ const CustomDesignScreen = ({ route }) => {
 
     return(
      <View style={{flex: 1, position: 'relative', alignItems: 'center', zIndex: 0}}>
-          <VideoBackground pointerEvents="none" source={require('../../../assets/gradient4.mp4')} />
+         
+         <LinearGradient
+            colors={gradientColors}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              bottom: 0,
+              right: 0,
+              zIndex: 0,
+            }}
+          ><View
+              style={{
+                flex: 1,
+                backgroundColor: 'rgba(0,0,0,0.4)', 
+              }}
+              >
+            </View>
+            
+            </LinearGradient>
               
            <View style={{ flex: 1, zIndex: 1 }}>
         <ScrollView   

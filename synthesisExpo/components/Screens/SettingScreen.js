@@ -18,6 +18,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { DevSettings } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import VideoBackground from './Bkgd/VideoBackground'; 
+import { ImageBackground } from 'react-native';
 
 
 import { useAuth } from '../../LogContext';
@@ -64,7 +65,7 @@ const SettingScreen = ({ route }) => {
   const renderBackButton = () => (
     <View style={{ position: 'absolute', top: 20, left: 10 }}>
       <Pressable onPress={() => setSelectedSetting('default')}>
-        <MaterialIcons name="arrow-back-ios" size={30} color="orange" />
+        <MaterialIcons name="arrow-back-ios" size={30} color="royalblue" />
       </Pressable>
     </View>
   );
@@ -86,10 +87,28 @@ const SettingScreen = ({ route }) => {
   return (
  
    
-        <View style={{flex: 1, position: 'relative', alignItems: 'center', zIndex: 0}}>
-               <VideoBackground pointerEvents="none" source={require('../../assets/gradient5.mp4')} />
+        <View style={{flex: 1, position: 'relative',  zIndex: 0}}>
+                <ImageBackground
+                                 source={require('../../assets/brown-gradient.png')}
+                                 resizeMode="cover"
+                                 style={{
+                                   position: 'absolute',
+                                   top: 0,
+                                   left: 0,
+                                   bottom: 0,
+                                   right: 0,
+                                   zIndex: 0,
+                                 }}
+                               >
+                                 <View
+                                   style={{
+                                     flex: 1,
+                                     backgroundColor: 'rgba(0,0,0,0.4)', // adjust opacity and color here
+                                   }}
+                                 />
+                    </ImageBackground>
           
-               <View style={{ flex: 1, zIndex: 1 }}>
+    <View style={{ flex: 1, zIndex: 1 }}>
         <ScrollView   
                   contentContainerStyle={{  flexDirection: 'column', paddingTop: headerHeight, paddingBottom: headerHeight, paddingHorizontal: 20}}
                   keyboardShouldPersistTaps="handled"
@@ -99,26 +118,39 @@ const SettingScreen = ({ route }) => {
          <View style={[{ alignItems: 'center', marginTop: 25 }]}>
            <MaterialIcons style={globalStyles.screenStyles.iconShadow} name="settings" size={65} color="royalblue" />
         </View>
-          <View style={globalStyles.screenStyles.column}>
-            <Pressable onPress={() => setSelectedSetting('account')} style={globalStyles.screenStyles.settingsComp}>
-              <Text style={globalStyles.screenStyles.topicText}>Account</Text>
-            </Pressable>
-            <Pressable onPress={() => setSelectedSetting('notifications')} style={globalStyles.screenStyles.settingsComp}>
-              <Text style={globalStyles.screenStyles.topicText}>Notifications</Text>
-            </Pressable>
-            <Pressable onPress={() => setSelectedSetting('privacy')} style={globalStyles.screenStyles.settingsComp}>
-              <Text style={globalStyles.screenStyles.topicText}>Privacy & Security</Text>
-            </Pressable>
-            <Pressable onPress={() => setSelectedSetting('help')} style={globalStyles.screenStyles.settingsComp}>
-              <Text style={globalStyles.screenStyles.topicText}>Help & Support</Text>
-            </Pressable>
-            <Pressable onPress={() => setSelectedSetting('about')} style={globalStyles.screenStyles.settingsComp}>
-              <Text style={globalStyles.screenStyles.topicText}>About</Text>
-            </Pressable>
-            <Pressable onPress={() => setSelectedSetting('contact')} style={globalStyles.screenStyles.settingsComp}>
-              <Text style={globalStyles.screenStyles.topicText}>Contact Us</Text>
-            </Pressable>
+        
+        <View style={{ marginTop: 30 }}>
+              <Pressable onPress={() => setSelectedSetting('account')} style={globalStyles.screenStyles.settingsComp}>
+                  <MaterialIcons name="person" size={24} color="white" style={[globalStyles.screenStyles.iconShadow, { marginRight: 15, }]} />
+                  <Text style={globalStyles.screenStyles.topicText}>Account</Text>
+              </Pressable>
+
+              <Pressable onPress={() => setSelectedSetting('notifications')} style={globalStyles.screenStyles.settingsComp}>
+                  <MaterialIcons name="notifications" size={24} color="white"  style={[globalStyles.screenStyles.iconShadow, { marginRight: 15, }]} />
+                  <Text style={globalStyles.screenStyles.topicText}>Notifications</Text>
+              </Pressable>
+
+              <Pressable onPress={() => setSelectedSetting('privacy')} style={globalStyles.screenStyles.settingsComp}>
+                  <MaterialIcons name="lock" size={24} color="white"  style={[globalStyles.screenStyles.iconShadow, { marginRight: 15, }]} />
+                  <Text style={globalStyles.screenStyles.topicText}>Privacy & Security</Text>
+              </Pressable>
+
+              <Pressable onPress={() => setSelectedSetting('help')} style={globalStyles.screenStyles.settingsComp}>
+                  <MaterialIcons name="help-outline" size={24} color="white"  style={[globalStyles.screenStyles.iconShadow, { marginRight: 15, }]}/>
+                  <Text style={globalStyles.screenStyles.topicText}>Help & Support</Text>
+              </Pressable>
+
+              <Pressable onPress={() => setSelectedSetting('about')} style={globalStyles.screenStyles.settingsComp}>
+                  <MaterialIcons name="info-outline" size={24} color="white"  style={[globalStyles.screenStyles.iconShadow, { marginRight: 15, }]} />
+                  <Text style={globalStyles.screenStyles.topicText}>About</Text>
+              </Pressable>
+
+              <Pressable onPress={() => setSelectedSetting('contact')} style={globalStyles.screenStyles.settingsComp}>
+                  <MaterialIcons name="email" size={24} color="white"  style={[globalStyles.screenStyles.iconShadow, { marginRight: 15, }]}/>
+                  <Text style={globalStyles.screenStyles.topicText}>Contact Us</Text>
+              </Pressable>
           </View>
+
         </View>
       )}
       {selectedSetting !== 'default' && (
@@ -137,7 +169,7 @@ const SettingScreen = ({ route }) => {
 
                <Text style={[globalStyles.screenStyles.text, { marginRight: 10 }]}>Enable Notifications</Text>
               <Switch
-                trackColor={{ false: 'white', true: 'orange' }}
+                trackColor={{ false: 'white', true: 'royalblue' }}
                 thumbColor={isAB ? 'white' : 'white'}
                 onValueChange={toggleSwitch}
                 value={isAB}
@@ -151,7 +183,7 @@ const SettingScreen = ({ route }) => {
               <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center',}}>
                 <Text style={[globalStyles.screenStyles.text, { marginRight: 10 }]}>Allow Synthesis to use your data for research purposes</Text>
                   <Switch
-                    trackColor={{ false: 'white', true: 'orange' }}
+                    trackColor={{ false: 'white', true: 'royalblue' }}
                     thumbColor={isAB ? 'white' : 'white'}
                     onValueChange={toggleSwitch}
                     value={isAB}
@@ -190,9 +222,14 @@ const SettingScreen = ({ route }) => {
        
                    
                  <TextInput
-                   style={[globalStyles.screenStyles.input, { marginBottom: 10}]}
-                   placeholder="Subject"
-                  placeholderTextColor="gray"
+                   style={[globalStyles.screenStyles.input, { 
+                    marginBottom: 10, 
+                    width: '85%', 
+                    borderColor: 'white', 
+                 
+                  }]}
+                    placeholder="Subject"
+                    placeholderTextColor="gray"
                  />
 
           
@@ -201,9 +238,11 @@ const SettingScreen = ({ route }) => {
              globalStyles.screenStyles.input,
              { 
                marginBottom: 10, 
-               height: 120, // Explicitly set height for larger box
-               textAlignVertical: 'top', // Ensures text starts at the top-left
-               padding: 10 // Adds padding inside the input box
+               height: 120, 
+               textAlignVertical: 'top', 
+               padding: 10,
+               width: '85%', 
+               borderColor: 'white', 
              }
                   ]}
                   placeholder="Your Message"
@@ -212,8 +251,18 @@ const SettingScreen = ({ route }) => {
                   numberOfLines={4}
                 />
 
-                 <Pressable onPress={submitFeedback} style={[globalStyles.screenStyles.viewBtn]}>
-                     <Text>
+               <Pressable onPress={submitFeedback}  
+                 style={{ 
+                    marginTop: 10,
+                    backgroundColor: 'royalblue',
+                    borderRadius: 5,
+                    paddingVertical: 10,
+                    paddingHorizontal: 20,
+                    alignItems: 'center',
+                    width: '85%'
+                  }} 
+                    >
+                     <Text style={{color: 'white'}}>
                         Submit Feedback
                      </Text>
                   </Pressable>

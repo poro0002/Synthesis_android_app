@@ -26,6 +26,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native'
 import { useHeaderHeight } from '@react-navigation/elements';
 import VideoBackground from './Bkgd/VideoBackground'; 
+import { ImageBackground } from 'react-native';
 
 import { useAuth } from '../../LogContext'; // Adjust path as needed
 import Icon from './subScreens/Icon'
@@ -86,9 +87,9 @@ const ProjectScreen = () => {
   );
   
 
-  useEffect(() => {
-    console.log("✅ Updated favData:", JSON.stringify(favData, null, 2));
-  }, [favData]);
+  // useEffect(() => {
+  //   console.log("✅ Updated favData:", JSON.stringify(favData, null, 2));
+  // }, [favData]);
 
 
   if (!Array.isArray(favData)) return null;
@@ -109,7 +110,25 @@ const ProjectScreen = () => {
 
   return (
     <View style={{flex: 1, position: 'relative', alignItems: 'center'}}>
-      <VideoBackground source={require('../../assets/gradient1.mp4')} />
+       <ImageBackground
+                     source={require('../../assets/grey-gradient.jpg')}
+                     resizeMode="cover"
+                     style={{
+                       position: 'absolute',
+                       top: 0,
+                       left: 0,
+                       bottom: 0,
+                       right: 0,
+                       zIndex: 0,
+                     }}
+                   >
+                     <View
+                       style={{
+                         flex: 1,
+                         backgroundColor: 'rgba(0,0,0,0.4)', // adjust opacity and color here
+                       }}
+                     />
+                 </ImageBackground>
       
         
       <View style={globalStyles.screenStyles.mainView}>
@@ -151,11 +170,11 @@ const ProjectScreen = () => {
                   }}
                 >
                   <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                    <View style={{ flexDirection: 'row' }}>
-                      <Text style={[globalStyles.screenStyles.textShadow, { color: 'white', fontWeight: 'bold', fontSize: 18,}]}>
+                    <View style={{ flexDirection: 'column' }}>
+                      <Text style={[globalStyles.screenStyles.textShadow, { color: 'white', fontWeight: 'bold', fontSize: 18, marginBottom: 5}]}>
                         {element.name}
                       </Text>
-                      <Text style={{ color: 'white' }}>{element.about}</Text>
+                      <Text style={{ color: 'white', fontWeight: 'bold', marginBottom: 5 }}>{element.about}</Text>
                     </View>
                     <View style={{ flexDirection: 'row' }}>
                       <MaterialIcons  style={globalStyles.screenStyles.iconShadow} name="palette" size={32} color="white" />
@@ -175,7 +194,7 @@ const ProjectScreen = () => {
             </View>
   ))
 ) : (
-  <Text>No design systems found or loading...</Text>
+  <Text style={{marginTop: 20, color: 'white'}}>No design systems found for this user</Text>
 )} 
 
       <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'left', marginTop: 35 }}>
@@ -359,8 +378,16 @@ const ProjectScreen = () => {
         </View>
       ))}
     </ScrollView>
-  </>
+
+ </>
 )}
+  {
+    (!favData || favData.length === 0) &&  (
+      <Text style={{marginTop: 20, color: 'white'}}>
+        No design systems found for this user
+      </Text>
+    )
+  }
 
 
 

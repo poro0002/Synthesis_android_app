@@ -95,326 +95,52 @@ app.listen(port, (err) => {
 
    
    const gradients = [
-     {
-       name: 'Sunset',
-       colors: ['#FF5F6D', '#FFC371'],
-       description: 'Sunset captures the warm energy of a financial sunrise, symbolizing optimism and growth.',
-       primary: '#FF5F6D',
-       primaryLight: '#FF7F8A',
-       primaryDark: '#CC4B54',
-       secondary: '#FFC371',
-       secondaryLight: '#FFD788',
-       secondaryDark: '#CC9F5B'
-     },
-     {
-       name: 'Ocean Blues',
-       colors: ['#36D1DC', '#5B86E5'],
-       description: 'Ocean Blues combines clarity and depth, perfect for conveying trust and stability in finance.',
-       primary: '#36D1DC',
-       primaryLight: '#64E6F1',
-       primaryDark: '#2AA2B1',
-       secondary: '#5B86E5',
-       secondaryLight: '#809EF7',
-       secondaryDark: '#4665B6'
-     },
-     {
-       name: 'Night Sky',
-       colors: ['#000428', '#004e92'],
-       description: 'Night Sky evokes calm and dependability, qualities essential in financial security.',
-       primary: '#000428',
-       primaryLight: '#202049',
-       primaryDark: '#00031D',
-       secondary: '#004e92',
-       secondaryLight: '#2B75C4',
-       secondaryDark: '#003E6F'
-     },
-     {
-       name: 'Purple Haze',
-       colors: ['#9D50BB', '#6E48AA'],
-       description: 'Purple Haze blends creativity with wisdom, inspiring confident financial decisions.',
-       primary: '#9D50BB',
-       primaryLight: '#B470D0',
-       primaryDark: '#7A3A95',
-       secondary: '#6E48AA',
-       secondaryLight: '#8A6DBC',
-       secondaryDark: '#55378A'
-     },
-     {
-       name: 'Lush Green',
-       colors: ['#56ab2f', '#a8e063'],
-       description: 'Lush Green embodies growth and renewal, symbolizing prosperous financial health.',
-       primary: '#56ab2f',
-       primaryLight: '#7AC758',
-       primaryDark: '#418224',
-       secondary: '#a8e063',
-       secondaryLight: '#C9F186',
-       secondaryDark: '#7DB44A'
-     },
-     {
-       name: 'Warm Sun',
-       colors: ['#f46b45', '#eea849'],
-       description: 'Warm Sun radiates positivity and wealth, perfect for financial optimism.',
-       primary: '#f46b45',
-       primaryLight: '#F9825F',
-       primaryDark: '#B75133',
-       secondary: '#eea849',
-       secondaryLight: '#FBC369',
-       secondaryDark: '#B7853A'
-     },
-     {
-       name: 'Deep Space',
-       colors: ['#434343', '#000000'],
-       description: 'Deep Space represents stability and strength, foundational to financial security.',
-       primary: '#434343',
-       primaryLight: '#666666',
-       primaryDark: '#2B2B2B',
-       secondary: '#000000',
-       secondaryLight: '#262626',
-       secondaryDark: '#000000'
-     },
-     {
-       name: 'Calm Waters',
-       colors: ['#89f7fe', '#66a6ff'],
-       description: 'Calm Waters soothes financial anxiety with trust and clarity.',
-       primary: '#89f7fe',
-       primaryLight: '#A7FAFF',
-       primaryDark: '#5EC9D1',
-       secondary: '#66a6ff',
-       secondaryLight: '#8AADFF',
-       secondaryDark: '#446CCC'
-     },
-     {
-       name: 'Sunny Days',
-       colors: ['#f7971e', '#ffd200'],
-       description: 'Sunny Days brings energy and optimism, brightening financial futures.',
-       primary: '#f7971e',
-       primaryLight: '#FBB93E',
-       primaryDark: '#B86F16',
-       secondary: '#ffd200',
-       secondaryLight: '#FFEB55',
-       secondaryDark: '#BBA000'
-     },
-     {
-       name: 'Blue Lagoon',
-       colors: ['#43cea2', '#185a9d'],
-       description: 'Blue Lagoon balances refreshing growth with deep trust in financial planning.',
-       primary: '#43cea2',
-       primaryLight: '#6CE2BD',
-       primaryDark: '#349373',
-       secondary: '#185a9d',
-       secondaryLight: '#3A7FC5',
-       secondaryDark: '#134471'
-     },
-     {
-       name: 'Electric Violet',
-       colors: ['#3a1c71', '#d76d77', '#ffaf7b'],
-       description: 'Electric Violet sparks creativity and passion for dynamic financial growth.',
-       primary: '#3a1c71',
-       primaryLight: '#574196',
-       primaryDark: '#2D165B',
-       secondary: '#d76d77',
-       secondaryLight: '#E38B8F',
-       secondaryDark: '#A35158'
-     },
-     {
-       name: 'Cool Breeze',
-       colors: ['#00c6ff', '#0072ff'],
-       description: 'Cool Breeze refreshes the financial landscape with calm confidence.',
-       primary: '#00c6ff',
-       primaryLight: '#33D2FF',
-       primaryDark: '#0096CC',
-       secondary: '#0072ff',
-       secondaryLight: '#3293FF',
-       secondaryDark: '#0059B3'
-     },
-     {
-       name: 'Peachy',
-       colors: ['#ed4264', '#ffedbc'],
-       description: 'Peachy blends warmth and softness, inspiring approachable financial optimism.',
-       primary: '#ed4264',
-       primaryLight: '#F06A80',
-       primaryDark: '#B2344C',
-       secondary: '#ffedbc',
-       secondaryLight: '#FFF3D1',
-       secondaryDark: '#CCB77F'
-     },
-     {
-       name: 'Pink Sunrise',
-       colors: ['#f953c6', '#b91d73'],
-       description: 'Pink Sunrise ignites passion and confidence for a bright financial dawn.',
-       primary: '#f953c6',
-       primaryLight: '#F96CD6',
-       primaryDark: '#B93694',
-       secondary: '#b91d73',
-       secondaryLight: '#D2449E',
-       secondaryDark: '#8A1657'
-     },
-     {
-       name: 'Skyline',
-       colors: ['#1488cc', '#2b32b2'],
-       description: 'Skyline reflects structure and ambition, reaching new financial heights.',
-       primary: '#1488cc',
-       primaryLight: '#4799E6',
-       primaryDark: '#0F6BA1',
-       secondary: '#2b32b2',
-       secondaryLight: '#5359CF',
-       secondaryDark: '#1F2491'
-     },
-     {
-       name: 'Candy',
-       colors: ['#ff6a00', '#ee0979'],
-       description: 'Candy energizes with vibrant passion and excitement for financial adventure.',
-       primary: '#ff6a00',
-       primaryLight: '#FF8741',
-       primaryDark: '#CC5600',
-       secondary: '#ee0979',
-       secondaryLight: '#F04B9B',
-       secondaryDark: '#B00662'
-     },
-     {
-       name: 'Berry Delight',
-       colors: ['#c31432', '#240b36'],
-       description: 'Berry Delight combines richness and mystery for confident financial boldness.',
-       primary: '#c31432',
-       primaryLight: '#D9435D',
-       primaryDark: '#970026',
-       secondary: '#240b36',
-       secondaryLight: '#4D3B62',
-       secondaryDark: '#190829'
-     },
-     {
-       name: 'Purple Dream',
-       colors: ['#bc4e9c', '#f80759'],
-       description: 'Purple Dream inspires visionary financial growth with passion and creativity.',
-       primary: '#bc4e9c',
-       primaryLight: '#CF72B4',
-       primaryDark: '#8E3B75',
-       secondary: '#f80759',
-       secondaryLight: '#FA3C7A',
-       secondaryDark: '#B30544'
-     },
-     {
-       name: 'Flare',
-       colors: ['#f12711', '#f5af19'],
-       description: 'Flare ignites energy and optimism, perfect for bold financial moves.',
-       primary: '#f12711',
-       primaryLight: '#F3462A',
-       primaryDark: '#B3170C',
-       secondary: '#f5af19',
-       secondaryLight: '#F7C545',
-       secondaryDark: '#B88A12'
-     },
-     {
-       name: 'Mint Fresh',
-       colors: ['#00b09b', '#96c93d'],
-       description: 'Mint Fresh refreshes financial perspectives with growth and vitality.',
-       primary: '#00b09b',
-       primaryLight: '#33C1AA',
-       primaryDark: '#008377',
-       secondary: '#96c93d',
-       secondaryLight: '#B6D46B',
-       secondaryDark: '#728A2D'
-     },
-     {
-       name: 'Steel Blue',
-       colors: ['#2980b9', '#6dd5fa', '#ffffff'],
-       description: 'Steel Blue stands for strength and clarity, essential in financial stability.',
-       primary: '#2980b9',
-       primaryLight: '#57A3D9',
-       primaryDark: '#1F5E88',
-       secondary: '#6dd5fa',
-       secondaryLight: '#9BE0FF',
-       secondaryDark: '#4AB2D1'
-     },
-     {
-       name: 'Emerald Water',
-       colors: ['#348f50', '#56b4d3'],
-       description: 'Emerald Water combines the stability of blue with the growth symbolism of green, making it perfect for representing prosperity and security in finance.',
-       primary: '#458B92',
-       primaryLight: '#74BCD9',
-       primaryDark: '#2A6D48',
-       secondary: '#469E7F',
-       secondaryLight: '#7CC6B4',
-       secondaryDark: '#2A6C50'
-     },
-     {
-       name: 'Bloody Sunset',
-       colors: ['#ff512f', '#dd2476'],
-       description: 'Bloody Sunset brings intense passion and drive, fueling ambitious financial goals.',
-       primary: '#ff512f',
-       primaryLight: '#FF6D54',
-       primaryDark: '#CC4125',
-       secondary: '#dd2476',
-       secondaryLight: '#E95699',
-       secondaryDark: '#AA1C5B'
-     },
-     {
-       name: 'Seashore',
-       colors: ['#43c6ac', '#191654'],
-       description: 'Seashore evokes tranquility and depth, grounding financial decisions with calm confidence.',
-       primary: '#43c6ac',
-       primaryLight: '#68D2BC',
-       primaryDark: '#36927D',
-       secondary: '#191654',
-       secondaryLight: '#403F81',
-       secondaryDark: '#121040'
-     },
-     {
-       name: 'Sky Blue',
-       colors: ['#00c6ff', '#0072ff'],
-       description: 'Sky Blue reflects clarity and trust, essential for transparent financial growth.',
-       primary: '#00c6ff',
-       primaryLight: '#33D4FF',
-       primaryDark: '#009ACC',
-       secondary: '#0072ff',
-       secondaryLight: '#3391FF',
-       secondaryDark: '#005BCC'
-     },
-     {
-       name: 'Mango',
-       colors: ['#ffe259', '#ffa751'],
-       description: 'Mango radiates warmth and abundance, ideal for optimistic financial outlooks.',
-       primary: '#ffe259',
-       primaryLight: '#FFEF7E',
-       primaryDark: '#CCB84A',
-       secondary: '#ffa751',
-       secondaryLight: '#FFB577',
-       secondaryDark: '#B37442'
-     },
-     {
-       name: 'Morning',
-       colors: ['#ff5f6d', '#ffc371'],
-       description: 'Morning symbolizes fresh starts and growth, perfect for new financial beginnings.',
-       primary: '#ff5f6d',
-       primaryLight: '#FF7D83',
-       primaryDark: '#CC4B56',
-       secondary: '#ffc371',
-       secondaryLight: '#FFDD90',
-       secondaryDark: '#CC9F58'
-     },
-     {
-       name: 'Frost',
-       colors: ['#000428', '#004e92'],
-       description: 'Frost cools tensions, providing steady and reliable financial confidence.',
-       primary: '#000428',
-       primaryLight: '#202049',
-       primaryDark: '#00031D',
-       secondary: '#004e92',
-       secondaryLight: '#2B75C4',
-       secondaryDark: '#003E6F'
-     },
-     {
-       name: 'Pastel Blue',
-       colors: ['#7f7fd5', '#86a8e7', '#91eae4'],
-       description: 'Pastel Blue promotes calmness and thoughtful growth in financial decisions.',
-       primary: '#7f7fd5',
-       primaryLight: '#9CA0E8',
-       primaryDark: '#6466B6',
-       secondary: '#86a8e7',
-       secondaryLight: '#A3C1F0',
-       secondaryDark: '#5D79BD'
-     },
-     {
+    // 🔴 REDS / PINKS / ORANGES
+    {
+      name: 'Bloody Sunset',
+      colors: ['#ff512f', '#dd2476'],
+      description: 'Bloody Sunset brings intense passion and drive, fueling ambitious financial goals.',
+      primary: '#ff512f',
+      primaryLight: '#FF6D54',
+      primaryDark: '#CC4125',
+      secondary: '#dd2476',
+      secondaryLight: '#E95699',
+      secondaryDark: '#AA1C5B'
+    },
+    {
+      name: 'Pink Sunrise',
+      colors: ['#f953c6', '#b91d73'],
+      description: 'Pink Sunrise ignites passion and confidence for a bright financial dawn.',
+      primary: '#f953c6',
+      primaryLight: '#F96CD6',
+      primaryDark: '#B93694',
+      secondary: '#b91d73',
+      secondaryLight: '#D2449E',
+      secondaryDark: '#8A1657'
+    },
+    {
+      name: 'Peachy',
+      colors: ['#ed4264', '#ffedbc'],
+      description: 'Peachy blends warmth and softness, inspiring approachable financial optimism.',
+      primary: '#ed4264',
+      primaryLight: '#F06A80',
+      primaryDark: '#B2344C',
+      secondary: '#ffedbc',
+      secondaryLight: '#FFF3D1',
+      secondaryDark: '#CCB77F'
+    },
+    {
+      name: 'Candy',
+      colors: ['#ff6a00', '#ee0979'],
+      description: 'Candy energizes with vibrant passion and excitement for financial adventure.',
+      primary: '#ff6a00',
+      primaryLight: '#FF8741',
+      primaryDark: '#CC5600',
+      secondary: '#ee0979',
+      secondaryLight: '#F04B9B',
+      secondaryDark: '#B00662'
+    },
+    {
       name: 'Flamingo',
       colors: ['#fe8c00', '#f83600'],
       description: 'Flamingo bursts with energetic vibrance and bold ambition, symbolizing fearless financial moves and creative growth.',
@@ -426,6 +152,232 @@ app.listen(port, (err) => {
       secondaryDark: '#C42A00'
     },
     {
+      name: 'Warm Sun',
+      colors: ['#f46b45', '#eea849'],
+      description: 'Warm Sun radiates positivity and wealth, perfect for financial optimism.',
+      primary: '#f46b45',
+      primaryLight: '#F9825F',
+      primaryDark: '#B75133',
+      secondary: '#eea849',
+      secondaryLight: '#FBC369',
+      secondaryDark: '#B7853A'
+    },
+    {
+      name: 'Sunset',
+      colors: ['#FF5F6D', '#FFC371'],
+      description: 'Sunset captures the warm energy of a financial sunrise, symbolizing optimism and growth.',
+      primary: '#FF5F6D',
+      primaryLight: '#FF7F8A',
+      primaryDark: '#CC4B54',
+      secondary: '#FFC371',
+      secondaryLight: '#FFD788',
+      secondaryDark: '#CC9F5B'
+    },
+    {
+      name: 'Morning',
+      colors: ['#ff5f6d', '#ffc371'],
+      description: 'Morning symbolizes fresh starts and growth, perfect for new financial beginnings.',
+      primary: '#ff5f6d',
+      primaryLight: '#FF7D83',
+      primaryDark: '#CC4B56',
+      secondary: '#ffc371',
+      secondaryLight: '#FFDD90',
+      secondaryDark: '#CC9F58'
+    },
+    {
+      name: 'Flare',
+      colors: ['#f12711', '#f5af19'],
+      description: 'Flare ignites energy and optimism, perfect for bold financial moves.',
+      primary: '#f12711',
+      primaryLight: '#F3462A',
+      primaryDark: '#B3170C',
+      secondary: '#f5af19',
+      secondaryLight: '#F7C545',
+      secondaryDark: '#B88A12'
+    },
+    {
+      name: 'Mango',
+      colors: ['#ffe259', '#ffa751'],
+      description: 'Mango radiates warmth and abundance, ideal for optimistic financial outlooks.',
+      primary: '#ffe259',
+      primaryLight: '#FFEF7E',
+      primaryDark: '#CCB84A',
+      secondary: '#ffa751',
+      secondaryLight: '#FFB577',
+      secondaryDark: '#B37442'
+    },
+    {
+      name: 'Sunny Days',
+      colors: ['#f7971e', '#ffd200'],
+      description: 'Sunny Days brings energy and optimism, brightening financial futures.',
+      primary: '#f7971e',
+      primaryLight: '#FBB93E',
+      primaryDark: '#B86F16',
+      secondary: '#ffd200',
+      secondaryLight: '#FFEB55',
+      secondaryDark: '#BBA000'
+    },
+  
+    // 🟢 GREENS
+    {
+      name: 'Lush Green',
+      colors: ['#56ab2f', '#a8e063'],
+      description: 'Lush Green embodies growth and renewal, symbolizing prosperous financial health.',
+      primary: '#56ab2f',
+      primaryLight: '#7AC758',
+      primaryDark: '#418224',
+      secondary: '#a8e063',
+      secondaryLight: '#C9F186',
+      secondaryDark: '#7DB44A'
+    },
+    {
+      name: 'Mint Fresh',
+      colors: ['#00b09b', '#96c93d'],
+      description: 'Mint Fresh refreshes financial perspectives with growth and vitality.',
+      primary: '#00b09b',
+      primaryLight: '#33C1AA',
+      primaryDark: '#008377',
+      secondary: '#96c93d',
+      secondaryLight: '#B6D46B',
+      secondaryDark: '#728A2D'
+    },
+    {
+      name: 'Emerald Water',
+      colors: ['#348f50', '#56b4d3'],
+      description: 'Emerald Water combines the stability of blue with the growth symbolism of green, making it perfect for representing prosperity and security in finance.',
+      primary: '#458B92',
+      primaryLight: '#74BCD9',
+      primaryDark: '#2A6D48',
+      secondary: '#469E7F',
+      secondaryLight: '#7CC6B4',
+      secondaryDark: '#2A6C50'
+    },
+  
+    // 🔵 BLUES
+    {
+      name: 'Ocean Blues',
+      colors: ['#36D1DC', '#5B86E5'],
+      description: 'Ocean Blues combines clarity and depth, perfect for conveying trust and stability in finance.',
+      primary: '#36D1DC',
+      primaryLight: '#64E6F1',
+      primaryDark: '#2AA2B1',
+      secondary: '#5B86E5',
+      secondaryLight: '#809EF7',
+      secondaryDark: '#4665B6'
+    },
+    {
+      name: 'Calm Waters',
+      colors: ['#89f7fe', '#66a6ff'],
+      description: 'Calm Waters soothes financial anxiety with trust and clarity.',
+      primary: '#89f7fe',
+      primaryLight: '#A7FAFF',
+      primaryDark: '#5EC9D1',
+      secondary: '#66a6ff',
+      secondaryLight: '#8AADFF',
+      secondaryDark: '#446CCC'
+    },
+    {
+      name: 'Sky Blue',
+      colors: ['#00c6ff', '#0072ff'],
+      description: 'Sky Blue reflects clarity and trust, essential for transparent financial growth.',
+      primary: '#00c6ff',
+      primaryLight: '#33D4FF',
+      primaryDark: '#009ACC',
+      secondary: '#0072ff',
+      secondaryLight: '#3391FF',
+      secondaryDark: '#005BCC'
+    },
+    {
+      name: 'Cool Breeze',
+      colors: ['#00c6ff', '#0072ff'],
+      description: 'Cool Breeze refreshes the financial landscape with calm confidence.',
+      primary: '#00c6ff',
+      primaryLight: '#33D2FF',
+      primaryDark: '#0096CC',
+      secondary: '#0072ff',
+      secondaryLight: '#3293FF',
+      secondaryDark: '#0059B3'
+    },
+    {
+      name: 'Blue Lagoon',
+      colors: ['#43cea2', '#185a9d'],
+      description: 'Blue Lagoon balances refreshing growth with deep trust in financial planning.',
+      primary: '#43cea2',
+      primaryLight: '#6CE2BD',
+      primaryDark: '#349373',
+      secondary: '#185a9d',
+      secondaryLight: '#3A7FC5',
+      secondaryDark: '#134471'
+    },
+    {
+      name: 'Steel Blue',
+      colors: ['#2980b9', '#6dd5fa', '#ffffff'],
+      description: 'Steel Blue stands for strength and clarity, essential in financial stability.',
+      primary: '#2980b9',
+      primaryLight: '#57A3D9',
+      primaryDark: '#1F5E88',
+      secondary: '#6dd5fa',
+      secondaryLight: '#9BE0FF',
+      secondaryDark: '#4AB2D1'
+    },
+    {
+      name: 'Skyline',
+      colors: ['#1488cc', '#2b32b2'],
+      description: 'Skyline reflects structure and ambition, reaching new financial heights.',
+      primary: '#1488cc',
+      primaryLight: '#4799E6',
+      primaryDark: '#0F6BA1',
+      secondary: '#2b32b2',
+      secondaryLight: '#5359CF',
+      secondaryDark: '#1F2491'
+    },
+  
+    // 🟣 PURPLES / VIOLETS
+    {
+      name: 'Purple Haze',
+      colors: ['#9D50BB', '#6E48AA'],
+      description: 'Purple Haze blends creativity with wisdom, inspiring confident financial decisions.',
+      primary: '#9D50BB',
+      primaryLight: '#B470D0',
+      primaryDark: '#7A3A95',
+      secondary: '#6E48AA',
+      secondaryLight: '#8A6DBC',
+      secondaryDark: '#55378A'
+    },
+    {
+      name: 'Purple Dream',
+      colors: ['#bc4e9c', '#f80759'],
+      description: 'Purple Dream inspires visionary financial growth with passion and creativity.',
+      primary: '#bc4e9c',
+      primaryLight: '#CF72B4',
+      primaryDark: '#8E3B75',
+      secondary: '#f80759',
+      secondaryLight: '#FA3C7A',
+      secondaryDark: '#B30544'
+    },
+    {
+      name: 'Electric Violet',
+      colors: ['#3a1c71', '#d76d77', '#ffaf7b'],
+      description: 'Electric Violet sparks creativity and passion for dynamic financial growth.',
+      primary: '#3a1c71',
+      primaryLight: '#574196',
+      primaryDark: '#2D165B',
+      secondary: '#d76d77',
+      secondaryLight: '#E38B8F',
+      secondaryDark: '#A35158'
+    },
+    {
+      name: 'Pastel Blue',
+      colors: ['#7f7fd5', '#86a8e7', '#91eae4'],
+      description: 'Pastel Blue promotes calmness and thoughtful growth in financial decisions.',
+      primary: '#7f7fd5',
+      primaryLight: '#9CA0E8',
+      primaryDark: '#6466B6',
+      secondary: '#86a8e7',
+      secondaryLight: '#A3C1F0',
+      secondaryDark: '#5D79BD'
+    },
+    {
       name: 'Royal Blue',
       colors: ['#536976', '#292e49'],
       description: 'Royal Blue exudes sophistication and strength, ideal for portraying trust, intelligence, and financial authority.',
@@ -435,6 +387,52 @@ app.listen(port, (err) => {
       secondary: '#292e49',
       secondaryLight: '#464A67',
       secondaryDark: '#1C2035'
+    },
+  
+    // ⚫ NEUTRALS / DARKS
+    {
+      name: 'Deep Space',
+      colors: ['#434343', '#000000'],
+      description: 'Deep Space represents stability and strength, foundational to financial security.',
+      primary: '#434343',
+      primaryLight: '#666666',
+      primaryDark: '#2B2B2B',
+      secondary: '#000000',
+      secondaryLight: '#262626',
+      secondaryDark: '#000000'
+    },
+    {
+      name: 'Berry Delight',
+      colors: ['#c31432', '#240b36'],
+      description: 'Berry Delight combines richness and mystery for confident financial boldness.',
+      primary: '#c31432',
+      primaryLight: '#D9435D',
+      primaryDark: '#970026',
+      secondary: '#240b36',
+      secondaryLight: '#4D3B62',
+      secondaryDark: '#190829'
+    },
+    {
+      name: 'Seashore',
+      colors: ['#43c6ac', '#191654'],
+      description: 'Seashore evokes tranquility and depth, grounding financial decisions with calm confidence.',
+      primary: '#43c6ac',
+      primaryLight: '#68D2BC',
+      primaryDark: '#36927D',
+      secondary: '#191654',
+      secondaryLight: '#403F81',
+      secondaryDark: '#121040'
+    },
+    {
+      name: 'Frost',
+      colors: ['#000428', '#004e92'],
+      description: 'Frost cools tensions, providing steady and reliable financial confidence.',
+      primary: '#000428',
+      primaryLight: '#202049',
+      primaryDark: '#00031D',
+      secondary: '#004e92',
+      secondaryLight: '#2B75C4',
+      secondaryDark: '#003E6F'
     }
   ];
 
@@ -1755,6 +1753,129 @@ const styledComponents = [
   }
 ]
 
+const tips = [
+  {
+    id: 1,
+    icon: "accessibility", // MaterialIcons example
+    title: "Accessibility Matters",
+    tip: "Use sufficient color contrast for text and backgrounds to improve readability for everyone."
+  },
+  {
+    id: 2,
+    icon: "touch-app",
+    title: "Touch Targets",
+    tip: "Make touch targets at least 44x44pt to ensure they’re easy to tap on all devices."
+  },
+  {
+    id: 3,
+    icon: "format-size",
+    title: "Hierarchy with Size",
+    tip: "Use typography size and weight to establish clear hierarchy in your layouts."
+  },
+  {
+    id: 4,
+    icon: "palette",
+    title: "Limit Color Palette",
+    tip: "Stick to 3-5 primary colors to maintain visual consistency across your app."
+  },
+  {
+    id: 5,
+    icon: "grid-on",
+    title: "Use an 8pt Grid",
+    tip: "Align spacing and sizing to an 8pt grid system for a cleaner, more organized UI."
+  },
+  {
+    id: 6,
+    icon: "visibility",
+    title: "Avoid Placeholder Text",
+    tip: "Don't use placeholder text as labels; use persistent labels for clarity."
+  },
+  {
+    id: 7,
+    icon: "gesture",
+    title: "Feedback on Actions",
+    tip: "Provide visual or haptic feedback when users tap buttons to confirm their action."
+  },
+  {
+    id: 8,
+    icon: "contrast",
+    title: "Dark Mode Testing",
+    tip: "Test your designs in both light and dark modes to ensure readability and consistency."
+  },
+  {
+    id: 9,
+    icon: "speed",
+    title: "Optimize Loading Times",
+    tip: "Users expect quick load times; optimize images and lazy load heavy assets when possible."
+  },
+  {
+    id: 10,
+    icon: "swipe",
+    title: "Avoid Hidden Gestures",
+    tip: "Don’t hide critical actions behind gestures alone; provide visible alternatives."
+  },
+  {
+    id: 11,
+    icon: "text-fields",
+    title: "Readable Line Length",
+    tip: "Keep line lengths between 45-75 characters to improve readability."
+  },
+  {
+    id: 12,
+    icon: "phonelink",
+    title: "Design for All Screen Sizes",
+    tip: "Test your UI on multiple devices to ensure layouts adapt gracefully."
+  },
+  {
+    id: 13,
+    icon: "done",
+    title: "Reduce Cognitive Load",
+    tip: "Keep interfaces simple by showing only what users need at each step."
+  },
+  {
+    id: 14,
+    icon: "star",
+    title: "Consistency Builds Trust",
+    tip: "Use consistent colors, icons, and typography to build user familiarity."
+  },
+  {
+    id: 15,
+    icon: "help-outline",
+    title: "Progress Indicators",
+    tip: "Use spinners or skeleton loaders to indicate loading states, reducing uncertainty."
+  },
+  {
+    id: 16,
+    icon: "lock",
+    title: "Security UX",
+    tip: "Inform users clearly when sensitive actions are performed and why authentication is needed."
+  },
+  {
+    id: 17,
+    icon: "highlight",
+    title: "Whitespace is Powerful",
+    tip: "Don’t overcrowd your UI; whitespace helps users focus on what matters."
+  },
+  {
+    id: 18,
+    icon: "code",
+    title: "Use Semantic Components",
+    tip: "Using semantic and meaningful component names helps maintain accessibility and clarity."
+  },
+  {
+    id: 19,
+    icon: "error-outline",
+    title: "Clear Error States",
+    tip: "Explain what went wrong in plain language and how users can fix it."
+  },
+  {
+    id: 20,
+    icon: "school",
+    title: "Never Stop Learning",
+    tip: "Stay updated with evolving design trends and guidelines to improve your design craft."
+  }
+];
+
 
 // icons are already impoted on the front end and used with a icon component
 
@@ -1776,6 +1897,10 @@ app.get('/pickElement', async (req, res) => {
     else if(category === 'comp' || category === 'component'){
     
       return res.json(styledComponents)
+    } 
+    else if(category === 'tips'){
+      console.log('✅ Sending tips now');
+      return res.json(tips);
     }
 });
 

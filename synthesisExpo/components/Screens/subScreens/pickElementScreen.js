@@ -152,7 +152,7 @@ const PickElementScreen = ({route}) => {
    
 
     
-   console.log("pick element corro data", corroData)
+  //  console.log("pick element corro data", corroData)
 
    // so basically grab the corro data
    // display it in the same way it is on the other topic screens but just with a VIEW or ADD btn

@@ -26,6 +26,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native'
 import VideoBackground from '../Bkgd/VideoBackground'; 
 import { useHeaderHeight } from '@react-navigation/elements';
+import { ImageBackground } from 'react-native';
 
 import Icon from './Icon'
 import { useAuth } from '../../../LogContext'; 
@@ -220,7 +221,25 @@ const addElement = (category, systemId) =>{
 
      <View style={{flex: 1, position: 'relative', alignItems: 'center', padding: 20, zIndex: 0}}>
 
-           <VideoBackground source={require('../../../assets/gradient2.mp4')} />
+           <ImageBackground
+                source={require('../../../assets/orange-gradient.jpg')}
+                resizeMode="cover"
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  bottom: 0,
+                  right: 0,
+                  zIndex: 0,
+                }}
+              >
+                <View
+                  style={{
+                    flex: 1,
+                    backgroundColor: 'rgba(0,0,0,0.4)', // adjust opacity and color here
+                  }}
+                />
+            </ImageBackground>
            
         <View style={{ flex: 1, zIndex: 1,}}>
          <ScrollView   

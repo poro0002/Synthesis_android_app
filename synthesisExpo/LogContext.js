@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useMemo } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Constants from 'expo-constants';
 
@@ -45,11 +45,25 @@ const [selectedElements, setSelectedElements] = useState({
 const apiUrl = Constants.expoConfig.extra.API_URL; 
 
 const checkLogin = async () => {
-  const loggedInStatus = await AsyncStorage.getItem('isLoggedIn');
-  if (loggedInStatus === 'true') {
-    setIsLoggedIn(true);
+  try {
+    const loggedInStatus = await AsyncStorage.getItem('isLoggedIn');
     const storedUsername = await AsyncStorage.getItem('username');
-    setUsername(storedUsername);
+
+    setIsLoggedIn(prev => {
+      // ✅ only update if value has changed
+      if (loggedInStatus === 'true' && !prev) return true;
+      if (loggedInStatus !== 'true' && prev) return false;
+      return prev;
+    });
+
+    setUsername(prev => {
+      // ✅ only update if username has changed
+      if (storedUsername && prev !== storedUsername) return storedUsername;
+      return prev;
+    });
+
+  } catch (error) {
+    console.error("Error checking login status:", error);
   }
 };
 
@@ -379,38 +393,52 @@ const handleCompElement = (navigation, type, data) => {
     }
   };
 
+// -----------------------------------< Children >------------------------------------------  
+
+
+  // useMemo is a React hook that memoizes (remembers) the result of a function so that it only recomputes when its dependencies change.
+  
+  const memoizedContext = useMemo(() => ({
+    isLoggedIn,
+    username,
+    selectedElements,
+    setSelectedElements,
+  }), [isLoggedIn, username, selectedElements, setSelectedElements]);
+
+
+
+  const otherContextValues = {
+    setUsername,
+    setIsLoggedIn,
+    designSystemData,
+    setDesignSystemData,
+    getDesignSystem,
+    getUpdatedUsername,
+    checkFavorites,
+    getPayloadData,
+    favData,
+    createSystem,
+    errorMessage, 
+    setErrorMessage,
+    toggleSelection,
+    handleViewElement,
+    handleIconElement,
+    handleTypoElement,
+    handleCompElement,
+    fetchCategoryData,
+    compData,
+    setCompData,
+    loading,
+   
+  };
+
    // -----------------------------------< Return JSX >------------------------------------------  
 
   return (
     <LogContext.Provider
       value={{ // these values are the children 
-        username,
-        setUsername,
-        isLoggedIn,
-        setIsLoggedIn,
-        designSystemData,
-        setDesignSystemData,
-        getDesignSystem,
-        getUpdatedUsername,
-        checkFavorites,
-        getPayloadData,
-        favData,
-        setSelectedElements,
-        selectedElements,
-        createSystem,
-        errorMessage, 
-        setErrorMessage,
-        toggleSelection,
-        handleViewElement,
-        handleIconElement,
-        handleTypoElement,
-        handleCompElement,
-        fetchCategoryData,
-        compData,
-        setCompData,
-        loading,
-        
-
+        ...memoizedContext,
+        ...otherContextValues,
       }}
     >
       {children} 

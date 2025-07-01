@@ -100,10 +100,32 @@ function App() {
         require('./assets/gradient4.mp4'),
         require('./assets/gradient5.mp4'),
         require('./assets/jelly4.mp4'),
+        require('./assets/fluid1.mp4'),
       ]);
       console.log('Videos preloaded successfully');
     } catch (error) {
       console.error('Error preloading videos:', error);
+    }finally{
+      setLoading(false)
+    }
+  };
+
+
+  const loadPhotos = async () => {
+
+    setLoading(true)
+    try {
+      await Asset.loadAsync([
+        require('./assets/portfolio-projects/batman_mockup.png'),
+        require('./assets/portfolio-projects/nike_x_off_white_iphone_mockup.png'),
+        require('./assets/portfolio-projects/black-myth-mockups/Black Wukong Mockup.png'),
+        require('./assets/portfolio-projects/dune/dune-screen-4.png'),
+        require('./assets/portfolio-projects/nike-offwhite-mockups/Nike x Off White ipad mockup.png'),
+        require('./assets/portfolio-projects/Smarthome Prototype/smartHUD mockup white.png'),
+      ]);
+      console.log('photos preloaded successfully');
+    } catch (error) {
+      console.error('Error preloading photos:', error);
     }finally{
       setLoading(false)
     }
@@ -166,6 +188,7 @@ useEffect(() => {
   const loadAssets = async () => {
     await loadFonts();
     await loadVideos();
+    await loadPhotos();
   };
 
   loadAssets();

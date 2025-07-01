@@ -20,6 +20,9 @@ import {
 
 import { faExternalLinkSquare } from '@fortawesome/free-solid-svg-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useHeaderHeight } from '@react-navigation/elements';
+import { ImageBackground } from 'react-native';
+import { MaterialIcons } from '@expo/vector-icons';
 
 import Constants from 'expo-constants';
 const apiUrl = Constants.expoConfig.extra.API_URL; 
@@ -36,6 +39,7 @@ const ChangeAccount = ({ route }) => {
 
   const {type} = route.params;
   const [errorMessage, setErrorMessage] = useState("");
+const headerHeight = useHeaderHeight();
 
 
 // fetch the username from the storage after the initial render
@@ -258,18 +262,54 @@ const ChangeAccount = ({ route }) => {
   }
 
    return (
-      <View style={globalStyles.screenStyles.centerContainer}>
-       {type === 'pass' && 
-        <>
-              <Text style={globalStyles.screenStyles.h2}>Change Password</Text>
+
+    <View style={{flex: 1, position: 'relative', zIndex: 0}}>
+               
+                  <ImageBackground
+                         source={require('../../../assets/green-gradient.png')}
+                         resizeMode="cover"
+                         style={{
+                           position: 'absolute',
+                           top: 0,
+                           left: 0,
+                           bottom: 0,
+                           right: 0,
+                           zIndex: 0,
+                         }}
+                       >
+                         <View
+                           style={{
+                             flex: 1,
+                             backgroundColor: 'rgba(0,0,0,0.4)', // adjust opacity and color here
+                           }}
+                         />
+                     </ImageBackground>
+       
+           <View style={{ flex: 1, zIndex: 1, }}>
+       
+              <View style={[{ alignItems:'center', paddingTop: headerHeight, paddingBottom: headerHeight, paddingHorizontal: 20}]}>
+            {type === 'pass' && 
+              <>
+               <Text style={[globalStyles.screenStyles.h2, globalStyles.screenStyles.textShadow ]}>Change Password</Text>
+                 <MaterialIcons name="lock" size={54} color="white" style={[globalStyles.screenStyles.iconShadow, { marginRight: 10 }]} />
                       <Text style={globalStyles.screenStyles.text}>{errorMessage}</Text>
 
                       <Text style={globalStyles.screenStyles.h4}>
                        Password 
                       </Text>
-
+                     
                       <TextInput
-                        style={globalStyles.screenStyles.input}
+                        style={[
+                          globalStyles.screenStyles.input,
+                          { 
+                            marginBottom: 10, 
+                            textAlignVertical: 'top', 
+                            padding: 10,
+                            width: '85%', 
+                            borderColor: 'white', 
+                          }
+                               ]}
+                        placeholderTextColor="gray"
                         placeholder="new password"
                         value={screenData.pass}
                         onChangeText={(value) => handleInputChange('pass', value)}
@@ -279,13 +319,31 @@ const ChangeAccount = ({ route }) => {
                       </Text>
 
                        <TextInput
-                        style={globalStyles.screenStyles.input}
+                        style={[
+                          globalStyles.screenStyles.input,
+                          { 
+                            marginBottom: 10, 
+                            textAlignVertical: 'top',
+                            padding: 10,
+                            width: '85%', 
+                            borderColor: 'white', 
+                          }
+                               ]}
+                        placeholderTextColor="gray"
                         placeholder="confirm new pass"
                         value={screenData.confirmPass}
                         onChangeText={(value) => handleInputChange('confirmPass', value)}
                       />
-                       <Pressable onPress={changePassword} style={[globalStyles.screenStyles.viewBtn, { backgroundColor: 'orange'}]}>
-                         <Text>
+                       <Pressable onPress={changePassword} style={{ 
+                            marginTop: 10,
+                            backgroundColor: 'royalblue',
+                            borderRadius: 5,
+                            paddingVertical: 10,
+                            paddingHorizontal: 20,
+                            alignItems: 'center',
+                            width: '85%'
+                         }} >
+                         <Text style={{color: 'white'}}>
                             Submit
                          </Text>
                       </Pressable>
@@ -293,22 +351,43 @@ const ChangeAccount = ({ route }) => {
        }
         {type === 'user' && 
         <>
-              <Text style={globalStyles.screenStyles.h2}>Change Username</Text>
+              <Text style={[globalStyles.screenStyles.h2, globalStyles.screenStyles.textShadow ]}>Change Username</Text>
+                 <MaterialIcons name="edit" size={54} color="white"  style={[globalStyles.screenStyles.iconShadow, { marginRight: 10 }]}/>
                       <Text style={globalStyles.screenStyles.text}>{errorMessage}</Text>
                       <TextInput
-                        style={globalStyles.screenStyles.input}
+                        style={[
+                          globalStyles.screenStyles.input,
+                          { 
+                            marginBottom: 10, 
+                            textAlignVertical: 'top',
+                            padding: 10,
+                            width: '85%', 
+                            borderColor: 'white', 
+                          }
+                        ]}
+                         placeholderTextColor="gray"
                         placeholder="New Username"
                         value={screenData.newUsername}
                         onChangeText={(value) => handleInputChange('newUsername', value)}
                       />
-                      <Pressable onPress={changeUsername} style={[globalStyles.screenStyles.viewBtn, { backgroundColor: 'orange'}]}>
-                         <Text>
+                      <Pressable onPress={changeUsername} style={{ 
+                            marginTop: 10,
+                            backgroundColor: 'royalblue',
+                            borderRadius: 5,
+                            paddingVertical: 10,
+                            paddingHorizontal: 20,
+                            alignItems: 'center',
+                            width: '85%'
+                         }}>
+                         <Text style={{color: 'white'}}>
                             Submit
                          </Text>
                       </Pressable>
-           </>           
+              </>           
        }
         
+         </View>
+       </View>
      </View>
    )
 }

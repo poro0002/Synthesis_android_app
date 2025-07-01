@@ -52,7 +52,7 @@ const FontComp = ({ compData }) =>{
      const navigation = useNavigation();
 
     return(
-      <View >
+      <View>
         <Text style={[globalStyles.screenStyles.h2, {textAlign: 'center'}]}>
           Tap To Add Font
         </Text>
@@ -84,8 +84,6 @@ const FontComp = ({ compData }) =>{
                 <Pressable style={{ 
                     marginTop: 10,
                     backgroundColor: 'royalblue',
-                    borderColor: 'white',
-                    borderWidth: 1,
                     borderRadius: 5,
                     paddingVertical: 10,
                     paddingHorizontal: 20,

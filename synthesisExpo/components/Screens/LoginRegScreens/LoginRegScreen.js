@@ -313,7 +313,7 @@ return(
     // login/register form JSX here
  
    <View style={{flex: 1, position: 'relative', alignItems: 'center', zIndex: 0}}>
-          <VideoBackground source={require('../../../assets/jelly4.mp4')} />
+          <VideoBackground source={require('../../../assets/fluid1.mp4')} />
          <View style={{ flex: 1, zIndex: 1 }}>
 
   {!logClicked && !regClicked ? (

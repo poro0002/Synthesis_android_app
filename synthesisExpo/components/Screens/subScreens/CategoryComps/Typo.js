@@ -52,7 +52,7 @@ const TypoComp = ({ compData }) =>{
      const navigation = useNavigation();
 
     return(
-      <View style={{marginBottom: 50}}>
+      <View >
         <Text style={[globalStyles.screenStyles.h2, {textAlign: 'center'}]}>
           Tap To Add Typo Scale
         </Text>

@@ -27,6 +27,7 @@ import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import Octicons from 'react-native-vector-icons/Octicons';
 import { MaterialIcons } from '@expo/vector-icons';
+import { ImageBackground } from 'react-native';
 
 import Icon from './Icon'
 import { useAuth } from '../../../LogContext'; 
@@ -223,7 +224,25 @@ const removeFav = async (data, element) => {
 
   return (
      <View style={{flex: 1, position: 'relative', alignItems: 'center', padding: 20, zIndex: 0}}>
-       <VideoBackground source={require('../../../assets/gradient2.mp4')} />
+                      <ImageBackground
+                           source={require('../../../assets/dark-blue-gradient.jpg')}
+                           resizeMode="cover"
+                           style={{
+                             position: 'absolute',
+                             top: 0,
+                             left: 0,
+                             bottom: 0,
+                             right: 0,
+                             zIndex: 0,
+                           }}
+                         >
+                           <View
+                             style={{
+                               flex: 1,
+                               backgroundColor: 'rgba(0,0,0,0.4)', // adjust opacity and color here
+                             }}
+                           />
+                       </ImageBackground>
          <View style={{ flex: 1, zIndex: 1 }}>
         
         <ScrollView   
@@ -473,7 +492,7 @@ const removeFav = async (data, element) => {
       {(type === "component" || type === "styledComponents") && (
 
         <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-          <Text style={[globalStyles.screenStyles.textShadow, { color: 'white', fontStyle: 'italic', fontSize: 40 }]}>{packageName}</Text>
+          <Text style={[globalStyles.screenStyles.textShadow, { color: 'white', fontStyle: 'italic', fontSize: 40, marginBottom: 30, marginTop: 30}]}>{packageName}</Text>
       
           < View>
           <View style={{ flexDirection: 'row', marginBottom: 5 }}>

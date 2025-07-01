@@ -28,6 +28,7 @@ import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import Octicons from 'react-native-vector-icons/Octicons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useHeaderHeight } from '@react-navigation/elements';
+import { ImageBackground } from 'react-native';
 
 import Icon from './Icon';
 import { useAuth } from '../../../LogContext'; 
@@ -62,20 +63,24 @@ const DisplayCategory = ({ route }) => {
         { key: 'material', label: 'Material Icons', Component: MaterialIcons, icon: 'folder' },
       ];
 
-    useEffect(()=>{
-        
-        fetchCategoryData(category);
-        
-    },[category]);
-
-    useEffect(()=>{
+      useFocusEffect(
+        useCallback(() => {
+          if (!compData || compData.length === 0) {
+            fetchCategoryData(category);
+          }
       
-      console.log('display category screen compData:', compData)
-      
-    })
+          return () => {
+            // optional: cleanup memory-heavy states or listeners here
+            setCompData(null); // ⬅️ helps if compData is large and not needed after
+          };
+        }, [category])
+      );
 
-   
-   
+
+    // useEffect(()=>{
+       // console.log('display category screen compData:', compData)
+    // })
+
 
     if ((loading || !compData) && category !== 'icon') {
         return (
@@ -98,21 +103,42 @@ const DisplayCategory = ({ route }) => {
 
    return(
     <View style={globalStyles.screenStyles.centerContainer}>
+            <ImageBackground
+                      source={require('../../../assets/grey-gradient.jpg')}
+                      resizeMode="cover"
+                      style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        bottom: 0,
+                        right: 0,
+                        zIndex: 0,
+                      }}
+                    >
+                      <View
+                        style={{
+                          flex: 1,
+                          backgroundColor: 'rgba(0,0,0,0.4)', // adjust opacity and color here
+                        }}
+                      ></View>
+                  </ImageBackground>
        
        <ScrollView   
-          contentContainerStyle={{  flexDirection: 'column', paddingTop: headerHeight, paddingBottom: headerHeight, backgroundColor: 'black'}}
+          contentContainerStyle={{  flexDirection: 'column', paddingTop: headerHeight, paddingBottom: headerHeight, backgroundColor: 'transparent', paddingHorizontal: 40,}}
           keyboardShouldPersistTaps="handled"
         >
-            {category === 'fonts' && compData[0].designer && compData.length > 0 && (
+       
+          {/* you should always check the length first when dealing with checking array data */}
+            {category === 'fonts' && compData.length > 0 && compData[0].designer && (
                 <FontComp compData={compData} />
             )}
-             {category === 'color' && compData[0].colors && compData.length > 0 && (
+             {category === 'color' && compData.length > 0 && compData[0].colors && (
                 <ColorComp compData={compData}/>
             )}
-             {category === 'typography' && compData && compData.length > 0 && (
+             {category === 'typography' && compData.length > 0 && compData &&  (
                 <TypoComp compData={compData}/>
             )}
-             {category === 'component' && compData && compData.length > 0 && (
+             {category === 'component' && compData.length > 0 && compData  && (
                 <CompComp compData={compData} />
             )}
              {category === 'icon' && (

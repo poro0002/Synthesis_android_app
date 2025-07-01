@@ -2,6 +2,7 @@
 import globalStyles from '../../../styles';
 import React, { useState, useEffect } from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
+import { ImageBackground } from 'react-native';
 
 
 
@@ -94,9 +95,9 @@ const TopicScreen = ({route}) => {
   // console.log('topic screen username: ', username)
   // console.log('topic screen data', JSON.stringify(data, null, 2))
 
- useEffect(() => {
-  console.log("Selected Elements on topic screen(logContext):\n", JSON.stringify(selectedElements, null, 2));
- }, [selectedElements])
+//  useEffect(() => {
+//   console.log("Selected Elements on topic screen(logContext):\n", JSON.stringify(selectedElements, null, 2));
+//  }, [selectedElements])
 
 
 
@@ -179,12 +180,33 @@ const cancelSystem = () => {
     return(
     <SafeAreaView style={{ flex: 1, backgroundColor: 'black' }}>
       <View style={{flex: 1, position: 'relative', alignItems: 'center', zIndex: 0}}>
-        <VideoBackground source={require('../../../assets/gradient2.mp4')} />
-       <View style={{ flex: 1, zIndex: 1 }}>
+      <ImageBackground
+            source={require('../../../assets/purple-gradient.jpg')}
+            resizeMode="cover"
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              bottom: 0,
+              right: 0,
+              zIndex: 0,
+            }}
+          >
+            <View
+              style={{
+                flex: 1,
+                backgroundColor: 'rgba(0,0,0,0.4)', // adjust opacity and color here
+              }}
+            />
+          </ImageBackground>
+
+       <View style={{ flex: 1, zIndex: 1, padding: 20, }}>
         <ScrollView 
          
          contentContainerStyle={{  flexDirection: 'column', paddingTop: headerHeight, paddingBottom: headerHeight,}}
          keyboardShouldPersistTaps="handled"
+         showsVerticalScrollIndicator={false}
+         showsHorizontalScrollIndicator={false}
          
         >
         <View>
@@ -534,7 +556,7 @@ const cancelSystem = () => {
 
   {/* -----------------------------------------------< CREATE && CANCEL BTNS >-----------------------------------------------  */} 
 
-          <View style={[{flexDirection: 'row', justifyContent: 'center', alignItems:'center', marginTop: 50, marginBottom: 50}]}>
+          <View style={[{flexDirection: 'row', justifyContent: 'center', alignItems:'center', marginTop: 30}]}>
 
                  <Pressable onPress={cancelSystem}  style={[globalStyles.screenStyles.btn1, globalStyles.screenStyles.btnShadow, {backgroundColor: 'white', color: 'black', marginRight: 20}]}>
                     <Text>Cancel</Text>

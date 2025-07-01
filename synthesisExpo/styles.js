@@ -177,6 +177,7 @@ const globalStyles = StyleSheet.create({
             fontSize: 12, // Text size for readability
             color: "white", // Bold text
             fontFamily: 'AbrilFatface-Regular',
+            
           },
 
         popularComp:{
@@ -221,8 +222,9 @@ const globalStyles = StyleSheet.create({
         },
 
         settingsComp:{
+          flexDirection: 'row',
           height: 50,
-          margin: 5,
+          margin: 10,
           fontSize: 15,
           marginHorizontal: 5,
           backgroundColor: 'transparent',
@@ -235,6 +237,8 @@ const globalStyles = StyleSheet.create({
           paddingBottom: 7,
           paddingLeft: 10,
           paddingRight: 10,
+          
+          
         },
         viewBtn:{
           height: 30,
@@ -324,6 +328,7 @@ const globalStyles = StyleSheet.create({
           textShadowColor: 'rgba(0, 0, 0, 0.6)', 
           textShadowOffset: { width: 2, height: 2 },
           textShadowRadius: 4,
+       
         },
         textShadow: {
            textShadowColor: 'rgba(0, 0, 0, 0.75)',

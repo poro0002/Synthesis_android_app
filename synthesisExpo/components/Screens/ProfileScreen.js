@@ -15,6 +15,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { useNavigation } from '@react-navigation/native';
 import { useHeaderHeight } from '@react-navigation/elements';
 import VideoBackground from './Bkgd/VideoBackground'; 
+import { ImageBackground } from 'react-native';
 
 
 import Constants from 'expo-constants';
@@ -88,43 +89,68 @@ const handleUsernameChange = (type) =>{
 
   return (
 
-     <View style={{flex: 1, position: 'relative', alignItems: 'center', zIndex: 0}}>
-         <VideoBackground pointerEvents="none" source={require('../../assets/gradient5.mp4')} />
-    
-         <View style={{ flex: 1, zIndex: 1 }}>
-    <View style={[globalStyles.screenStyles.container, { alignItems:'center', paddingTop: headerHeight, paddingBottom: headerHeight, paddingHorizontal: 20}]}>
+    <View style={{flex: 1, position: 'relative', alignItems: 'center', zIndex: 0}}>
+        
+           <ImageBackground
+                  source={require('../../assets/pink-gradient.png')}
+                  resizeMode="cover"
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    bottom: 0,
+                    right: 0,
+                    zIndex: 0,
+                  }}
+                >
+                  <View
+                    style={{
+                      flex: 1,
+                      backgroundColor: 'rgba(0,0,0,0.4)', // adjust opacity and color here
+                    }}
+                  />
+              </ImageBackground>
+
+    <View style={{ flex: 1, zIndex: 1, }}>
+
+       <View style={[{ alignItems:'center', paddingTop: headerHeight, paddingBottom: headerHeight, paddingHorizontal: 20}]}>
      
-      <View style={styles.imageContainer}>
-        {profileImage ? (
-          <Image source={{ uri: profileImage }} style={{ width: 100, height: 100, borderRadius: 50 }} />
-        ) : (
-          <MaterialIcons style={globalStyles.screenStyles.iconShadow} name="person" size={100} color="white" />
-        )}
+             <View style={{}}>
+                {profileImage ? (
+                  <Image source={{ uri: profileImage }} style={{ width: 100, height: 100, borderRadius: 50 }} />
+                ) : (
+                  <MaterialIcons style={globalStyles.screenStyles.iconShadow} name="person" size={100} color="white" />
+                )}
+              </View>
+          
+               <Pressable style={[{backgroundColor: "royalblue", padding: 10, borderRadius: 5,}]}>
+                  <Text style={{color: 'white'}}>
+                      Upload Profile Picture
+                  </Text>
+               </Pressable>
+           
+           
+           <Text style={globalStyles.screenStyles.text}>Username: {username || 'Not set'}</Text>
+           <Text style={globalStyles.screenStyles.text}>Email: {email || 'Not set'}</Text>
+
+             <View>
+                <Pressable onPress={() => handlePassChange('pass')} style={globalStyles.screenStyles.settingsComp}>
+                    <MaterialIcons name="lock" size={24} color="white" style={{ marginRight: 10 }} />
+                    <Text style={globalStyles.screenStyles.topicText}>Change Password</Text>
+                </Pressable>
+
+                <Pressable onPress={() => handleUsernameChange('user')} style={globalStyles.screenStyles.settingsComp}>
+                    <MaterialIcons name="edit" size={24} color="white" style={{ marginRight: 10 }} />
+                    <Text style={globalStyles.screenStyles.topicText}>Change Username</Text>
+                </Pressable>
+
+                <Pressable style={globalStyles.screenStyles.settingsComp}>
+                    <MaterialIcons name="link" size={24} color="white" style={{ marginRight: 10 }} />
+                    <Text style={globalStyles.screenStyles.topicText}>Connect</Text>
+                </Pressable>
+            </View>
+       </View>
       </View>
-     <Pressable style={[{backgroundColor: "royalblue", padding: 10, borderRadius: 5,}]}>
-        <Text>
-            Upload Profile Picture
-        </Text>
-     </Pressable>
-
-
-      {/* Display Username and Email */}
-      <Text style={globalStyles.screenStyles.text}>Username: {username || 'Not set'}</Text>
-      <Text style={globalStyles.screenStyles.text}>Email: {email || 'Not set'}</Text>
-
-      <Pressable onPress={() => handlePassChange('pass')}  style={globalStyles.screenStyles.settingsComp}>
-              <Text style={globalStyles.screenStyles.topicText}>Change Password</Text>
-      </Pressable>
-
-      <Pressable onPress={() => handleUsernameChange('user')}  style={globalStyles.screenStyles.settingsComp}>
-              <Text style={globalStyles.screenStyles.topicText}>Change Username</Text>
-      </Pressable>
-
-      <Pressable  style={globalStyles.screenStyles.settingsComp}>
-              <Text style={globalStyles.screenStyles.topicText}>Connect</Text>
-      </Pressable>
-    </View>
-    </View>
     </View>
   );
 };
