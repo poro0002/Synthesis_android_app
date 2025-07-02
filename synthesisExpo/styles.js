@@ -266,9 +266,9 @@ const globalStyles = StyleSheet.create({
           borderColor: 'gray',
           borderWidth: 1,
           color: 'white',
-          width: 200,
           marginTop: 10,
           paddingLeft: 10,
+          borderRadius: 8,
         },
         btn1:{
           flex: 1,

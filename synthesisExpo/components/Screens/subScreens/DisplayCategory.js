@@ -29,6 +29,7 @@ import Octicons from 'react-native-vector-icons/Octicons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useHeaderHeight } from '@react-navigation/elements';
 import { ImageBackground } from 'react-native';
+import LottieView from 'lottie-react-native';
 
 import Icon from './Icon';
 import { useAuth } from '../../../LogContext'; 
@@ -92,7 +93,12 @@ const DisplayCategory = ({ route }) => {
             alignItems: 'center',
             zIndex: 1000
           }}>
-            <ActivityIndicator size="large" color="white" />
+              <LottieView
+                  source={require('../../../assets/loading1.json')}
+                  autoPlay
+                  loop
+                  style={{ width: 100, height: 100, alignSelf: 'center'}}
+                />
             <Text style={{ color: 'white', marginTop: 10 }}>Loading assets...</Text>
           </View>
         </Modal>
@@ -126,6 +132,8 @@ const DisplayCategory = ({ route }) => {
        <ScrollView   
           contentContainerStyle={{  flexDirection: 'column', paddingTop: headerHeight, paddingBottom: headerHeight, backgroundColor: 'transparent', paddingHorizontal: 40,}}
           keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
         >
        
           {/* you should always check the length first when dealing with checking array data */}

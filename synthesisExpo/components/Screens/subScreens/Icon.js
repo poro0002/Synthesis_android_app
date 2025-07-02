@@ -28,7 +28,7 @@ const iconData = {
       '• Clean and flat aesthetics.',
       '• Applications focused on lightweight performance.',
     ],
-    image: require('../../../assets/feather-logo.png'),
+    image: require('../../../assets/feathericons.jpg'),
   },
   evil: {
     title: 'Evil Icons',
@@ -39,7 +39,7 @@ const iconData = {
       '• Perfect for action-oriented designs.',
       '• Best for minimalistic interfaces.',
     ],
-    image: require('../../../assets/evil-logo.jpeg'),
+    image: require('../../../assets/evilIcons.png'),
   },
   simple: {
     title: 'Simple Line Icons',
@@ -60,7 +60,7 @@ const iconData = {
       '• Works well with repositories and codebases.',
       '• Clean, clear icons for action buttons.',
     ],
-    image: require('../../../assets/octicons-logo.png'),
+    image: require('../../../assets/octicons_logo.png'),
   },
   ionicons: {
     title: 'Ionicons',
@@ -71,7 +71,7 @@ const iconData = {
       '• Clean and consistent design language.',
       '• Great for responsive design and apps.',
     ],
-    image: require('../../../assets/ionicons-logo.png'),
+    image: require('../../../assets/ionic.png'),
   },
   Fontawesome: {
     title: 'FontAwesome Icons',
@@ -82,7 +82,7 @@ const iconData = {
       '• Ideal for both web and mobile design.',
       '• Highly customizable and scalable icons.',
     ],
-    image: require('../../../assets/fontawesome-logo.png'),
+    image: require('../../../assets/Font_Awesome_logomark.png'),
   },
   material: {
     title: 'Material Icons',
@@ -93,7 +93,7 @@ const iconData = {
       '• Clean, easy-to-read icons.',
       '• Consistent look across mobile and web interfaces.',
     ],
-    image: require('../../../assets/material-logo.png'),
+    image: require('../../../assets/material _icons_logo.jpg'),
   },
 };
 

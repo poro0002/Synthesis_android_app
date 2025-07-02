@@ -16,6 +16,7 @@ import { useNavigation } from '@react-navigation/native';
 import { useHeaderHeight } from '@react-navigation/elements';
 import VideoBackground from './Bkgd/VideoBackground'; 
 import { ImageBackground } from 'react-native';
+import LottieView from 'lottie-react-native';
 
 
 import Constants from 'expo-constants';
@@ -119,7 +120,12 @@ const handleUsernameChange = (type) =>{
                 {profileImage ? (
                   <Image source={{ uri: profileImage }} style={{ width: 100, height: 100, borderRadius: 50 }} />
                 ) : (
-                  <MaterialIcons style={globalStyles.screenStyles.iconShadow} name="person" size={100} color="white" />
+                  <LottieView
+                     source={require('../../assets/animation3.json')}
+                     autoPlay
+                     loop
+                     style={{ width: 100, height: 100, alignSelf: 'center'}}
+                  />
                 )}
               </View>
           

@@ -524,7 +524,7 @@ const cancelSystem = () => {
             <TextInput
                 onChangeText={(value) => toggleSelection('name', value)}
                 value={selectedElements.name}
-                style={[globalStyles.screenStyles.input, {width: '85%', borderColor: 'white', }]}
+                style={[globalStyles.screenStyles.input, {width: '100%', borderColor: 'white', }]}
                 placeholder="System Name"
                 placeholderTextColor="gray"
                 maxLength={15}
@@ -537,7 +537,7 @@ const cancelSystem = () => {
             <TextInput
               onChangeText={(value) => toggleSelection('about', value)}
               value={selectedElements.about}
-              style={[globalStyles.screenStyles.input, {width: '85%', borderColor: 'white', }]}
+              style={[globalStyles.screenStyles.input, {width: '100%', borderColor: 'white', }]}
               placeholder="About ( optional )"
               placeholderTextColor="gray"
               maxLength={30}

@@ -31,6 +31,7 @@ import VideoBackground from './Bkgd/VideoBackground';
 import { Video } from 'expo-av';
 import { BlurView } from 'expo-blur';
 import { ImageBackground } from 'react-native';
+import LottieView from 'lottie-react-native';
 import Constants from 'expo-constants';
 const apiUrl = Constants.expoConfig.extra.API_URL; 
 
@@ -249,11 +250,19 @@ useLayoutEffect(() => {
 
      <View style={{ flex: 1, zIndex: 1 }}>
         <ScrollView   
-                 contentContainerStyle={{  flexDirection: 'column', paddingTop: headerHeight, paddingBottom: headerHeight, paddingHorizontal: 20}}
+                 contentContainerStyle={{  flexDirection: 'column', paddingTop: headerHeight, paddingBottom: headerHeight, paddingHorizontal: 20,}}
                  keyboardShouldPersistTaps="handled"
                  >
         
                <Text style={[globalStyles.screenStyles.h1, globalStyles.screenStyles.textShadow, {textAlign: 'center', }]}>Welcome, {username}</Text>
+               <LottieView
+                  source={require('../../assets/animation1.json')}
+                  autoPlay
+                  loop
+                  style={{ width: 80, height: 80, alignSelf: 'center'}}
+                />
+
+                
                 <Text style={{color: 'white', textAlign: 'center', fontWeight: 'bold'}}>
                     ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
                 </Text>

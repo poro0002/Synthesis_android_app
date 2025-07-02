@@ -27,6 +27,7 @@ import { useNavigation } from '@react-navigation/native'
 import { useHeaderHeight } from '@react-navigation/elements';
 import VideoBackground from './Bkgd/VideoBackground'; 
 import { ImageBackground } from 'react-native';
+import LottieView from 'lottie-react-native';
 
 import { useAuth } from '../../LogContext'; // Adjust path as needed
 import Icon from './subScreens/Icon'
@@ -68,9 +69,9 @@ const ProjectScreen = () => {
 
 
 
-  // useEffect(() => {
-  //   console.log('Updated designSystemData:', designSystemData);
-  // }, [designSystemData]);
+  useEffect(() => {
+    console.log('Updated designSystemData:', designSystemData[0].fonts);
+  }, [designSystemData]);
 
 
   // I have to send the correct favData per element to the element screen when one of the favs "view" btn is clicked navigate = elementScreen
@@ -137,8 +138,13 @@ const ProjectScreen = () => {
         keyboardShouldPersistTaps="handled"
         >
        <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'left', marginTop: 35 }}>
-          <Text style={[globalStyles.screenStyles.h2, {marginRight: 20}]}>My Projects</Text>
-          <MaterialIcons style={globalStyles.screenStyles.iconShadow}  name="folder-special" size={30} color="royalblue" />
+          <Text style={[globalStyles.screenStyles.h2]}>My Projects</Text>
+           <LottieView
+                source={require('../../assets/animation5.json')}
+                autoPlay
+                loop
+                style={{ width: 100, height: 100, alignSelf: 'center'}}
+              />
        </View>
 
       {designSystemData.length > 0 ? (
@@ -171,7 +177,7 @@ const ProjectScreen = () => {
                 >
                   <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                     <View style={{ flexDirection: 'column' }}>
-                      <Text style={[globalStyles.screenStyles.textShadow, { color: 'white', fontWeight: 'bold', fontSize: 18, marginBottom: 5}]}>
+                      <Text style={[globalStyles.screenStyles.textShadow, { color: 'white', fontWeight: 'bold', fontSize: 18, fontFamily: element.fonts[0].name , marginBottom: 5}]}>
                         {element.name}
                       </Text>
                       <Text style={{ color: 'white', fontWeight: 'bold', marginBottom: 5 }}>{element.about}</Text>
@@ -198,8 +204,13 @@ const ProjectScreen = () => {
 )} 
 
       <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'left', marginTop: 35 }}>
-          <Text style={[globalStyles.screenStyles.h2, {marginRight: 20}]}> Favorites</Text>
-            <MaterialIcons style={globalStyles.screenStyles.iconShadow}  name="favorite" size={30} color="royalblue" />
+          <Text style={[globalStyles.screenStyles.h2]}> Favorites</Text>
+          <LottieView
+                source={require('../../assets/animation4.json')}
+                autoPlay
+                loop
+                style={{ width: 100, height: 100, alignSelf: 'center'}}
+              />
           
       </View>
 

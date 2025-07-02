@@ -19,7 +19,7 @@ import { DevSettings } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import VideoBackground from './Bkgd/VideoBackground'; 
 import { ImageBackground } from 'react-native';
-
+import LottieView from 'lottie-react-native';
 
 import { useAuth } from '../../LogContext';
 import { useHeaderHeight } from '@react-navigation/elements';
@@ -116,7 +116,12 @@ const SettingScreen = ({ route }) => {
       {selectedSetting === 'default' && (
         <View>
          <View style={[{ alignItems: 'center', marginTop: 25 }]}>
-           <MaterialIcons style={globalStyles.screenStyles.iconShadow} name="settings" size={65} color="royalblue" />
+            <LottieView
+                source={require('../../assets/animation7.json')}
+                autoPlay
+                loop
+                style={{ width: 80, height: 80, alignSelf: 'center'}}
+              />
         </View>
         
         <View style={{ marginTop: 30 }}>

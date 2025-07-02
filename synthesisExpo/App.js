@@ -21,11 +21,7 @@ const apiUrl = Constants.expoConfig.extra.API_URL;
 
 import * as Font from 'expo-font';
 import { Asset } from 'expo-asset';
-
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import StackNavigator from './components/Routes/TabNavigator';
+import LottieView from 'lottie-react-native';
 
 import ErrorBoundary from './ErrorBoundary';
 import { LogProvider} from './LogContext'; 
@@ -199,7 +195,12 @@ useEffect(() => {
   if (!fontsLoaded) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size="large" color="orange" />
+          <LottieView
+             source={require('./assets/loading1.json')}
+             autoPlay
+             loop
+             style={{ width: 100, height: 100, alignSelf: 'center'}}
+           />
         <Text>Loading Assets...</Text>
       </View>
     );
@@ -222,7 +223,12 @@ return (
                 alignItems: 'center',
                 zIndex: 1000
               }}>
-                <ActivityIndicator size="large" color="white" />
+                  <LottieView
+                      source={require('./assets/loading1.json')}
+                      autoPlay
+                      loop
+                      style={{ width: 100, height: 100, alignSelf: 'center'}}
+                    />
                 <Text style={{ color: 'white', marginTop: 10 }}>Loading assets...</Text>
               </View>
             </Modal>

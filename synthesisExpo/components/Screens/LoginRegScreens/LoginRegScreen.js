@@ -489,5 +489,6 @@ const styles = StyleSheet.create({
     width: 200,
     marginTop: 10,
     paddingLeft: 10,
+    borderRadius: 8,
   },
 });
