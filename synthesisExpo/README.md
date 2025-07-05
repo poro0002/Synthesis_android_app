@@ -1,6 +1,8 @@
 # Synthesis – React Native Design System Builder
 
-![Synthesis Banner](./assets/logo2.png)
+<p align="center">
+  <img src="./assets/logo2.png" alt="Synthesis Banner" width="400">
+</p>
 
 **Synthesis** is a **React Native Android app** that helps designers and developers efficiently generate and manage **custom design systems**, including typography scales, color palettes, and reusable UI element tracking. Built to streamline workflow for solo developers, small teams, and designers seeking consistent, scalable design systems directly on mobile.
 
