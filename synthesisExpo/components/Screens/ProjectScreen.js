@@ -137,7 +137,7 @@ const ProjectScreen = () => {
         contentContainerStyle={{  flexDirection: 'column', paddingTop: headerHeight, paddingBottom: headerHeight, paddingHorizontal: 20}}
         keyboardShouldPersistTaps="handled"
         >
-       <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'left', marginTop: 35 }}>
+       <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'left', }}>
           <Text style={[globalStyles.screenStyles.h2]}>My Projects</Text>
            <LottieView
                 source={require('../../assets/animation5.json')}

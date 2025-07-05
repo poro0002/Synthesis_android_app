@@ -120,7 +120,7 @@ const SettingScreen = ({ route }) => {
                 source={require('../../assets/animation7.json')}
                 autoPlay
                 loop
-                style={{ width: 80, height: 80, alignSelf: 'center'}}
+                style={{ width: 120, height: 120, alignSelf: 'center'}}
               />
         </View>
         
