@@ -63,25 +63,6 @@ const handleUsernameChange = (type) =>{
   navigation.navigate('AccountChangeScreen', {type})
 }
 
-// ----------------------------------------------------< Fetch Stored Profile Picture >--------------------------------------------------------
-
-// When you fetch the profilePicture from Firestore, it will be this download URL which you can safely load on any device/app reload.
-
-
-
-// ----------------------------------------------------< Upload Profile Picture >--------------------------------------------------------
-
-
-// This function  uploads the image binary and generates a public (or authenticated) download URL.
-// 	•	You save this URL (e.g., https://firebasestorage.googleapis.com/....) in Firestore as profilePicture.
-
-
-
-// Then you need to:
-// 	1.	Upload the image file to something like Firebase Storage,
-// 	2.	Store the download URL in a Firestore document under the user’s ID,
-// 	3.	Fetch it when rendering the profile screen.
-
 
 
 
@@ -117,27 +98,20 @@ const handleUsernameChange = (type) =>{
        <View style={[{ alignItems:'center', paddingTop: headerHeight, paddingBottom: headerHeight, paddingHorizontal: 20}]}>
      
              <View style={{}}>
-                {profileImage ? (
-                  <Image source={{ uri: profileImage }} style={{ width: 100, height: 100, borderRadius: 50 }} />
-                ) : (
                   <LottieView
                      source={require('../../assets/animation3.json')}
                      autoPlay
                      loop
                      style={{ width: 100, height: 100, alignSelf: 'center'}}
                   />
-                )}
               </View>
           
-               <Pressable style={[{backgroundColor: "royalblue", padding: 10, borderRadius: 5,}]}>
-                  <Text style={{color: 'white'}}>
-                      Upload Profile Picture
-                  </Text>
-               </Pressable>
            
-           
-           <Text style={globalStyles.screenStyles.text}>Username: {username || 'Not set'}</Text>
-           <Text style={globalStyles.screenStyles.text}>Email: {email || 'Not set'}</Text>
+           <View style={{margin: 20}}>
+              <Text style={[globalStyles.screenStyles.text,{paddingTop: 10, fontWeight: 'bold'}]}>  {username || 'Not set'}</Text>
+           <Text style={[globalStyles.screenStyles.text, {paddingTop: 10, paddingBottom: 10, fontStyle: 'italic'}]}> {email || 'Not set'}</Text>
+           </View>
+          
 
              <View>
                 <Pressable onPress={() => handlePassChange('pass')} style={globalStyles.screenStyles.settingsComp}>

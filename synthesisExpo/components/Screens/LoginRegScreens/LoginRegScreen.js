@@ -24,6 +24,7 @@ const apiUrl = Constants.expoConfig.extra.API_URL;
 import StackNavigator from '../../Routes/TabNavigator';
 import { useAuth } from '../../../LogContext';
 import VideoBackground from '../Bkgd/VideoBackground'; 
+import LottieView from 'lottie-react-native';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { enableScreens } from 'react-native-screens';
@@ -42,14 +43,16 @@ const LoginRegScreen = () =>  {
     username, 
     setUsername, 
     errorMessage, 
-    setErrorMessage
+    setErrorMessage,
    } = useAuth();
 
-   
+   const [loading, setLoading] = useState(false);
 
+   
   // Separate state objects for login and register form data
   const [logData, setLogData] = useState(null);
   const [regData, setRegData] = useState(null);
+  const [newAccountCreated, setNewAccountCreated] = useState(false);
 
   useEffect(() =>{
      setRegData({ username: '', pass: '', email: '' })
@@ -57,7 +60,12 @@ const LoginRegScreen = () =>  {
   }, [isLoggedIn])
 
   useEffect(() =>{
-    setErrorMessage("");
+    if(newAccountCreated === true){
+       setErrorMessage("Account successfully created");
+    }else{
+      setErrorMessage("");
+    }
+   
   }, [regClicked, logClicked])
 
   // ----------------------------------------------------< Handle Input Changes >--------------------------------------------------------
@@ -67,14 +75,14 @@ const LoginRegScreen = () =>  {
   const handleLogInputChange = (name, value) => {
     setLogData((prevData) => ({
       ...prevData,
-      [name]: value,
+      [name]: value.trim(),
     }));
   };
 
   const handleRegInputChange = (name, value) => {
     setRegData((prevData) => ({
       ...prevData,
-      [name]: value,
+      [name]: value.trim(),
     }));
   };
 
@@ -201,7 +209,7 @@ function testEmail(data) {
 
 
  const regSubmit = async () => {
-
+    setLoading(true)
     console.log('regSubmit fired', regData)
 // the regData data needs to checkout against the rules before the api fetch is made
 
@@ -218,35 +226,32 @@ function testEmail(data) {
            body: JSON.stringify(regData)
          }
 
-        try {
+          try {
             const response = await fetch(registerURL, regOptions);
-
-             // Check if the response was successful
-             //  if (!response.ok) {
-             //  throw new Error('There was a problem with the register fetch');
-             //   }
-
-          // Parse the response body
             const data = await response.json();
 
-          // Handle the data returned from the server
-            if(data.message === 'Account successfully created'){
-                  setLogClicked(true)
-                  setRegClicked(false)
-                  setErrorMessage(data.message)
-                  console.log(data.message)
-                } else if(data.message === 'there is another user with that username or email'){
-                       setErrorMessage(data.message)
-                       console.log(data.message)
-                    }
+            if (data.message === 'Account successfully created') {
+               setErrorMessage(data.message);
+                setLogClicked(true);
+                setRegClicked(false);
+                setNewAccountCreated(true)
+                console.log(data.message);
+            } else if (data.message === 'there is another user with that username or email') {
+                setErrorMessage(data.message);
+                console.log(data.message);
+            }
 
         } catch (error) {
             console.error('Error during registration:', error);
+            setErrorMessage('Server error during registration.');
+        } finally {
+            setLoading(false); // when those blocks are resolved it will set any of them to false 
         }
+
     } else {
         console.log('Validation failed');
+        setLoading(false); // prevent spinner getting stuck
     }
-
 
 
 // the fetch to the api to create the user in the mongo database needs to be done here
@@ -259,7 +264,7 @@ function testEmail(data) {
 
 const logSubmit = async () => {
 
-
+    setLoading(true)
     console.log('logSubmit fired', logData)
 
  // do a fetch to the server side log route that includes a body with the log input values
@@ -273,44 +278,54 @@ const logSubmit = async () => {
             mode: 'cors',
             body: JSON.stringify(logData)
           }
+ try {
+        const response = await fetch(logURL, logOptions);
+        const data = await response.json();
 
-      try{
-          const response = await fetch(logURL, logOptions)
+        if (data.message === 'User successfully logged in') {
+            setErrorMessage(data.message);
+            setIsLoggedIn(true);
+            setLogClicked(false);
+            setUsername(data.username);
 
+            await AsyncStorage.setItem('email', data.email);
 
-          const data = await response.json();
+            console.log('Login successful, user:', data.username);
+        } else if (data.message === 'Invalid username') {
+            setErrorMessage(data.message);
+            console.log('Login failed: Invalid username');
+        } else if (data.message === 'Invalid password') {
+            setErrorMessage(data.message);
+            console.log('Login failed: Invalid password');
+        } else {
+            setErrorMessage('Error logging in user');
+            console.log('Login failed: Unknown error');
+        }
 
-         if(data.message === 'User successfully logged in'){
-              setErrorMessage(data.message);
-              setIsLoggedIn(true);
-              setLogClicked(false)
-             // store req.body.username <------
-              setUsername(data.username)
-              AsyncStorage.setItem('email', data.email)
-              // save the received data from the database or body to a storage so it can be used on the client side
-              // load the user profile component ? redirect ?
-             }
-          else if(data.message === 'Invalid username'){
-                setErrorMessage(data.message)
-
-              }else if(data.message === 'Invalid password'){
-                  setErrorMessage(data.message)
-                  } else{
-                      setErrorMessage('Error logging in user')
-                      }
-
-          }
-      catch(error){
+    } catch (error) {
         console.error('Error during login:', error);
-         }
+        setErrorMessage('Network or server error during login.');
+    } finally {
+        setLoading(false); // when those blocks are resolved it will set any of them to false 
+    }
 
     }
 
 return(
-  isLoggedIn ? (
+   loading ? (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'black' }}>
+      <LottieView
+        source={require('../../../assets/loading1.json')}
+        autoPlay
+        loop
+        style={{ width: 100, height: 100, alignSelf: 'center' }}
+      />
+      <Text style={{ color: 'white', marginTop: 10 }}>Authenticating....</Text>
+    </View>
+  ) : isLoggedIn ? (
+    
     <StackNavigator />
   ) : (
-    // login/register form JSX here
  
    <View style={{flex: 1, position: 'relative', alignItems: 'center', zIndex: 0}}>
           <VideoBackground source={require('../../../assets/fluid1.mp4')} />

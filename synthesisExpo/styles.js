@@ -132,8 +132,7 @@ const globalStyles = StyleSheet.create({
             fontSize: 18,
             color: 'white',
             textAlign: 'center',
-            marginBottom: 15,
-            marginTop: 15,
+            
             
            
            

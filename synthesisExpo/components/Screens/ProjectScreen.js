@@ -69,9 +69,9 @@ const ProjectScreen = () => {
 
 
 
-  useEffect(() => {
-    console.log('Updated designSystemData:', designSystemData[0].fonts);
-  }, [designSystemData]);
+  // useEffect(() => {
+  //   console.log('Updated designSystemData:', designSystemData[0].fonts);
+  // }, [designSystemData]);
 
 
   // I have to send the correct favData per element to the element screen when one of the favs "view" btn is clicked navigate = elementScreen
@@ -142,7 +142,7 @@ const ProjectScreen = () => {
            <LottieView
                 source={require('../../assets/animation5.json')}
                 autoPlay
-                loop
+                loop={false} 
                 style={{ width: 100, height: 100, alignSelf: 'center'}}
               />
        </View>
@@ -177,7 +177,7 @@ const ProjectScreen = () => {
                 >
                   <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                     <View style={{ flexDirection: 'column' }}>
-                      <Text style={[globalStyles.screenStyles.textShadow, { color: 'white', fontWeight: 'bold', fontSize: 18, fontFamily: element.fonts[0].name , marginBottom: 5}]}>
+                      <Text style={[globalStyles.screenStyles.textShadow, { color: 'white', fontWeight: 'bold', fontSize: 18, fontFamily: element.fonts[0].name , marginBottom: 5,}]}>
                         {element.name}
                       </Text>
                       <Text style={{ color: 'white', fontWeight: 'bold', marginBottom: 5 }}>{element.about}</Text>
@@ -208,7 +208,7 @@ const ProjectScreen = () => {
           <LottieView
                 source={require('../../assets/animation4.json')}
                 autoPlay
-                loop
+                loop={false} 
                 style={{ width: 100, height: 100, alignSelf: 'center'}}
               />
           

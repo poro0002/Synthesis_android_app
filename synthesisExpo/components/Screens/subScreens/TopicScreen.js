@@ -12,9 +12,11 @@ import Zocial from 'react-native-vector-icons/Zocial';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import Octicons from 'react-native-vector-icons/Octicons';
+import LottieView from 'lottie-react-native';
 
 import VideoBackground from '../Bkgd/VideoBackground'; 
 import { useHeaderHeight } from '@react-navigation/elements';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 // Constants makes it so i can access the app.config file in my project from anywhere 
 import Constants from 'expo-constants';
@@ -48,6 +50,7 @@ import { useNavigation } from '@react-navigation/native'
 const TopicScreen = ({route}) => {
 
   const {topic} = route.params;
+  
   const { 
     username, 
     getUpdatedUsername, 
@@ -61,10 +64,14 @@ const TopicScreen = ({route}) => {
     handleIconElement,
     handleTypoElement,
     handleCompElement,
+    loading,
+   
   
   } = useAuth();
 
    const headerHeight = useHeaderHeight();
+    const navigation = useNavigation();
+   
 
   const [data, setData] = useState(null);
   const [serverFonts, setServerFonts] = useState([]);
@@ -109,9 +116,10 @@ const TopicScreen = ({route}) => {
 
 
 const handleCreate = async () => {
+ 
   const success = await createSystem();
-  if (success) {
-    
+  
+  if (success) {     
     setTimeout(() => {
       navigation.navigate('Tabs', { screen: 'Project' });
     }, 1000); 
@@ -120,8 +128,6 @@ const handleCreate = async () => {
 };
 
 
-
-  const navigation = useNavigation();
 
    const toggleCheck = () => {
      setIsChecked(!isChecked);
@@ -177,7 +183,17 @@ const cancelSystem = () => {
 }
 
  {/* -----------------------------------------------< RETURN JSX >-----------------------------------------------  */} 
-    return(
+    return( 
+      loading ? (     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <LottieView
+             source={require('../../../assets/loading1.json')}
+             autoPlay
+             loop
+             style={{ width: 100, height: 100, alignSelf: 'center'}}
+           />
+        <Text>Creating System....</Text>
+      </View>):
+
     <SafeAreaView style={{ flex: 1, backgroundColor: 'black' }}>
       <View style={{flex: 1, position: 'relative', alignItems: 'center', zIndex: 0}}>
       <ImageBackground
@@ -201,14 +217,16 @@ const cancelSystem = () => {
           </ImageBackground>
 
        <View style={{ flex: 1, zIndex: 1, padding: 20, }}>
-        <ScrollView 
-         
-         contentContainerStyle={{  flexDirection: 'column', paddingTop: headerHeight, paddingBottom: headerHeight,}}
-         keyboardShouldPersistTaps="handled"
-         showsVerticalScrollIndicator={false}
-         showsHorizontalScrollIndicator={false}
-         
-        >
+      
+     <KeyboardAwareScrollView
+        contentContainerStyle={{ paddingTop: headerHeight, paddingBottom: headerHeight }}
+        enableOnAndroid
+        extraScrollHeight={20}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}   // hide vertical scrollbar
+        showsHorizontalScrollIndicator={false} // hide horizontal scrollbar
+      >
+
         <View>
           <Text style={[globalStyles.screenStyles.h2, globalStyles.screenStyles.textShadow, {textTransform: 'uppercase'}]}>{topic}</Text>
         </View>
@@ -549,7 +567,7 @@ const cancelSystem = () => {
           </View>
           
           {errorMessage ? (
-            <Text style={{ color: 'white', textAlign: 'center', marginVertical: 10 }}>
+            <Text style={[globalStyles.screenStyles.textShadow, { color: 'orange', textAlign: 'center', marginVertical: 10 }]}>
                 {errorMessage}
              </Text>
             ) : null}
@@ -568,7 +586,7 @@ const cancelSystem = () => {
              
           </View>
 
-         </ScrollView>
+         </KeyboardAwareScrollView>
          </View>
       </View>
   </SafeAreaView>  

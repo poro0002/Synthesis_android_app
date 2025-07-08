@@ -18,6 +18,7 @@ export const LogProvider = ({ children }) => {
   const [favData, setFavData] = useState([]);
   const [compData, setCompData] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
 
   console.log('isLoggedIn on context pattern:', isLoggedIn)
@@ -28,7 +29,6 @@ export const LogProvider = ({ children }) => {
   }, [isLoggedIn]);
 
 
-const [errorMessage, setErrorMessage] = useState("");
 
 const [selectedElements, setSelectedElements] = useState({
   fonts: [],
@@ -227,6 +227,7 @@ const handleCompElement = (navigation, type, data) => {
 
   const createSystem = async () => {
     setErrorMessage("");
+    setLoading(true)
   
     const storedUsername = await AsyncStorage.getItem("username");
     setUsername(storedUsername);
@@ -247,6 +248,7 @@ const handleCompElement = (navigation, type, data) => {
   
     // check to make sure there is a name for the system
     if (!name) {
+      setLoading(false);
       setErrorMessage("You must have a name for your design system.");
       return false;
     }
@@ -276,6 +278,7 @@ const handleCompElement = (navigation, type, data) => {
   
       if (data.success) {
         setErrorMessage(data.message); // success feedback
+        setLoading(false)
   
         setSelectedElements({
           fonts: [],
@@ -292,6 +295,7 @@ const handleCompElement = (navigation, type, data) => {
     } catch (err) {
       console.error("Error saving design system:", err);
       setErrorMessage("Failed to save design system. Please try again.");
+      setLoading(false);
     }
   
     return false; // if all else fails return false so the navigation doesn't happen

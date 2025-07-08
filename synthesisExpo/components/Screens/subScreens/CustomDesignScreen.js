@@ -17,8 +17,13 @@ import {
   ActivityIndicator, // For showing loading indicators during asynchronous tasks
   Switch,  // A toggle component for binary options (on/off)
   Button,
-  SafeAreaView
+  SafeAreaView,
+  KeyboardAvoidingView,
+  Platform
 } from 'react-native';
+
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+
 
 import { ImageBackground } from 'react-native';
 
@@ -31,6 +36,7 @@ import Octicons from 'react-native-vector-icons/Octicons';
 import { MaterialIcons } from '@expo/vector-icons';
 import VideoBackground from '../Bkgd/VideoBackground'; 
 import { useHeaderHeight } from '@react-navigation/elements';
+import LottieView from 'lottie-react-native';
 
 import Icon from './Icon';
 import DisplayScreen from './DisplayCategory'
@@ -63,6 +69,7 @@ const CustomDesignScreen = ({ route }) => {
         errorMessage, 
         setErrorMessage,
         toggleSelection,
+        loading,
 
     } = useAuth();
 
@@ -73,10 +80,11 @@ const CustomDesignScreen = ({ route }) => {
 
     setErrorMessage('');
 
-  },[])
+  }, []);
 
   
     const handleViewCategory = (category) =>{
+
         navigation.navigate('DisplayCategory', {category})
        
     }
@@ -105,6 +113,7 @@ const CustomDesignScreen = ({ route }) => {
     
 
     return(
+
      <View style={{flex: 1, position: 'relative', alignItems: 'center', zIndex: 0}}>
          
          <LinearGradient
@@ -130,12 +139,16 @@ const CustomDesignScreen = ({ route }) => {
             </LinearGradient>
               
            <View style={{ flex: 1, zIndex: 1 }}>
-        <ScrollView   
-            contentContainerStyle={{  flexDirection: 'column', paddingTop: headerHeight, paddingBottom: headerHeight,}}
-            keyboardShouldPersistTaps="handled"
-            showsVerticalScrollIndicator={false} 
-            showsHorizontalScrollIndicator={false}
-            >
+
+
+      <KeyboardAwareScrollView
+        contentContainerStyle={{ paddingTop: headerHeight, paddingBottom: headerHeight }}
+        enableOnAndroid
+        extraScrollHeight={20}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false} 
+
+      >
               
                 <Text style={[globalStyles.screenStyles.h2, {marginBottom: 50, marginTop: 20}]}>
                      Choose Your Elements
@@ -235,7 +248,7 @@ const CustomDesignScreen = ({ route }) => {
 
 
              {/* -----------------------------------------------< NAMING THE SYSTEM >-----------------------------------------------  */} 
-
+         
           <View style={[{ justifyContent: 'center', alignItems:'flex-start', marginTop: 20}]}>
              <Text style={[globalStyles.screenStyles.h4, globalStyles.screenStyles.textShadow, {color: 'white'}]}>Name Your Design System</Text>
             <TextInput
@@ -263,9 +276,10 @@ const CustomDesignScreen = ({ route }) => {
             </TextInput>
 
           </View>
+        
           
           {errorMessage ? (
-            <Text style={{ color: 'white', textAlign: 'center', marginVertical: 10 }}>
+            <Text style={{ color: 'orange', textAlign: 'center', marginVertical: 10 }}>
                 {errorMessage}
              </Text>
             ) : null}
@@ -288,7 +302,8 @@ const CustomDesignScreen = ({ route }) => {
 
     
 
-        </ScrollView>
+       </KeyboardAwareScrollView>
+     
      </View>   
      </View>  
     )

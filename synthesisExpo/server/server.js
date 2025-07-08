@@ -1899,7 +1899,6 @@ app.get('/pickElement', async (req, res) => {
       return res.json(styledComponents)
     } 
     else if(category === 'tips'){
-      console.log('✅ Sending tips now');
       return res.json(tips);
     }
 });

@@ -17,7 +17,8 @@ import {
   ActivityIndicator, // For showing loading indicators during asynchronous tasks
   Switch,  // A toggle component for binary options (on/off)
   Button,
-  SafeAreaView
+  SafeAreaView,
+  Alert
 } from 'react-native';
 
 import { MaterialIcons } from '@expo/vector-icons';
@@ -54,6 +55,8 @@ const MyDesignScreen = ({route}) => {
   const [currentSystem, setCurrentSystem] = useState(data); // keep this
   const [loading, setLoading] = useState(false);
 
+   const gradientColors = currentSystem.gradients.length > 0 ? currentSystem.gradients[0].colors : ['#4c4c66', '#1a1a2e']; 
+
 
 
   // console.log('design screen current system', currentSystem)
@@ -68,6 +71,7 @@ const MyDesignScreen = ({route}) => {
 useFocusEffect(
   useCallback(() => {
     console.log('Screen focused. (myDesignScreen) Refetching design system...');
+     console.log('current system:', currentSystem);
     getDesignSystem(); // <-- this should call your backend and refresh data
   }, [])
 );
@@ -169,7 +173,15 @@ const addElement = (category, systemId) =>{
       })
   }
 
-  try{
+
+  Alert.alert(
+    "Delete Design System",
+    "are you sure you want to delete this design system ?",
+     [
+    { text: "Cancel", style: "cancel" },
+    { text: "OK", onPress: async () =>  {
+
+        try{
       let response = await fetch(fetchURL, fetchOptions);
 
       let data = await response.json();
@@ -195,7 +207,10 @@ const addElement = (category, systemId) =>{
   }catch(err){
       console.log("there was an error with the fetch", err)
   }
-      
+    }}
+  ]
+
+  )  
  }
 
  {/* ----------------------------------------------------< RETURN JSX >--------------------------------------------------- */} 
@@ -221,25 +236,29 @@ const addElement = (category, systemId) =>{
 
      <View style={{flex: 1, position: 'relative', alignItems: 'center', padding: 20, zIndex: 0}}>
 
-           <ImageBackground
-                source={require('../../../assets/orange-gradient.jpg')}
-                resizeMode="cover"
-                style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  bottom: 0,
-                  right: 0,
-                  zIndex: 0,
-                }}
-              >
-                <View
+             <LinearGradient
+                  colors={gradientColors}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 1 }}
                   style={{
-                    flex: 1,
-                    backgroundColor: 'rgba(0,0,0,0.4)', // adjust opacity and color here
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    bottom: 0,
+                    right: 0,
+                    zIndex: 0,
                   }}
-                />
-            </ImageBackground>
+                ><View
+                    style={{
+                      flex: 1,
+                      backgroundColor: 'rgba(0,0,0,0.4)', 
+                    }}
+                    >
+                  </View>
+                  
+                  </LinearGradient>
+
+     
            
         <View style={{ flex: 1, zIndex: 1,}}>
          <ScrollView   
@@ -467,13 +486,13 @@ const addElement = (category, systemId) =>{
           
     {/* ----------------------------------------------------< OPTIONS >---------------------------------------------------  */} 
           
-    <View>
-       <Pressable onPress={() => deleteSystem(currentSystem.id)} style={[globalStyles.screenStyles.btn1, {backgroundColor: 'red', color: 'black'}]}>
+
+       <Pressable onPress={() => deleteSystem(currentSystem.id)} style={[globalStyles.screenStyles.btnShadow, {backgroundColor: 'red', borderRadius: 10,  height: 70, alignItems: 'center', justifyContent: 'center' }]}>
             <Text style={globalStyles.screenStyles.text}>
               Delete Design System
             </Text>
        </Pressable>
-    </View>
+
           
           
           

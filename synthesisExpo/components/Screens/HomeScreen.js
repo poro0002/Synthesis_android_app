@@ -266,7 +266,7 @@ useLayoutEffect(() => {
                 <Text style={{color: 'white', textAlign: 'center', fontWeight: 'bold'}}>
                     ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
                 </Text>
-               <Text style={globalStyles.screenStyles.text}>
+               <Text style={[globalStyles.screenStyles.text, {marginBottom: 10, marginTop: 10}]}>
                     Today &#8226;{' '}
                     <Text style={{ fontWeight: 'bold' }}>
                       {new Date().toLocaleDateString(undefined, {
@@ -280,8 +280,8 @@ useLayoutEffect(() => {
            
                  
               
-                  <Text style={{color: 'white', textAlign: 'center'}}>
-                   Battery: {batteryLevel !== null ? `${batteryLevel}%` : 'Loading...'}
+                  <Text style={{color: 'white', textAlign: 'center', marginTop: 10,}}>
+                       Battery: {batteryLevel !== null ? `${batteryLevel}%` : 'Loading...'}
                   </Text>
 
                   <Text style={{color: 'white', textAlign: 'center', fontWeight: 'bold', marginTop: 10,}}>
@@ -294,7 +294,7 @@ useLayoutEffect(() => {
                 </Text>
 
 
-        <Text style={globalStyles.screenStyles.text}>What are you Looking For ?</Text>
+        <Text style={[globalStyles.screenStyles.text, {marginBottom: 20, marginTop: 20}]}>What are you Looking For ?</Text>
 
       <View style={globalStyles.screenStyles.row}>
               
