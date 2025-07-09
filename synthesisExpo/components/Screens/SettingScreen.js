@@ -163,7 +163,7 @@ const SettingScreen = ({ route }) => {
           {renderBackButton()}
           {selectedSetting === 'account' && (
             <View style={globalStyles.screenStyles.column}>
-              <Pressable onPress={logout} style={globalStyles.screenStyles.settingsComp}>
+              <Pressable onPress={logout} style={[globalStyles.screenStyles.settingsComp, {backgroundColor: 'red'}]}>
                 <Text style={globalStyles.screenStyles.topicText}>Log Out</Text>
               </Pressable>
             </View>

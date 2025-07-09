@@ -1,5 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View,  KeyboardAvoidingView, Platform,} from 'react-native';
+import globalStyles from '../../../styles';
 
 import React, { useState, useEffect } from 'react';
 import {
@@ -59,14 +60,27 @@ const LoginRegScreen = () =>  {
      setLogData({ username: '', pass: '' })
   }, [isLoggedIn])
 
+
   useEffect(() =>{
-    if(newAccountCreated === true){
-       setErrorMessage("Account successfully created");
-    }else{
-      setErrorMessage("");
+   console.log('reg login username var from context:', username)
+  },[username])
+
+
+  useEffect(() => {
+    if (newAccountCreated) {
+        setErrorMessage("Account successfully created");
+
+        const timer = setTimeout(() => { // encapsulate the timer into a variable
+            setNewAccountCreated(false);
+            setErrorMessage("");
+        }, 3000);
+
+        return () => clearTimeout(timer); // then, clear it using the clearTimeout method with the var inside
+
+        // If your component unmounts or the dependencies change before 3 seconds pass, React will run the cleanup function returned by useEffect. 
+        // Calling clearTimeout(timer) there:
     }
-   
-  }, [regClicked, logClicked])
+}, [newAccountCreated]);
 
   // ----------------------------------------------------< Handle Input Changes >--------------------------------------------------------
 
@@ -87,11 +101,13 @@ const LoginRegScreen = () =>  {
   };
 
   function handleLog() {
+    setErrorMessage("");
     setLogClicked(true);
-    setRegClicked(false);
+    setRegClicked(false); 
   }
 
   function handleReg() {
+    setErrorMessage("");
     setRegClicked(true);
     setLogClicked(false);
   }
@@ -234,9 +250,11 @@ function testEmail(data) {
                setErrorMessage(data.message);
                 setLogClicked(true);
                 setRegClicked(false);
-                setNewAccountCreated(true)
+                 setTimeout(() => {
+                    setNewAccountCreated(true);
+                 }, 3000);
                 console.log(data.message);
-            } else if (data.message === 'there is another user with that username or email') {
+            } else if (data.message === 'There is already an account associated with that username or email') {
                 setErrorMessage(data.message);
                 console.log(data.message);
             }
@@ -345,7 +363,7 @@ return(
   {logClicked && (
    <View style={styles.container}>
       <Text style={styles.header}>Login</Text>
-      <Text style={styles.inputTag}>{errorMessage}</Text>
+      <Text style={[globalStyles.screenStyles.textShadow, { color: 'orange', textAlign: 'center', marginVertical: 10 }]}>{errorMessage}</Text>
       <Text style={styles.inputTag}>Username</Text>
      
       <KeyboardAvoidingView
@@ -381,7 +399,7 @@ return(
   {regClicked && (
     <View style={styles.container}>
       <Text style={styles.header}>Register</Text>
-      <Text style={styles.inputTag}>{errorMessage}</Text>
+      <Text style={[globalStyles.screenStyles.textShadow, { color: 'orange', textAlign: 'center', marginVertical: 10 }]}>{errorMessage}</Text>
       <Text style={styles.inputTag}>Username</Text>
       <TextInput
         style={styles.input}

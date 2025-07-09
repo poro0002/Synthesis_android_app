@@ -163,7 +163,6 @@ const ProjectScreen = () => {
                   elevation: 5, // Android shadow
                   borderColor: 'white',
                   borderWidth: 1,
-                  
                 }}
               >
                 <LinearGradient

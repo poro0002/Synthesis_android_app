@@ -134,7 +134,7 @@ const handleCreate = async () => {
    };
 
   //  console.log('topic screen typo data:', data?.typography)
-  //  console.log('topic screen comp data:', data?.styledComponents)
+   console.log('topic screen comp data:', data)
 
 
    
@@ -174,6 +174,12 @@ const handleCreate = async () => {
 useEffect(() => {
     fetchCorroData();
 }, []);
+
+useEffect(() => { // for whatever reason when the user changes his/hers username the topic data wont refetch. here is a temp fix ?
+  if(username) {
+    fetchCorroData();
+  }
+}, [username]); 
 
 
 const cancelSystem = () => {

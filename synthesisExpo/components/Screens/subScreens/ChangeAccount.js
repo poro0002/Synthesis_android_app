@@ -23,6 +23,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useHeaderHeight } from '@react-navigation/elements';
 import { ImageBackground } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native'
+import LottieView from 'lottie-react-native';
 
 import Constants from 'expo-constants';
 const apiUrl = Constants.expoConfig.extra.API_URL; 
@@ -39,7 +41,10 @@ const ChangeAccount = ({ route }) => {
 
   const {type} = route.params;
   const [errorMessage, setErrorMessage] = useState("");
+  const [loading, setLoading]= useState(false);
 const headerHeight = useHeaderHeight();
+const navigation = useNavigation();
+
 
 
 // fetch the username from the storage after the initial render
@@ -68,6 +73,7 @@ const headerHeight = useHeaderHeight();
   useEffect(() => {
     if (errorMessage) {
       console.log("Current error message:", errorMessage);
+      
     }
   }, [errorMessage]);
 
@@ -152,7 +158,7 @@ const headerHeight = useHeaderHeight();
     
 
       const changePassword = async () => {
-
+         
           const fetchURL = `${apiUrl}/changePass`
           const fetchHeaders = new Headers({'Content-Type':'application/json'})
 
@@ -168,8 +174,11 @@ const headerHeight = useHeaderHeight();
     
 
           if(!testPass(screenData)){
+            setLoading(false);
             return;
           }
+
+           setLoading(true)
 
           if(screenData.pass === screenData.confirmPass){
 
@@ -184,9 +193,11 @@ const headerHeight = useHeaderHeight();
           
                 if(data.message === "password successfully changed"){
                    setErrorMessage("password successfully changed.........redirecting")
-                   setTimeout(() => {
-                    DevSettings.reload();
-                  }, 2000);
+                  
+                     navigation.navigate('Tabs', {
+                       screen: 'Home',
+                      });
+                
                 } else{
                   setErrorMessage("there was an issue trying to change your password")
                 }
@@ -195,6 +206,8 @@ const headerHeight = useHeaderHeight();
               }catch(err){
                 console.error('Fetch error:', err);
                 setErrorMessage('Something went wrong with the fetch');
+              }finally{
+                setLoading(false)
               }
 
           }else{
@@ -206,7 +219,7 @@ const headerHeight = useHeaderHeight();
 
 
   const changeUsername = async () => {
-
+   
     const fetchURL = `${apiUrl}/changeUsername`
     const fetchHeaders = new Headers({'Content-Type':'application/json'})
 
@@ -218,8 +231,11 @@ const headerHeight = useHeaderHeight();
     }
 
     if(!testUsername(screenData)){
+      setLoading(false);
       return;
     }
+
+     setLoading(true)
 
     try{
     
@@ -241,9 +257,11 @@ const headerHeight = useHeaderHeight();
               confirmPass: '',
               pass: '',
             }));
-          setTimeout(() => {
-            DevSettings.reload();
-          }, 2000);
+        
+              navigation.navigate('Tabs', {
+                screen: 'Home',
+               });
+        
            
         } else if(data.message === 'could not find a user with that username'){
             setErrorMessage("could not find a user with that username");
@@ -258,12 +276,25 @@ const headerHeight = useHeaderHeight();
         console.error('Fetch error:', err);
         setErrorMessage('Something went wrong with the fetch');
       }
+      finally{
+        setLoading(false)
+      }
 
   }
 
-   return (
+   return ( 
+    loading ? (    
+       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', zIndex: 0, }}>
+             <LottieView
+                source={require('../../../assets/loading1.json')}
+                autoPlay
+                loop
+                style={{ width: 100, height: 100, alignSelf: 'center'}}
+              />
+           <Text>Updating User Credentials....</Text>
+         </View>):
 
-    <View style={{flex: 1, position: 'relative', zIndex: 0}}>
+    <View style={{flex: 1, position: 'relative', zIndex: 0,}}>
                
                   <ImageBackground
                          source={require('../../../assets/green-gradient.png')}
@@ -292,7 +323,7 @@ const headerHeight = useHeaderHeight();
               <>
                <Text style={[globalStyles.screenStyles.h2, globalStyles.screenStyles.textShadow ]}>Change Password</Text>
                  <MaterialIcons name="lock" size={54} color="white" style={[globalStyles.screenStyles.iconShadow, { marginRight: 10 }]} />
-                      <Text style={globalStyles.screenStyles.text}>{errorMessage}</Text>
+                      <Text style={[globalStyles.screenStyles.textShadow, { color: 'orange', textAlign: 'center', marginVertical: 10 }]}>{errorMessage}</Text>
 
                       <Text style={globalStyles.screenStyles.h4}>
                        Password 
@@ -312,6 +343,7 @@ const headerHeight = useHeaderHeight();
                         placeholderTextColor="gray"
                         placeholder="new password"
                         value={screenData.pass}
+                        secureTextEntry={true} 
                         onChangeText={(value) => handleInputChange('pass', value)}
                       />
                       <Text style={globalStyles.screenStyles.h4}>
@@ -332,6 +364,7 @@ const headerHeight = useHeaderHeight();
                         placeholderTextColor="gray"
                         placeholder="confirm new pass"
                         value={screenData.confirmPass}
+                        secureTextEntry={true} 
                         onChangeText={(value) => handleInputChange('confirmPass', value)}
                       />
                        <Pressable onPress={changePassword} style={{ 
@@ -353,7 +386,7 @@ const headerHeight = useHeaderHeight();
         <>
               <Text style={[globalStyles.screenStyles.h2, globalStyles.screenStyles.textShadow ]}>Change Username</Text>
                  <MaterialIcons name="edit" size={54} color="white"  style={[globalStyles.screenStyles.iconShadow, { marginRight: 10 }]}/>
-                      <Text style={globalStyles.screenStyles.text}>{errorMessage}</Text>
+                      <Text style={[globalStyles.screenStyles.textShadow, { color: 'orange', textAlign: 'center', marginVertical: 10 }]}>{errorMessage}</Text>
                       <TextInput
                         style={[
                           globalStyles.screenStyles.input,

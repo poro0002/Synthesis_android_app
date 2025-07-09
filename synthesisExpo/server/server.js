@@ -2062,7 +2062,9 @@ app.post('/changePass', async (req, res) => {
 
     // how do i write code here to update apreexisting password ?
     const userDoc = existingUser.docs[0];
-    await userDoc.ref.update({ pass });
+    const hashedPass = await bcrypt.hash(pass, 10);
+
+    await userDoc.ref.update({ pass: hashedPass });
 
     return res.status(200).json({message: "password successfully changed"})
 
