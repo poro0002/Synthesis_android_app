@@ -310,7 +310,7 @@ const globalStyles = StyleSheet.create({
           borderColor: 'black',
           position: 'absolute',
           top: 0,
-          left: 70,
+          left: 0,
           justifyContent: 'center',
           alignItems: 'center',
           backgroundColor: 'white',

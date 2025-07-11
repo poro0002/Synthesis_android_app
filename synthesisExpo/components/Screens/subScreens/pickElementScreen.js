@@ -52,7 +52,7 @@ const PickElementScreen = ({route}) => {
 
     const [corroData, setCorroData] = useState();
     const { getDesignSystem, username } = useAuth();
-    const [loading, setLoading] = useState(false);
+    const [localLoading, setLocalLoading] = useState(false);
 
 
      const navigation = useNavigation();
@@ -114,7 +114,7 @@ const PickElementScreen = ({route}) => {
      }
 
      console.log("category", category)
-    setLoading(true)
+    setLocalLoading(true)
      try{
          let response = await fetch(fetchURL, fetchOptions);
  
@@ -136,7 +136,7 @@ const PickElementScreen = ({route}) => {
      }catch(err){
          console.log("there was an error with the fetch", err)
      }finally{
-      setLoading(false)
+      setLocalLoading(false)
      }
       
    }
@@ -163,7 +163,7 @@ const PickElementScreen = ({route}) => {
       
        <SafeAreaView style={{ flex: 1, backgroundColor: 'black' }}>
 
-         {loading && (
+         {localLoading && (
                   <Modal transparent={true} animationType="fade">
                     <View style={{
                       flex: 1,

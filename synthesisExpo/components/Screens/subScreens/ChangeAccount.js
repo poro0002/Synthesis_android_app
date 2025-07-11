@@ -41,7 +41,7 @@ const ChangeAccount = ({ route }) => {
 
   const {type} = route.params;
   const [errorMessage, setErrorMessage] = useState("");
-  const [loading, setLoading]= useState(false);
+  const [localLoading, setLocalLoading]= useState(false);
 const headerHeight = useHeaderHeight();
 const navigation = useNavigation();
 
@@ -178,7 +178,7 @@ const navigation = useNavigation();
             return;
           }
 
-           setLoading(true)
+           setLocalLoading(true)
 
           if(screenData.pass === screenData.confirmPass){
 
@@ -207,7 +207,7 @@ const navigation = useNavigation();
                 console.error('Fetch error:', err);
                 setErrorMessage('Something went wrong with the fetch');
               }finally{
-                setLoading(false)
+                setLocalLoading(false)
               }
 
           }else{
@@ -235,7 +235,7 @@ const navigation = useNavigation();
       return;
     }
 
-     setLoading(true)
+     setLocalLoading(true)
 
     try{
     
@@ -277,13 +277,13 @@ const navigation = useNavigation();
         setErrorMessage('Something went wrong with the fetch');
       }
       finally{
-        setLoading(false)
+        setLocalLoading(false)
       }
 
   }
 
    return ( 
-    loading ? (    
+    localLoading ? (    
        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', zIndex: 0, }}>
              <LottieView
                 source={require('../../../assets/loading1.json')}

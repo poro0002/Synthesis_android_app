@@ -24,10 +24,13 @@ const __dirname = path.dirname(__filename); // You can use this to reference the
 
 
 app.use(cors({
-  origin: '*', // Allow all origins for now (you can tighten this up later)
-  methods: ['GET', 'POST'],
-  credentials: true
+  origin: '*',
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
 }));
+
+
 
 app.use(express.json());
 

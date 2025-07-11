@@ -140,20 +140,23 @@ const StackNavigator = ({ username }) => {
         options={{ headerTitle: 'Settings' }}
       />
         <Stack.Screen name="Topic" 
-        component={TopicScreen} 
+          component={TopicScreen} 
+          options={{ headerTitle: 'Explore Topic Elements' }}
          
         />
-           <Stack.Screen name="Element" 
+        <Stack.Screen name="Element" 
         component={ElementScreen} 
+         options={{ headerTitle: 'Element Preview' }}
          
         />
-             <Stack.Screen name="MyDesignScreen" 
+         <Stack.Screen name="MyDesignScreen" 
         component={MyDesignScreen} 
+        options={{ headerTitle: 'My Design Systems' }}
          
         />
-                <Stack.Screen name="AccountChangeScreen" 
+        <Stack.Screen name="AccountChangeScreen" 
         component={AccountChangeScreen} 
-         
+          options={{ headerTitle: 'Change My Credentials' }}
         />
 
         <Stack.Screen name="PickElementScreen" 
@@ -166,6 +169,7 @@ const StackNavigator = ({ username }) => {
 
       <Stack.Screen name="CustomDesignScreen" 
         component={CustomDesignScreen} 
+        options={{ headerTitle: 'Create A Custom Design System' }}
          
         /> 
 

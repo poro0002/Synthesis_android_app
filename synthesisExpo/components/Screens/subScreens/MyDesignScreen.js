@@ -53,7 +53,7 @@ const MyDesignScreen = ({route}) => {
 
   const [selectedIndex, setSelectedIndex] = useState(0); // Defaults to showing the first design system
   const [currentSystem, setCurrentSystem] = useState(data); // keep this
-  const [loading, setLoading] = useState(false);
+  const [localLoading, setLocalLoading] = useState(false);
 
    const gradientColors = currentSystem.gradients.length > 0 ? currentSystem.gradients[0].colors : ['#4c4c66', '#1a1a2e']; 
 
@@ -130,7 +130,7 @@ const addElement = (category, systemId) =>{
           index: index,
         })
     }
-    setLoading(true);
+    setLocalLoading(true);
     try{
         let response = await fetch(fetchURL, fetchOptions);
 
@@ -152,7 +152,7 @@ const addElement = (category, systemId) =>{
     }catch(err){
         console.log("there was an error with the fetch", err)
     } finally {
-      setLoading(false);
+      setLocalLoading(false);
     }
  }
 
@@ -218,7 +218,7 @@ const addElement = (category, systemId) =>{
  return(
   <SafeAreaView style={{ flex: 1, backgroundColor: 'black' }}>
      
-      {loading && (
+      {localLoading && (
           <Modal transparent={true} animationType="fade">
             <View style={{
               flex: 1,

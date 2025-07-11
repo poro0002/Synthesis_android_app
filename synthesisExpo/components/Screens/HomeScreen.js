@@ -428,6 +428,84 @@ useLayoutEffect(() => {
         </Text>
        </View>
 
+
+          <Text style={{color: 'white', textAlign: 'center', fontWeight: 'bold'}}>
+                    ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+                </Text>
+
+   
+        <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 30, marginBottom: 10 }}>
+    
+          <Text
+            style={[
+              globalStyles.screenStyles.h4,
+              globalStyles.screenStyles.textShadow,
+              { marginLeft: 8, marginBottom: 20 },
+            ]}
+          >
+            How It Works
+          </Text>
+        </View>
+          
+        <View style={{ alignItems: 'left', marginBottom: 10 }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center',  marginBottom: 20 }}>
+            <MaterialIcons
+              name="build"
+              size={22}
+              color="white"
+              style={globalStyles.screenStyles.iconShadow}
+            />
+            <Text style={{color: 'white', fontSize: 12, fontWeight: 'bold', marginLeft: 10}}>
+              Build your design system with fonts, colors, icons & more.
+            </Text>
+          </View>
+          
+          <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 20 }}>
+            <MaterialIcons
+              name="file-download"
+              size={22}
+              color="white"
+              style={globalStyles.screenStyles.iconShadow}
+            />
+            <Text style={{color: 'white', fontSize: 12, fontWeight: 'bold', marginLeft: 10}}>
+              Export it as a Figma JSON config file instantly.
+            </Text>
+          </View>
+          
+          <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 20 }}>
+            <MaterialIcons
+              name="design-services"
+              size={22}
+              color="white"
+              style={globalStyles.screenStyles.iconShadow}
+            />
+            <Text style={{color: 'white', fontSize: 12, fontWeight: 'bold', marginLeft: 10}}>
+              Import into Figma & design with your system live.
+            </Text>
+          </View>
+        </View>
+          
+        <View style={{ alignItems: 'center', marginBottom: 40 }}>
+          <Pressable
+            onPress={() => navigation.navigate('CustomDesignScreen')}
+            style={[globalStyles.screenStyles.btnShadow, {
+                backgroundColor: 'royalblue',
+                borderRadius: 8,
+                paddingVertical: 10,
+                paddingHorizontal: 20,
+                width: '100%',
+                height: 75, 
+                alignItems: 'center',
+                justifyContent: 'center',
+            }]}
+            
+          >
+            <Text style={{ color: 'white', fontWeight: 'bold', }}>
+              Start Building 
+            </Text>
+          </Pressable>
+        </View>
+
         </ScrollView>
 
       </View>

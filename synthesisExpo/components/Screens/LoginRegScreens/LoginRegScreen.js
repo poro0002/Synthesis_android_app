@@ -47,7 +47,7 @@ const LoginRegScreen = () =>  {
     setErrorMessage,
    } = useAuth();
 
-   const [loading, setLoading] = useState(false);
+   const [localLoading, setLocalLoading] = useState(false);
 
    
   // Separate state objects for login and register form data
@@ -61,9 +61,11 @@ const LoginRegScreen = () =>  {
   }, [isLoggedIn])
 
 
-  useEffect(() =>{
-   console.log('reg login username var from context:', username)
-  },[username])
+  // useEffect(() =>{
+  //  console.log('reg login username var from context:', username)
+  // },[username])
+
+
 
 
   useEffect(() => {
@@ -225,7 +227,7 @@ function testEmail(data) {
 
 
  const regSubmit = async () => {
-    setLoading(true)
+    setLocalLoading(true)
     console.log('regSubmit fired', regData)
 // the regData data needs to checkout against the rules before the api fetch is made
 
@@ -263,12 +265,12 @@ function testEmail(data) {
             console.error('Error during registration:', error);
             setErrorMessage('Server error during registration.');
         } finally {
-            setLoading(false); // when those blocks are resolved it will set any of them to false 
+            setLocalLoading(false); // when those blocks are resolved it will set any of them to false 
         }
 
     } else {
         console.log('Validation failed');
-        setLoading(false); // prevent spinner getting stuck
+        setLocalLoading(false); // prevent spinner getting stuck
     }
 
 
@@ -282,7 +284,7 @@ function testEmail(data) {
 
 const logSubmit = async () => {
 
-    setLoading(true)
+    setLocalLoading(true)
     console.log('logSubmit fired', logData)
 
  // do a fetch to the server side log route that includes a body with the log input values
@@ -324,13 +326,13 @@ const logSubmit = async () => {
         console.error('Error during login:', error);
         setErrorMessage('Network or server error during login.');
     } finally {
-        setLoading(false); // when those blocks are resolved it will set any of them to false 
+        setLocalLoading(false); // when those blocks are resolved it will set any of them to false 
     }
 
     }
 
 return(
-   loading ? (
+   localLoading ? (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'black' }}>
       <LottieView
         source={require('../../../assets/loading1.json')}

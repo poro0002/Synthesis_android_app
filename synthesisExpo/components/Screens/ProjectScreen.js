@@ -110,9 +110,9 @@ const ProjectScreen = () => {
 
 
   return (
-    <View style={{flex: 1, position: 'relative', alignItems: 'center'}}>
+    <View style={{flex: 1, position: 'relative', alignItems: 'center', backgroundColor: 'black'}}>
        <ImageBackground
-                     source={require('../../assets/grey-gradient.jpg')}
+                     source={require('../../assets/purple-pink-gradient.jpg')}
                      resizeMode="cover"
                      style={{
                        position: 'absolute',
@@ -176,7 +176,7 @@ const ProjectScreen = () => {
                 >
                   <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                     <View style={{ flexDirection: 'column' }}>
-                      <Text style={[globalStyles.screenStyles.textShadow, { color: 'white', fontWeight: 'bold', fontSize: 18, fontFamily: element.fonts[0].name , marginBottom: 5,}]}>
+                      <Text style={[globalStyles.screenStyles.textShadow, { color: 'white', fontWeight: 'bold', fontSize: 18, fontFamily: element.fonts?.[0]?.name || 'System', marginBottom: 5,}]}>
                         {element.name}
                       </Text>
                       <Text style={{ color: 'white', fontWeight: 'bold', marginBottom: 5 }}>{element.about}</Text>

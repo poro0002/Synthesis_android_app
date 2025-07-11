@@ -80,14 +80,14 @@ import 'react-native-gesture-handler';
 function App() {
 
   const [fontsLoaded, setFontsLoaded] = useState(false);
-   const [loading, setLoading] = useState(false);
+   const [localLoading, setLocalLoading] = useState(false);
 
   // ----------------------------------------------------< Load Fonts/Video >--------------------------------------------------------
   
   
   const loadVideos = async () => {
 
-    setLoading(true)
+    setLocalLoading(true)
     try {
       await Asset.loadAsync([
         require('./assets/gradient1.mp4'),
@@ -102,14 +102,14 @@ function App() {
     } catch (error) {
       console.error('Error preloading videos:', error);
     }finally{
-      setLoading(false)
+      setLocalLoading(false)
     }
   };
 
 
   const loadPhotos = async () => {
 
-    setLoading(true)
+    setLocalLoading(true)
     try {
       await Asset.loadAsync([
         require('./assets/portfolio-projects/batman_mockup.png'),
@@ -123,7 +123,7 @@ function App() {
     } catch (error) {
       console.error('Error preloading photos:', error);
     }finally{
-      setLoading(false)
+      setLocalLoading(false)
     }
   };
 
@@ -214,7 +214,7 @@ return (
 
 <LogProvider>
  <ErrorBoundary>
-    {loading && fontsLoaded && (
+    {localLoading && fontsLoaded && (
             <Modal transparent={true} animationType="fade">
               <View style={{
                 flex: 1,

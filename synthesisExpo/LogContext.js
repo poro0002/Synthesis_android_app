@@ -50,14 +50,14 @@ const checkLogin = async () => {
     const storedUsername = await AsyncStorage.getItem('username');
 
     setIsLoggedIn(prev => {
-      // ✅ only update if value has changed
+      //  only update if value has changed
       if (loggedInStatus === 'true' && !prev) return true;
       if (loggedInStatus !== 'true' && prev) return false;
       return prev;
     });
 
     setUsername(prev => {
-      // ✅ only update if username has changed
+      //  only update if username has changed
       if (storedUsername && prev !== storedUsername) return storedUsername;
       return prev;
     });

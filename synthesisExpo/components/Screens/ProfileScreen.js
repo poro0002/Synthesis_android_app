@@ -74,7 +74,7 @@ const handleUsernameChange = (type) =>{
     <View style={{flex: 1, position: 'relative', alignItems: 'center', zIndex: 0}}>
         
            <ImageBackground
-                  source={require('../../assets/pink-gradient.png')}
+                  source={require('../../assets/blue-purple-gradient.jpg')}
                   resizeMode="cover"
                   style={{
                     position: 'absolute',

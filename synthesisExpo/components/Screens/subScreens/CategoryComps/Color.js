@@ -69,6 +69,12 @@ const ColorComp = ({ compData }) =>{
                         borderWidth: 1,
                       }}
                     >
+                         <View style={globalStyles.screenStyles.checkCircle}>
+                         {selectedElements.gradients.some((item) => item.name === element.name) && ( // this is just matching the circle with the corrospponding element
+                              <View style={globalStyles.screenStyles.filledCircle} />
+                           )}
+                        </View>
+
                     <Pressable 
                     onPress={() => toggleSelection('gradients', element)}
                       style={{
@@ -78,11 +84,7 @@ const ColorComp = ({ compData }) =>{
                         alignItems: 'center',
                       }}>
                    
-                   <View style={globalStyles.screenStyles.checkCircle}>
-                         {selectedElements.gradients.some((item) => item.name === element.name) && ( // this is just matching the circle with the corrospponding element
-                              <View style={globalStyles.screenStyles.filledCircle} />
-                           )}
-                   </View>
+                
 
                    <Text style={{color: 'white', fontSize:  30,  }}>{element.name}</Text>
                    <Text style={{color: 'white', fontSize:  10, }}>{element.colors[0]}</Text>

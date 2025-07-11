@@ -260,12 +260,13 @@ const cancelSystem = () => {
                 return (
                   <View key={index} >
                   <View style={globalStyles.screenStyles.box}>
-                   <Pressable onPress={() => toggleSelection('fonts', element)}>
-                    <View style={globalStyles.screenStyles.checkCircle}>
-                      {selectedElements.fonts.some((item) => item.name === element.name) && ( // this is just matching the circle with the corrospponding element
+                     <View style={globalStyles.screenStyles.checkCircle}>
+                            {selectedElements.fonts.some((item) => item.name === element.name) && ( // this is just matching the circle with the corrospponding element
                         <View style={globalStyles.screenStyles.filledCircle} />
                         )}
                     </View>
+                   <Pressable onPress={() => toggleSelection('fonts', element)}>
+                  
                     <Text style={[{ fontFamily: matchingFont, color: 'white', fontSize: 40 }]}>T t</Text>
                    
                     <Text style={{ fontFamily: matchingFont, color: 'white', }}>{element.name}</Text>
@@ -304,11 +305,7 @@ const cancelSystem = () => {
                 return (
                 <View key={index}>
                   <Pressable onPress={() => toggleSelection('gradients', element)}>
-                    <View style={globalStyles.screenStyles.checkCircle}>
-                        {selectedElements.gradients.some((item) => item.name === element.name) && (
-                          <View style={globalStyles.screenStyles.filledCircle}></View>
-                         )}
-                    </View>
+                  
                    <LinearGradient
                     key={index} style={globalStyles.screenStyles.box}
                     colors={element.colors} // Array of colors
@@ -316,6 +313,11 @@ const cancelSystem = () => {
                     start={{ x: 0, y: 0 }} // Gradient start (top-left)
                     end={{ x: 1, y: 1 }} // Gradient end (bottom-right)
                     >
+                    <View style={globalStyles.screenStyles.checkCircle}>
+                        {selectedElements.gradients.some((item) => item.name === element.name) && (
+                          <View style={globalStyles.screenStyles.filledCircle}></View>
+                         )}
+                    </View>
                   <Text style={{ color: '#fff'}}>{element.name}</Text>
                  
           
@@ -382,14 +384,18 @@ const cancelSystem = () => {
               
                <View>
                   <View style={globalStyles.screenStyles.box}>
-                  <Pressable onPress={() => toggleSelection('icons', {name: 'feather',})}>
-                  <View style={globalStyles.screenStyles.checkCircle}>
+                    <View style={globalStyles.screenStyles.checkCircle}>
                        {selectedElements.icons.some((item) => (item.name === 'feather')) && (
                          <View style={globalStyles.screenStyles.filledCircle}></View>
                        )}
                      </View>
-                       <Feather name="folder" size={50} color="royalblue" />
-                         <Text style={{  color: 'white'}}>Feather Icons</Text>
+                  <Pressable onPress={() => toggleSelection('icons', {name: 'feather',})}>
+                        
+                        <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                          <Feather name="folder" size={50} color="royalblue" />
+                          <Text style={{  color: 'white'}}>Feather Icons</Text>
+                        </View>
+                        
                     </Pressable>
                 </View>
                   <Pressable onPress={() => handleIconElement(navigation, 'feather', "icons")}   style={globalStyles.screenStyles.viewBtn}>
@@ -399,14 +405,16 @@ const cancelSystem = () => {
 
                <View>
                   <View style={globalStyles.screenStyles.box}>
-                  <Pressable onPress={() => toggleSelection('icons', {name: 'evil',})}>
-                  <View style={globalStyles.screenStyles.checkCircle}>
+                     <View style={globalStyles.screenStyles.checkCircle}>
                        {selectedElements.icons.some((item) => (item.name === 'evil')) && (
                          <View style={globalStyles.screenStyles.filledCircle}></View>
                        )}
                      </View>
-                       <EvilIcons name="search" size={50} height={50} color="royalblue" />
+                  <Pressable onPress={() => toggleSelection('icons', {name: 'evil',})}>
+                        <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                         <EvilIcons name="search" size={50} height={50} color="royalblue" />
                          <Text style={{  color: 'white'}}>Evil Icons</Text>
+                         </View>
                     </Pressable>
                 </View>
                   <Pressable onPress={() => handleIconElement(navigation, 'evil', "icons")}  style={globalStyles.screenStyles.viewBtn}>
@@ -416,14 +424,16 @@ const cancelSystem = () => {
 
                <View >
                   <View style={globalStyles.screenStyles.box}>
-                  <Pressable onPress={() => toggleSelection('icons', {name: 'simple',})}>
-                  <View style={globalStyles.screenStyles.checkCircle}>
+                    <View style={globalStyles.screenStyles.checkCircle}>
                        {selectedElements.icons.some((item) => (item.name === 'simple')) && (
                          <View style={globalStyles.screenStyles.filledCircle}></View>
                        )}
                      </View>
-                       <SimpleLineIcons name="folder" size={50} height={50} color="royalblue" />
-                         <Text style={{  color: 'white'}}>SimpleLine Icons</Text>
+                  <Pressable onPress={() => toggleSelection('icons', {name: 'simple',})}>
+                        <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                           <SimpleLineIcons name="folder" size={50} height={50} color="royalblue" />
+                           <Text style={{  color: 'white'}}>SimpleLine Icons</Text>
+                         </View>
                     </Pressable>
                 </View>
                   <Pressable onPress={() => handleIconElement(navigation, 'simple', "icons")}   style={globalStyles.screenStyles.viewBtn}>
@@ -433,14 +443,16 @@ const cancelSystem = () => {
 
                <View>
                   <View style={globalStyles.screenStyles.box}>
-                  <Pressable onPress={() => toggleSelection('icons', {name: 'octicons',})}>
-                  <View style={globalStyles.screenStyles.checkCircle}>
+                      <View style={globalStyles.screenStyles.checkCircle}>
                        {selectedElements.icons.some((item) => (item.name === 'octicons')) && (
                          <View style={globalStyles.screenStyles.filledCircle}></View>
                        )}
                      </View>
-                       <Octicons name="repo" size={50} height={50} color="royalblue" />
-                         <Text style={{  color: 'white'}}>Octicons Icons</Text>
+                  <Pressable onPress={() => toggleSelection('icons', {name: 'octicons',})}>
+                        <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                           <Octicons name="repo" size={50} height={50} color="royalblue" />
+                           <Text style={{  color: 'white'}}>Octicons Icons</Text>
+                         </View>
                     </Pressable>
                 </View>
                   <Pressable onPress={() => handleIconElement(navigation, 'octicons', "icons")}   style={globalStyles.screenStyles.viewBtn}>
@@ -450,14 +462,16 @@ const cancelSystem = () => {
 
                <View>
                   <View style={globalStyles.screenStyles.box}>
-                  <Pressable onPress={() => toggleSelection('icons', {name: 'ionicons',})}>
-                  <View style={globalStyles.screenStyles.checkCircle}>
+                     <View style={globalStyles.screenStyles.checkCircle}>
                        {selectedElements.icons.some((item) => (item.name === 'ionicons')) && (
                          <View style={globalStyles.screenStyles.filledCircle}></View>
                        )}
                      </View>
-                     <Ionicons name="folder" size={50} color="royalblue" />
-                         <Text style={{  color: 'white'}}>Ionicons</Text>
+                  <Pressable onPress={() => toggleSelection('icons', {name: 'ionicons',})}>
+                       <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                           <Ionicons name="folder" size={50} color="royalblue" />
+                           <Text style={{  color: 'white'}}>Ionicons</Text>
+                         </View>
                     </Pressable>
                 </View>
                   <Pressable onPress={() => handleIconElement(navigation, 'ionicons', "icons")}    style={globalStyles.screenStyles.viewBtn}>
@@ -467,14 +481,16 @@ const cancelSystem = () => {
 
                <View>
                   <View style={globalStyles.screenStyles.box}>
-                  <Pressable onPress={() => toggleSelection('icons', {name: 'fontawesome',})}>
-                  <View style={globalStyles.screenStyles.checkCircle}>
+                     <View style={globalStyles.screenStyles.checkCircle}>
                        {selectedElements.icons.some((item) => (item.name === 'fontawesome')) && (
                          <View style={globalStyles.screenStyles.filledCircle}></View>
                        )}
                      </View>
-                  <FontAwesome5 name="folder" size={50} color="royalblue" />
-                  <Text style={{  color: 'white'}}>Fontawesome Icons</Text>
+                  <Pressable onPress={() => toggleSelection('icons', {name: 'fontawesome',})}>
+                       <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                          <FontAwesome5 name="folder" size={50} color="royalblue" />
+                          <Text style={{  color: 'white'}}>Fontawesome Icons</Text>
+                        </View>
                     </Pressable>
                 </View>
                   <Pressable onPress={() => handleIconElement(navigation, 'Fontawesome', "icons")}   style={globalStyles.screenStyles.viewBtn}>
@@ -484,14 +500,16 @@ const cancelSystem = () => {
 
                <View>
                   <View style={globalStyles.screenStyles.box}>
-                  <Pressable onPress={() => toggleSelection('icons', {name: 'material',})}>
-                  <View style={globalStyles.screenStyles.checkCircle}>
+                      <View style={globalStyles.screenStyles.checkCircle}>
                        {selectedElements.icons.some((item) => (item.name === 'material')) && (
                          <View style={globalStyles.screenStyles.filledCircle}></View>
                        )}
                      </View>
-                     <MaterialIcons name="folder" size={50} color="royalblue" />
-                         <Text style={{  color: 'white'}}>Material Icons</Text>
+                  <Pressable onPress={() => toggleSelection('icons', {name: 'material',})}>
+                        <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                           <MaterialIcons name="folder" size={50} color="royalblue" />
+                           <Text style={{  color: 'white'}}>Material Icons</Text>
+                         </View>
                     </Pressable>
                 </View>
                   <Pressable onPress={() => handleIconElement(navigation, 'material', "icons")}  style={globalStyles.screenStyles.viewBtn}>
@@ -516,12 +534,15 @@ const cancelSystem = () => {
                    >
                      <View>
                        <View style={globalStyles.screenStyles.box}>
-                         <Pressable onPress={() => toggleSelection('comp', data.styledComponents)}>
-                            <View style={globalStyles.screenStyles.checkCircle}>
+                           <View style={globalStyles.screenStyles.checkCircle}>
                                {selectedElements.comp.some((item) => (item.package === data.styledComponents.package)) && (
-                            <View style={globalStyles.screenStyles.filledCircle}></View>
-                            )}
+                                 <View style={globalStyles.screenStyles.filledCircle}></View>
+                                 )}
                            </View>
+                         <Pressable onPress={() => toggleSelection('comp', data.styledComponents)}>
+                         <View style={{padding: 20}}>
+                           
+                       
                            <Text style={{ fontWeight: 'bold', color: 'white' }}>
                              {data.styledComponents.package}
                            </Text>
@@ -531,6 +552,8 @@ const cancelSystem = () => {
                                {componentName}
                              </Text>
                            ))}
+
+                             </View>
                          </Pressable>
                        </View>
                        <Pressable onPress={() => handleCompElement(navigation, 'component', data.styledComponents)} style={globalStyles.screenStyles.viewBtn}>

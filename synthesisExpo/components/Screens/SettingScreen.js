@@ -28,7 +28,7 @@ const SettingScreen = ({ route }) => {
   const [selectedSetting, setSelectedSetting] = useState('default');
   const [isAB, setIsAB] = useState(false); // state to control the switch (on/off)
   const headerHeight = useHeaderHeight();
-  const { setIsLoggedIn, setUsername, setFavData, setErrorMessage, setDesignSystemData, setSelectedElements } = useAuth();
+  const { setIsLoggedIn, setUsername, setFavData, setErrorMessage, setDesignSystemData, setSelectedElements, checkLogin } = useAuth();
   console.log(selectedSetting);
 
 
@@ -54,6 +54,8 @@ const SettingScreen = ({ route }) => {
       name: [],
       about: [],
     });
+    setTimeout(() => checkLogin(), 200);
+    
   }
    
 
@@ -89,7 +91,7 @@ const SettingScreen = ({ route }) => {
    
         <View style={{flex: 1, position: 'relative',  zIndex: 0}}>
                 <ImageBackground
-                                 source={require('../../assets/brown-gradient.png')}
+                                 source={require('../../assets/blue-orange-gradient.jpg')}
                                  resizeMode="cover"
                                  style={{
                                    position: 'absolute',
@@ -98,6 +100,7 @@ const SettingScreen = ({ route }) => {
                                    bottom: 0,
                                    right: 0,
                                    zIndex: 0,
+                                   
                                  }}
                                >
                                  <View
@@ -192,7 +195,6 @@ const SettingScreen = ({ route }) => {
                     thumbColor={isAB ? 'white' : 'white'}
                     onValueChange={toggleSwitch}
                     value={isAB}
-
                   />       
                 </View>
             </View>
