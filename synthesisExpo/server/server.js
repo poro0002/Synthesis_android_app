@@ -2000,6 +2000,37 @@ app.get('/elements', (req, res) => {
   }
 });
 
+// --------------------------------------------------------< Feeback/Contact Route >-------------------------------------------------------------
+
+
+app.post('/contact', async (req, res) => {
+
+   const {subject, message, username} = req.body;
+   console.log('contact data:', req.body)
+ 
+
+   try{
+
+     const collection =  firestore.collection('feedback');
+
+      await collection.add({
+        subject,
+        message,
+        username, 
+        createdAt: admin.firestore.Timestamp.now(),
+      })
+      console.log('contact message stored in firebase')
+      return res.status(200).json({message: 'message sent, your feedback is appreciated', success: true})
+
+
+
+   }catch(err){
+    console.log('there was an error saving that message to the database', err)
+        return res.status(500).json({message: 'there was an error saving that message to the database', success: false})
+   }
+  
+})
+
 
 
 

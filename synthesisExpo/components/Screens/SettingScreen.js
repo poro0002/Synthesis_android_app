@@ -1,5 +1,5 @@
 import globalStyles from '../../styles'
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View, // A container that supports layout with flexbox
   Text, // For displaying text
@@ -21,6 +21,10 @@ import VideoBackground from './Bkgd/VideoBackground';
 import { ImageBackground } from 'react-native';
 import LottieView from 'lottie-react-native';
 
+
+
+import Constants from 'expo-constants';
+const apiUrl = Constants.expoConfig.extra.API_URL;
 import { useAuth } from '../../LogContext';
 import { useHeaderHeight } from '@react-navigation/elements';
 
@@ -28,8 +32,73 @@ const SettingScreen = ({ route }) => {
   const [selectedSetting, setSelectedSetting] = useState('default');
   const [isAB, setIsAB] = useState(false); // state to control the switch (on/off)
   const headerHeight = useHeaderHeight();
-  const { setIsLoggedIn, setUsername, setFavData, setErrorMessage, setDesignSystemData, setSelectedElements, checkLogin } = useAuth();
-  console.log(selectedSetting);
+  const { setIsLoggedIn, setUsername, username, setFavData, setErrorMessage, errorMessage, setDesignSystemData, setSelectedElements, checkLogin } = useAuth();
+ 
+
+
+  const [feedbackData, setFeedbackData] = useState({
+    subject: [],
+    message: [],
+    username: username
+  })
+
+useEffect(() => {
+    setErrorMessage("");
+}, [selectedSetting]); 
+
+      const handleInputChange = (property, value) => {
+          console.log("Updated feedbackData:", feedbackData);
+          setFeedbackData(prev => ({ ...prev, [property]: value })); // matches the coro property and updates the value on change 
+      };
+
+
+
+  const submitFeedback = async () => {
+
+
+    console.log('submitFeedback btn pressed')
+     
+       const fetchURL = `${apiUrl}/contact`;
+       const fetchHeaders = new Headers({'Content-Type': 'application/json'});
+
+      const fetchOptions = {
+         method: "POST",
+         headers: fetchHeaders,
+         mode: 'cors',
+         body: JSON.stringify({
+          subject: feedbackData.subject,
+          message: feedbackData.message,
+          username: username,
+        })
+      }
+
+     try{
+
+      let response = await fetch(fetchURL, fetchOptions);
+
+      let data = await response.json();
+      console.log('data:', data)
+
+      if(data.success){
+        setErrorMessage(data.message)
+        setFeedbackData({    
+          subject: [],
+          message: [],
+          username: username}) 
+        setErrorMessage(data.message)
+        console.log('errorMessage set to:', data.message);
+      } else{
+         setErrorMessage(data.message)
+        console.log('errorMessage set to:', data.message);
+      }
+
+
+
+      }catch(err){
+          console.log("there was an error with the fetch", err)
+      }
+
+  }
 
 
 
@@ -74,15 +143,7 @@ const SettingScreen = ({ route }) => {
 
 
 
-  const [feedbackData, setFeedbackData] = useState({
-    subject: [],
-    message: [],
-  })
 
-  const submitFeedback = () =>{
-      // fetch to the backend and create a spot in the database that stores users feedback so i can read it.
-
-  }
 
   //so the only props that should be passed is navigation and route and whatever initial params you send get attached to the route
 
@@ -225,7 +286,10 @@ const SettingScreen = ({ route }) => {
           )}
           {selectedSetting === 'contact' && (
                  <View style={[globalStyles.screenStyles.column, { alignItems: 'center', justifyContent: 'center' }]}>
-                    <Text style={globalStyles.screenStyles.text}>Contact Us</Text>
+                    <Text style={globalStyles.screenStyles.text}>Contact Me</Text>
+                     {errorMessage &&
+                      <Text style={[globalStyles.screenStyles.textShadow, { color: 'orange', textAlign: 'center', marginVertical: 10 }]}>{errorMessage}</Text>
+                     }
        
                    
                  <TextInput
@@ -237,25 +301,29 @@ const SettingScreen = ({ route }) => {
                   }]}
                     placeholder="Subject"
                     placeholderTextColor="gray"
+                    value={feedbackData.subject}
+                    onChangeText={(value) => handleInputChange('subject', value)}
                  />
 
           
            <TextInput
              style={[
-             globalStyles.screenStyles.input,
-             { 
-               marginBottom: 10, 
-               height: 120, 
-               textAlignVertical: 'top', 
-               padding: 10,
-               width: '85%', 
-               borderColor: 'white', 
-             }
+                   globalStyles.screenStyles.input,
+                   { 
+                     marginBottom: 10, 
+                     height: 120, 
+                     textAlignVertical: 'top', 
+                     padding: 10,
+                     width: '85%', 
+                     borderColor: 'white', 
+                   }
                   ]}
                   placeholder="Your Message"
                   placeholderTextColor="gray"
                   multiline
                   numberOfLines={4}
+                  value={feedbackData.message}
+                  onChangeText={(value) => handleInputChange('message', value)}
                 />
 
                <Pressable onPress={submitFeedback}  
