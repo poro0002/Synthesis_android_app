@@ -110,7 +110,7 @@ const ProjectScreen = () => {
 
 
   return (
-    <View style={{flex: 1, position: 'relative', alignItems: 'center', backgroundColor: 'black'}}>
+    <View style={{flex: 1, position: 'relative', alignItems: 'center', backgroundColor: 'black', }}>
        <ImageBackground
                      source={require('../../assets/purple-pink-gradient.jpg')}
                      resizeMode="cover"
@@ -132,7 +132,7 @@ const ProjectScreen = () => {
                  </ImageBackground>
       
         
-      <View style={globalStyles.screenStyles.mainView}>
+      <View style={[globalStyles.screenStyles.mainView, {marginBottom: 50}]}>
      <ScrollView   
         contentContainerStyle={{  flexDirection: 'column', paddingTop: headerHeight, paddingBottom: headerHeight, paddingHorizontal: 20}}
         keyboardShouldPersistTaps="handled"
@@ -143,7 +143,7 @@ const ProjectScreen = () => {
                 source={require('../../assets/animation5.json')}
                 autoPlay
                 loop={false} 
-                style={{ width: 100, height: 100, alignSelf: 'center'}}
+                style={[globalStyles.screenStyles.iconShadow, { width: 150, height: 150, alignSelf: 'center'}]}
               />
        </View>
 
@@ -202,26 +202,25 @@ const ProjectScreen = () => {
   <Text style={{marginTop: 20, color: 'white'}}>No design systems found for this user</Text>
 )} 
 
-      <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'left', marginTop: 35 }}>
-          <Text style={[globalStyles.screenStyles.h2]}> Favorites</Text>
-          <LottieView
-                source={require('../../assets/animation4.json')}
-                autoPlay
-                loop={false} 
-                style={{ width: 100, height: 100, alignSelf: 'center'}}
-              />
-          
-      </View>
-
 
 {/* -------------------------------------------------------------------------------------------------------------------------------  */}
  {/* ----------------------------------------------------< FAVORITES >---------------------------------------------------  */}
  {/* -------------------------------------------------------------------------------------------------------------------------------  */}
      
 
+      <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'left', marginTop: 35 }}>
+          <Text style={[globalStyles.screenStyles.h2]}> Favorites</Text>
+          <LottieView
+                source={require('../../assets/animation4.json')}
+                autoPlay
+                loop={false} 
+                style={[globalStyles.screenStyles.iconShadow, { width: 150, height: 150, alignSelf: 'center'}]}
+              />
+          
+      </View>
 
-      <View style={[globalStyles.screenStyles.column,{marginTop: 20} ]}>
-        {/* add favorite elements for corro user here */}
+
+<View style={[globalStyles.screenStyles.column, {marginTop: 20} ]}>
 
      
      {/* ----------------------------------------------------< FONTS >---------------------------------------------------  */}

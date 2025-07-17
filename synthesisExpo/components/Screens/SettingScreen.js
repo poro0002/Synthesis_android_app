@@ -134,7 +134,7 @@ useEffect(() => {
   const toggleSwitch = () => setIsAB((previousState) => !previousState);
 
   const renderBackButton = () => (
-    <View style={{ position: 'absolute', top: 20, left: 10 }}>
+    <View style={{ position: 'absolute', top: 20, left: 10, zIndex: 1 }}>
       <Pressable onPress={() => setSelectedSetting('default')}>
         <MaterialIcons name="arrow-back-ios" size={30} color="royalblue" />
       </Pressable>
@@ -151,26 +151,26 @@ useEffect(() => {
  
    
         <View style={{flex: 1, position: 'relative',  zIndex: 0}}>
-                <ImageBackground
-                                 source={require('../../assets/blue-orange-gradient.jpg')}
-                                 resizeMode="cover"
-                                 style={{
-                                   position: 'absolute',
-                                   top: 0,
-                                   left: 0,
-                                   bottom: 0,
-                                   right: 0,
-                                   zIndex: 0,
-                                   
-                                 }}
-                               >
-                                 <View
-                                   style={{
-                                     flex: 1,
-                                     backgroundColor: 'rgba(0,0,0,0.4)', // adjust opacity and color here
-                                   }}
-                                 />
-                    </ImageBackground>
+          <ImageBackground
+                   source={require('../../assets/blue-orange-gradient.jpg')}
+                   resizeMode="cover"
+                   style={{
+                     position: 'absolute',
+                     top: 0,
+                     left: 0,
+                     bottom: 0,
+                     right: 0,
+                     zIndex: 0,
+                     
+                   }}
+                 >
+                   <View
+                     style={{
+                       flex: 1,
+                       backgroundColor: 'rgba(0,0,0,0.4)', // adjust opacity and color here
+                     }}
+                   />
+             </ImageBackground>
           
     <View style={{ flex: 1, zIndex: 1 }}>
         <ScrollView   
@@ -216,7 +216,7 @@ useEffect(() => {
 
               <Pressable onPress={() => setSelectedSetting('contact')} style={globalStyles.screenStyles.settingsComp}>
                   <MaterialIcons name="email" size={24} color="white"  style={[globalStyles.screenStyles.iconShadow, { marginRight: 15, }]}/>
-                  <Text style={globalStyles.screenStyles.topicText}>Contact Us</Text>
+                  <Text style={globalStyles.screenStyles.topicText}>Contact Me</Text>
               </Pressable>
           </View>
 
@@ -268,25 +268,35 @@ useEffect(() => {
                </View>
           )}
           {selectedSetting === 'about' && (
-               <View style={[globalStyles.screenStyles.column, { alignItems: 'center' }]}>
-                   <Image
+              
+                  <ScrollView 
+                    vertical // Enables horizontal scrolling
+                    showsHorizontalScrollIndicator={false} // Hides the scroll indicator
+                    contentContainerStyle={[globalStyles.screenStyles.column,  { alignItems: 'center', marginBottom: 50, marginTop: 50 }]} 
+                    >
+              
+                 <Image
                     source={require('../../assets/logo2.png')}  // Adjust according to your directory structure
-                    style={{ width: 200, height: 200 }}
+                    style={[globalStyles.screenStyles.logoShadow, { width: 200, height: 200, }]}
+                    
                     />
-              <Text style={[globalStyles.screenStyles.text, { marginBottom: 10 }]}>
-                About Synthesis
+                  
+             
+                  
+              <Text style={{marginBottom: 25, marginTop: 25, fontSize: 18, fontWeight: 'bold', color: 'white',  }}>
+                Synthesis
               </Text>
-              <Text style={[globalStyles.screenStyles.text, { marginBottom: 10 }]}>
+              <Text style={ { marginBottom: 10, fontSize: 14, fontStyle: 'italic', color: 'white', textAlign: 'center' }}>
                 Synthesis is a comprehensive design system app that offers pre-packaged design systems and the tools to create your own. It provides a curated collection of fonts, gradients, typography, hierarchy, icons, and more, allowing you to customize your designs with ease. Whether you’re an experienced designer or just getting started, Synthesis helps you streamline the design process by providing essential tools and recommendations to create visually appealing and consistent design systems.
               </Text>
-              <Text style={[globalStyles.screenStyles.text, { marginBottom: 10 }]}>
+              <Text style={{ marginBottom: 10, fontSize: 14, fontStyle: 'italic', color: 'white', textAlign: 'center' }}>
                 Built using React Native, Android Studio, Expo, Node.js, and Firebase, Synthesis leverages the latest technologies to offer a seamless and intuitive user experience. As a fullstack software developer, I’ve crafted this app to not only simplify design but also empower developers and designers alike to create and implement their own unique design systems.
               </Text>
-            </View>
+        </ScrollView>
           )}
           {selectedSetting === 'contact' && (
                  <View style={[globalStyles.screenStyles.column, { alignItems: 'center', justifyContent: 'center' }]}>
-                    <Text style={globalStyles.screenStyles.text}>Contact Me</Text>
+                    <Text style={[globalStyles.screenStyles.text, {marginBottom: 10, fontWeight: 'bold'}]}>How Can I Improve ?</Text>
                      {errorMessage &&
                       <Text style={[globalStyles.screenStyles.textShadow, { color: 'orange', textAlign: 'center', marginVertical: 10 }]}>{errorMessage}</Text>
                      }

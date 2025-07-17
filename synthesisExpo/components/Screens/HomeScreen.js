@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback, useLayoutEffect, useRef } from
 import { useFocusEffect } from '@react-navigation/native';
 import { useHeaderHeight } from '@react-navigation/elements';
 import * as Battery from 'expo-battery';
+import { AppState } from 'react-native';
 
 
 import {
@@ -40,15 +41,18 @@ const HomeScreen = () => {
 
   const renderCount = useRef(0);
   console.log(`🔁 HomeScreen rendered ${renderCount.current++} times`);
+  
 
      const [topic, setTopic] = useState("home");
      const [currentTime, setCurrentTime] = useState('');
      const [batteryLevel, setBatteryLevel] = useState(null);
      const [tipsData, setTipsData] = useState();
 
-     const { setSelectedElements, username } = useAuth();
+     const { setSelectedElements, username, testToken } = useAuth();
      const navigation = useNavigation();
      const headerHeight = useHeaderHeight();
+
+     
 
    const todayString = `Today \u2022 ${new Date().toLocaleDateString(undefined, {
       year: 'numeric',
@@ -97,6 +101,24 @@ const HomeScreen = () => {
 
     let randomPhotoIndex = Math.floor(Math.random() * photoArr.length);
 
+
+    // AppState lets you track the current state of the app: whether it’s active, background, or inactive.
+    // 
+ 
+  useEffect(() => {
+    const subscription = AppState.addEventListener('change', nextAppState => {
+      // This checks if the app has become active (i.e., the user switched back to it).
+      // 3 options that nextAppState param can hold Active, Background, or Inactive.
+      if (nextAppState === 'active') {
+        testToken(); 
+      }
+    });
+
+   //  This is the cleanup function. It runs when the component unmounts.(unmount === The component is removed from the UI tree) 
+   // (when <StackNavigator />  Stops rendering, HomeScreen is unmounted )
+
+    return () => subscription.remove();
+  }, []);
 
 
 

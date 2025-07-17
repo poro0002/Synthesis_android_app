@@ -45,6 +45,7 @@ const LoginRegScreen = () =>  {
     setUsername, 
     errorMessage, 
     setErrorMessage,
+    getToken,
    } = useAuth();
 
    const [localLoading, setLocalLoading] = useState(false);
@@ -299,6 +300,7 @@ const logSubmit = async () => {
             body: JSON.stringify(logData)
           }
  try {
+     
         const response = await fetch(logURL, logOptions);
         const data = await response.json();
 
@@ -311,6 +313,7 @@ const logSubmit = async () => {
             await AsyncStorage.setItem('email', data.email);
 
             console.log('Login successful, user:', data.username);
+            await  getToken();
         } else if (data.message === 'Invalid username') {
             setErrorMessage(data.message);
             console.log('Login failed: Invalid username');
@@ -331,6 +334,7 @@ const logSubmit = async () => {
 
     }
 
+
 return(
    localLoading ? (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'black' }}>
@@ -348,8 +352,17 @@ return(
   ) : (
  
    <View style={{flex: 1, position: 'relative', alignItems: 'center', zIndex: 0}}>
-          <VideoBackground source={require('../../../assets/fluid1.mp4')} />
-         <View style={{ flex: 1, zIndex: 1 }}>
+      
+      <VideoBackground source={require('../../../assets/fluid1.mp4')} />
+      
+      <View style={{ flex: 1, zIndex: 1, alignItems: 'center', justifyContent: 'center'  }}>
+        
+            <Image
+                source={require('../../../assets/logo2.png')}  
+                style={[globalStyles.screenStyles.logoShadow, { width: 200, height: 200 }]}
+              />
+       
+    
 
   {!logClicked && !regClicked ? (
     <View style={styles.container}>
@@ -363,14 +376,16 @@ return(
   ) : null}
 
   {logClicked && (
+  <KeyboardAvoidingView
+    behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    style={{ width: '100%', alignItems: 'center' }}
+  >
    <View style={styles.container}>
       <Text style={styles.header}>Login</Text>
       <Text style={[globalStyles.screenStyles.textShadow, { color: 'orange', textAlign: 'center', marginVertical: 10 }]}>{errorMessage}</Text>
       <Text style={styles.inputTag}>Username</Text>
      
-      <KeyboardAvoidingView
-         behavior="height"
-      >
+   
       <TextInput
         style={styles.input}
         placeholder="Username"
@@ -387,8 +402,7 @@ return(
         onChangeText={(value) => handleLogInputChange('pass', value)}
         placeholderTextColor={'grey'}
       />
-      </KeyboardAvoidingView>
-     
+
       <Pressable onPress={logSubmit} style={styles.submitBtn}>
         <Text style={styles.buttonText}>Login</Text>
       </Pressable>
@@ -396,9 +410,14 @@ return(
         <Text style={[styles.buttonText, {marginTop: 50, textDecorationLine: 'underline'}]}>Don't have an Account?  Register Here</Text>
       </Pressable>
     </View>
+    </KeyboardAvoidingView>
   )}
 
   {regClicked && (
+    <KeyboardAvoidingView
+    behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    style={{ width: '100%', alignItems: 'center' }}
+  >
     <View style={styles.container}>
       <Text style={styles.header}>Register</Text>
       <Text style={[globalStyles.screenStyles.textShadow, { color: 'orange', textAlign: 'center', marginVertical: 10 }]}>{errorMessage}</Text>
@@ -434,8 +453,9 @@ return(
         <Text style={[styles.buttonText, {marginTop: 50, textDecorationLine: 'underline'}]}>Already have an Account? Login</Text>
       </Pressable>
     </View>
+  </KeyboardAvoidingView>
   )}
-</View>
+ </View>
 </View>
  )
 )
@@ -450,9 +470,9 @@ export default LoginRegScreen;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    margin: 0
  
   },
   logBtn: {
@@ -463,18 +483,18 @@ const styles = StyleSheet.create({
     backgroundColor: 'royalblue',
     borderRadius: 7,
     shadowColor: '#000',
-          shadowOffset: { width: 2, height: 4 },
-          shadowOpacity: 0.3,
-          shadowRadius: 5,
+    shadowOffset: { width: 2, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
 
-          // Android Shadow
-          elevation: 6,
+    // Android Shadow
+    elevation: 6,
   },
   regBtn: {
-     paddingTop: 20,
-     paddingBottom: 20,
-     paddingLeft: 40,
-     paddingRight: 40,
+    paddingTop: 20,
+    paddingBottom: 20,
+    paddingLeft: 40,
+    paddingRight: 40,
     borderWidth: 3,
     backgroundColor: 'transparent',
     borderColor: 'white',
@@ -482,18 +502,19 @@ const styles = StyleSheet.create({
     color: 'white',
     borderRadius: 7,
     shadowColor: '#000',
-          shadowOffset: { width: 2, height: 4 },
-          shadowOpacity: 0.3,
-          shadowRadius: 5,
+    shadowOffset: { width: 2, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
 
-          // Android Shadow
-          elevation: 6,
+    // Android Shadow
+    elevation: 6,
   },
   submitBtn: {
     justifyContent: 'center',
     marginTop: 50,
-    width: '85%',
-    height: '8%',
+    minWidth: '55%',
+    alignItems: 'center',
+    height: '15%',
     backgroundColor: 'transparent',
     borderColor: 'royalblue',
     borderWidth: 3,
@@ -505,17 +526,15 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   header: {
-    marginTop: 20,
     color: 'white',
     fontSize: 18,
   },
   inputTag: {
-        marginTop: 15,
-         color: 'white',
-         fontSize: 13,
-         textAlign: 'center'
-      },
-
+    marginTop: 15,
+     color: 'white',
+     fontSize: 13,
+     textAlign: 'center'
+    },
   input: {
     height: 40,
     borderColor: 'white',

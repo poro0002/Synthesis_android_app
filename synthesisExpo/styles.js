@@ -110,7 +110,7 @@ const globalStyles = StyleSheet.create({
             fontWeight: 'bold',
             color: 'white',
             marginVertical: 8,
-            marginBottom: 10,
+            
           },
           h3: {
             fontSize: 24,
@@ -328,6 +328,14 @@ const globalStyles = StyleSheet.create({
           textShadowOffset: { width: 2, height: 2 },
           textShadowRadius: 4,
        
+        },
+       logoShadow:{
+         shadowColor: 'rgba(255, 255, 255, 0.8)',  // white glow
+          shadowOffset: { width: 0, height: 0 },
+          shadowOpacity: 0.9,
+          shadowRadius: 8,
+          // For Android shadow (optional):
+          elevation: 10,
         },
         textShadow: {
            textShadowColor: 'rgba(0, 0, 0, 0.75)',

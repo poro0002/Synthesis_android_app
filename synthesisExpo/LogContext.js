@@ -1,6 +1,8 @@
 import React, { createContext, useContext, useState, useEffect, useMemo } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Constants from 'expo-constants';
+import * as SecureStore from 'expo-secure-store';
+import jwtDecode from 'jwt-decode';
 
 
 // ------------------------------------------< REACT CONTEXT PATTERN API >-----------------------------------------------
@@ -40,7 +42,109 @@ const [selectedElements, setSelectedElements] = useState({
   about: [],
 });
 
+// ------------------------------< JWT Authentication >------------------------------------------
 
+const testToken = async () => {
+  const token = await SecureStore.getItemAsync('jwt');
+  if (!token) {
+    setIsLoggedIn(false);
+    return;
+  }
+
+  // Decode basically makes it so you can read the encrypted jwt code that you got from the server, on the client side and read it without having to fetch again
+  try {
+    const decoded = jwtDecode(token);
+    const currentTime = Date.now() / 1000; 
+
+    // decoded.exp = 1752784400 // means: "this token expires at this exact second"
+    // so decoded.exp is giving you a future timestamp to compare to the current time
+
+    if (decoded.exp < currentTime) { // this runs true when the current time runs past that decoded.exp timestamp (hence token expired)
+      Alert.alert(
+        "Session Expired",
+        "Your session has expired. Please log in again.",
+        [{ text: "OK", onPress: () => setIsLoggedIn(false) }]
+      );
+      return;
+    }
+  } catch (err) {
+    console.error('Error decoding token:', err);
+    setIsLoggedIn(false);
+    return;
+  }
+
+  // If token looks valid, verify it with the backend
+  const fetchURL = `${apiUrl}/testToken`;
+  
+  const fetchHeaders = new Headers({
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${token}`,
+  });
+
+  const fetchOptions = {
+    method: "GET",
+    headers: fetchHeaders,
+    mode: 'cors',
+  };
+
+  try {
+    const response = await fetch(fetchURL, fetchOptions);
+    const data = await response.json();
+
+    if (data.success) {
+      console.log(data.message);
+    } else {
+      console.log(data.message);
+      setIsLoggedIn(false);
+    }
+  } catch (err) {
+    console.log('There was an error with the test token fetch:', err);
+    setIsLoggedIn(false);
+  }
+};
+
+
+
+const getToken = async () => {
+
+    const fetchURL = `${apiUrl}/token`;
+    const fetchHeaders = new Headers({'Content-Type': 'application/json'});
+
+  const fetchOptions = {
+      method: "GET",
+      headers: fetchHeaders,
+      mode: 'cors',
+  }
+
+
+  try{
+  
+    const response = await fetch(fetchURL, fetchOptions);
+
+    let data = await response.json();
+
+    if(data.success){
+       console.log(data.message)
+       await SecureStore.setItemAsync('jwt', data.token);
+
+
+    }else{
+      console.log(data.message)
+    }
+    
+
+  }catch(err){
+    console.log('there was an error with the get token fetch', err)
+  }
+
+  // save the token in secureStore
+
+}
+
+
+
+
+// ------------------------------< Check Login Status >------------------------------------------
 
 const apiUrl = Constants.expoConfig.extra.API_URL; 
 
@@ -433,6 +537,8 @@ const handleCompElement = (navigation, type, data) => {
     compData,
     setCompData,
     loading,
+    testToken,
+    getToken,
    
   };
 

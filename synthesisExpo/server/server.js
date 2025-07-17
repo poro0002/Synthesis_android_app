@@ -87,6 +87,72 @@ app.listen(port, (err) => {
 
 });
 
+// ---------------------------------------------------------< JWT TOKEN >------------------------------------------------------------
+
+app.get('/token', async (req, res) => {
+  
+// 1) Math.random() generates a pseudo-random number between 0 (inclusive) and 1 (exclusive).
+// 2) .toString(36) converts it to a base36 string using 0-9 and a-z characters.
+//    The result looks like "0.xyzabc..."
+// 3) .substring(2, 8) removes the "0." and keeps the next 6 characters for a short ID.
+// The final result is a 6-character random alphanumeric string (not cryptographically secure).
+
+  let id = Math.random().toString(36).substring(2, 8); 
+  let limit = 60 * 60 * 4; // 4 hour limit before the user ahs to re-authenticate 
+  let expires = Math.floor(Date.now() / 1000) + limit; // adds the limitstarts the clock on that token from right the second till the limit expires
+
+  // stores the info needed for the token
+  let payload = {
+    _id: id, 
+    exp: expires,
+
+  }
+
+  let token = jwt.sign(payload, jwt_key); // Signing ensures the integrity of the token (you can verify it hasn’t been tampered with).
+  res.status(200).json({token: token, message: 'token successfully created for user', success: true})
+
+
+
+
+})
+
+
+app.get('/testToken', async (req, res) => {
+
+   const header = req.header('Authorization');
+    // header is a string → "Bearer abc123"
+    // header.split(' ') returns → ["Bearer", "abc123"] (an array)
+
+    const [type, token] = header.split(' ');
+
+   if(type === 'Bearer' & typeof token !== 'undefined'){
+
+      try{
+       let payload =  jwt.verify(token, jwt_key); // should throw an error if the limit is expired
+       // above returns   
+
+       //payload = {
+          //_id: "abc123",
+          //exp: 1752770491,
+          //iat: 1752770191 // auto-added by jwt
+      // }
+
+       let current = Math.floor(Date.now() / 1000)
+       let diff = current - payload.exp;
+       res.status(200).json({message: `token verified ${diff} remaining`, success: true})
+
+      }catch(err){
+        res.status(401).json({message: 'invalid or expired token', success: false})
+      }
+     
+
+    }else{
+      res.status(402).json({message: 'Invalid token', success: false})
+    }
+
+
+})
+
 
 // -------------------------------------------------------------< Packages >---------------------------------------------------------------
 
