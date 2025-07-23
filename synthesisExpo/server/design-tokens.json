@@ -1,0 +1,96 @@
+{
+  "global": {
+    "colors": {
+      "PurpleDreamPrimary": {
+        "value": "#CD3F85",
+        "type": "color",
+        "description": "Purple Dream offers a whimsical and fantastical feel, making it ideal for entertainment themes. The vivid hues evoke creativity and a sense of wonder."
+      },
+      "PurpleDreamSecondary": {
+        "value": "#D15992",
+        "type": "color"
+      }
+    },
+    "typography": {
+      "h1": {
+        "value": {
+          "fontSize": "34px",
+          "fontFamily": "Bebas Neue",
+          "lineHeight": "130%"
+        },
+        "type": "typography"
+      },
+      "h2": {
+        "value": {
+          "fontSize": "24px",
+          "fontFamily": "Bebas Neue",
+          "lineHeight": "130%"
+        },
+        "type": "typography"
+      },
+      "h3": {
+        "value": {
+          "fontSize": "22px",
+          "fontFamily": "Bebas Neue",
+          "lineHeight": "130%"
+        },
+        "type": "typography"
+      },
+      "h4": {
+        "value": {
+          "fontSize": "18px",
+          "fontFamily": "Bebas Neue",
+          "lineHeight": "130%"
+        },
+        "type": "typography"
+      },
+      "h5": {
+        "value": {
+          "fontSize": "15px",
+          "fontFamily": "Bebas Neue",
+          "lineHeight": "130%"
+        },
+        "type": "typography"
+      },
+      "h6": {
+        "value": {
+          "fontSize": "12px",
+          "fontFamily": "Bebas Neue",
+          "lineHeight": "130%"
+        },
+        "type": "typography"
+      },
+      "p": {
+        "value": {
+          "fontSize": "9px",
+          "fontFamily": "Bebas Neue",
+          "lineHeight": "130%"
+        },
+        "type": "typography"
+      },
+      "small": {
+        "value": {
+          "fontSize": "8px",
+          "fontFamily": "Bebas Neue",
+          "lineHeight": "130%"
+        },
+        "type": "typography"
+      },
+      "scale10": {
+        "value": {
+          "fontSize": "5px",
+          "fontFamily": "Bebas Neue",
+          "lineHeight": "130%"
+        },
+        "type": "typography"
+      }
+    },
+    "fontFamilies": {
+      "Bebas Neue": {
+        "value": "Bebas Neue",
+        "type": "font",
+        "description": "Bebas Neue's bold and striking appearance makes it great for headlines and posters in entertainment."
+      }
+    }
+  }
+}

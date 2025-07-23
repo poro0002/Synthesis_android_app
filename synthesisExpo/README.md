@@ -8,24 +8,11 @@
 
 ---
 
-## 📂 Table of Contents
-
-- [Features](#features)
-- [Tech Stack](#tech-stack)
-- [Screenshots](#screenshots)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Roadmap](#roadmap)
-- [Credits](#credits)
-- [License](#license)
-
----
-
 ## ✨ Features
 
 - **Design System Creation:** Create and manage reusable typography scales, color palettes, and UI element libraries.
-- **Persistent Local Storage:** Stores user design systems locally using context-based state management and AsyncStorage.
-
+- **Persistent Local Storage:** Stores user design systems locally/firebase using context-based state management and AsyncStorage.
+- **JWT Authentication:** Secure login and session management using JSON Web Tokens with automatic token validation and expiration handling.
 - **Responsive Design:** Fully optimized for Android devices with consistent scaling.
 - **Project-Oriented:** Track and manage design system elements by project.
 - **Planned Firebase Integration:** Future support for cloud backup, syncing, and cross-device use.
@@ -54,17 +41,19 @@
 ## 🚀 Usage
 
 - Open the app on your Android device.
-- Create a new design system project.
+- Create an Account
+- Start a new design system project.
 - Add typography scales, color palettes, and reusable UI element notes.
 - View, edit, and manage your systems to maintain consistency across your design and development workflow.
 - Save and persist data locally for offline use.
+- Export as a Figma config file to use in your design projects
 
 ---
 
 ## 🛣️ Roadmap
 
 - **Firebase Integration:** Enable cloud sync and backup.
-- **Export/Import:** Share design systems between devices or teammates.
+- **Export/Import:** Share design systems between teammates or export as a Figma config file
 - **Advanced Sorting/Filtering:** Enhanced element management.
 - **Launching to Google Play Store:** Coming Soon.
 

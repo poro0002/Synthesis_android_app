@@ -6,6 +6,8 @@ import bcrypt from 'bcrypt';
 import xss from 'xss';
 import fetch from 'node-fetch';
 import dotenv from 'dotenv';
+import nodemailer from 'nodemailer';
+import fs from 'fs-extra';
 
 import admin from 'firebase-admin'; // admin from firebase admin is a essential part of connecting to the db because it certifies your service account with your firebase project 
 import { initializeApp } from 'firebase/app';
@@ -29,6 +31,15 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
 }));
+
+
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS, // Your Gmail App Password, NOT your normal Gmail password
+  },
+});
 
 
 
@@ -128,7 +139,7 @@ app.get('/testToken', async (req, res) => {
    if(type === 'Bearer' & typeof token !== 'undefined'){
 
       try{
-       let payload =  jwt.verify(token, jwt_key); // should throw an error if the limit is expired
+       let payload = jwt.verify(token, jwt_key); // should throw an error if the limit is expired
        // above returns   
 
        //payload = {
@@ -145,10 +156,143 @@ app.get('/testToken', async (req, res) => {
         res.status(401).json({message: 'invalid or expired token', success: false})
       }
      
-
     }else{
       res.status(402).json({message: 'Invalid token', success: false})
     }
+
+
+})
+
+
+
+
+app.post('/getTokenJson', async (req, res) => {
+
+    // get the corro username, email, current system ID that the client has asked to export
+    // use the username to get a ref or snapshot
+    // if its .empty() write a base case for that 
+    // go use that user ref to get the userRef.docs[0].ref.
+    // await userRef.collection('tokenJson').where(id, "==", id).get() and get the specific data
+    // 
+
+    const { username, email, id } = req.body;
+
+    console.log('tokenJson username:', username);
+    console.log('tokenJson email:', email);
+    console.log('tokenJson id:', id);
+
+    try {
+
+        const userRef = await firestore.collection('users').where('username', '==', username).get();
+
+        if (userRef.empty) {
+            return res.status(400).json({ message: 'could not find a user with that username', success: false });
+        }
+
+        const userDoc = userRef.docs[0].ref;
+
+        const tokenJsonSnapshot = await userDoc.collection('tokenJson').where('id', '==', id).get();
+
+        if (tokenJsonSnapshot.empty) {
+            return res.status(404).json({ message: 'No token JSON data found for this system ID.', success: false });
+        }
+
+        // Extract the tokenData in the correct structure for Token Studio
+        let tokenJsonData = null;
+        tokenJsonSnapshot.forEach(doc => {
+            const data = doc.data();
+            if (data.tokenData) {
+                tokenJsonData = data.tokenData;
+            }
+        });
+
+        if (!tokenJsonData) {
+            return res.status(404).json({
+                success: false,
+                message: "Token JSON data not found in document."
+            });
+        }
+
+        const jsonString = JSON.stringify(tokenJsonData, null, 2);
+
+        const mailOptions = {
+            from: process.env.EMAIL_USER,
+            to: email,
+            subject: 'Your Design Token JSON Export',
+            text: 'Attached is your exported design token JSON, ready for import into Token Studio or Figma.',
+            attachments: [
+                {
+                    filename: 'design-tokens.json',
+                    content: jsonString,
+                    contentType: 'application/json'
+                }
+            ]
+        };
+
+        // Send the email
+        await transporter.sendMail(mailOptions); // use the transporter information above that has the email and pass from .env
+
+        console.log(`Token JSON data sent to ${email}`);
+
+        return res.status(200).json({
+            message: 'Token JSON data found and sent to their email',
+            success: true
+        });
+
+    } catch (err) {
+        console.log('There was a problem accessing or sending the token JSON data for that user', err);
+        res.status(500).json({
+            message: 'There was a problem accessing or sending the token JSON data for that user',
+            success: false
+        });
+    }
+});
+
+
+
+// ---------------------------------------------------------< Token Studios JSON >------------------------------------------------------------
+
+
+app.post('/saveTokenJson', async (req, res) => {
+
+  const { tokenData, username, systemId } = req.body;
+
+    console.log('tokenData:', tokenData)
+    console.log('sysetmId:', systemId)
+
+   if (!username || !systemId) {
+    return res
+      .status(400)
+      .json({ success: false, message: 'username and systemId are required' })
+  }
+   
+   try{
+
+    const userRef = await firestore.collection('users').where('username', '==', username).get();
+
+     if(userRef.empty){
+      return res.status(400).json({ message: "no user found with that username", success: false })
+     }    
+
+
+     const userDoc = userRef.docs[0].ref;
+
+      await userDoc.collection('tokenJson').add({
+              id: systemId,
+              username,
+              tokenData,
+              createdAt: new Date().toISOString()
+      });
+
+     console.log('token json data stored')
+     console.log('User Document ID:', userDoc.id);
+     res.status(200).json({message: `token json data stored`, success: true})
+
+
+   }catch(err){
+       res.status(500).json({message: 'issue with saving token json data', success: false})
+       console.log('issue with saving token json data') 
+   }
 
 
 })
@@ -2149,7 +2293,7 @@ catch(error){
 app.post('/changePass', async (req, res) => {
    
   const { username, oldUsername, email, pass} = req.body;
-  console.log(req.body)
+  // console.log(req.body)
 
   try{
 
@@ -2285,9 +2429,9 @@ app.post('/login', async (req, res) => {
 
 app.post('/saveDesignSystem', async (req, res) => {
 
-  const { username, data } = req.body;
+  const { username, data } = req.body; 
   
-  console.log('is this save design system route working or not ??? ')
+  // console.log('is this save design system route working or not ??? ')
 
 
     try {
@@ -2306,12 +2450,20 @@ app.post('/saveDesignSystem', async (req, res) => {
       const userDoc = userRef.docs[0].ref;
 
       // Save the design system in the user's "savedSystems" subcollection
-      await userDoc.collection('savedSystems').add({
-        ...data, // Save the design system data
-        createdAt: new Date().toISOString(), 
-      });
+      const sysRef = await userDoc.collection('savedSystems').add({
+         ...data,
+         createdAt: new Date().toISOString(),
+    });
 
-      return res.status(200).json({ message: 'Design System successfully stored.', success: true });
+     console.log('New system ID:', sysRef.id)
+
+    return res.status(200).json({
+      success: true,
+      message: 'Design System successfully stored.',
+      systemId: sysRef.id
+    })
+
+
   } catch (error) {
     console.error('Error saving design system:', error);
     return res.status(500).json({ message: 'Error saving design system. Please try again later.' });
@@ -2321,8 +2473,9 @@ app.post('/saveDesignSystem', async (req, res) => {
 });
 
 
-// ----------------------------------------------------< Get Profile Picture >--------------------------------------------------------
+// ----------------------------------------------------< Get Profile Picture (Not Active) >--------------------------------------------------------
 
+// this endpoint is not being used atm
 
 app.post('/getPfp', async (req, res) => {
 
@@ -2366,6 +2519,8 @@ app.post('/getPfp', async (req, res) => {
 
 
 // ----------------------------------------------------< Save Profile Picture >--------------------------------------------------------
+
+// this endpoint is not being used atm
 
 
 app.post('/savePfp', async (req, res) => {
@@ -2575,7 +2730,7 @@ app.post('/checkFavorites', async (req, res) =>{
 // console.log('checkFavs type:', type)
 // console.log('checkFavs data:', data)
 // console.log('checkFavs element:', element)
- console.log('checkFavs payload:', payload)
+//  console.log('checkFavs payload:', payload)
 //  console.log('checkFavs username:', username)
 
 
@@ -2718,7 +2873,7 @@ app.patch('/updateSystem', async (req, res) => {
 app.get('/saved', async (req, res) => {
    
      const {username} = req.query;
-     console.log(username)
+    //  console.log(username)
     try{
       const userRef = await firestore.collection('users').where('username', '==', username).get(); 
 
@@ -2741,7 +2896,7 @@ app.get('/saved', async (req, res) => {
         ...doc.data(),      // Spread the document data
       }));
 
-      console.log('Saved systems:', savedSystems);
+      // console.log('Saved systems:', savedSystems);
       return res.json(savedSystems);
 
 

@@ -40,6 +40,8 @@ const MyDesignScreen = ({route}) => {
   const { data } = route?.params || {}; // we now get data from the react context pattern
     // console.log("data:", data);
 
+
+
   const { 
     designSystemData, 
     getDesignSystem, 
@@ -48,6 +50,7 @@ const MyDesignScreen = ({route}) => {
     handleIconElement,
     handleTypoElement,
     handleCompElement,
+    username,
 
   } = useAuth();
 
@@ -67,11 +70,17 @@ const MyDesignScreen = ({route}) => {
   const navigation = useNavigation();
   const headerHeight = useHeaderHeight();
 
+// useEffect(()=>{
+//   console.log('what screen is this ')
+
+// }, [])
+
+
 
 useFocusEffect(
   useCallback(() => {
     console.log('Screen focused. (myDesignScreen) Refetching design system...');
-     console.log('current system:', currentSystem);
+    //  console.log('current system:', currentSystem);
     getDesignSystem(); // <-- this should call your backend and refresh data
   }, [])
 );
@@ -98,7 +107,7 @@ useEffect(() => {
 
 const addElement = (category, systemId) =>{
   // add element functionality after i fix this delete element issues
-   console.log("Navigating to PickElementScreen with category:", category, "and systemId:", systemId);
+  //  console.log("Navigating to PickElementScreen with category:", category, "and systemId:", systemId);
 
   navigation.navigate('PickElementScreen', {
     category: category,
@@ -154,6 +163,61 @@ const addElement = (category, systemId) =>{
     } finally {
       setLocalLoading(false);
     }
+ }
+
+
+ {/* ----------------------------------------------------< Export System >--------------------------------------------------- */} 
+
+
+ const exportSystem = async (id) =>{
+
+   // send the username, email and current system id to the backend via body 
+setLocalLoading(true)
+  const fetchURL = `${apiUrl}/getTokenJson`;
+  const fetchHeaders = new Headers({'Content-Type': 'application/json'});
+  const email = await AsyncStorage.getItem('email');
+
+  const fetchOptions = {
+      method: "POST",
+      headers: fetchHeaders,
+      mode: 'cors',
+      body: JSON.stringify({
+        username,
+        email,
+        id
+      })
+  }
+
+  try{
+     console.log("export system btn pressed")
+    let response = await fetch(fetchURL, fetchOptions);
+
+    let data = await response.json();
+
+    if(data.success){
+  
+       console.log(data.message)
+      Alert.alert(
+        "Success",
+        "JSON data has been sent to your email.",
+        [{ text: "OK" }]
+      );
+    }else{
+     
+       console.log(data.message)
+        Alert.alert(
+        "Failed",
+        "Please Try Again Later",
+        [{ text: "OK" }]
+      );
+    }
+
+  }catch(err){
+     console.log("there was an error with the fetch", err)
+  }
+   finally {
+    setLocalLoading(false);
+  }
  }
 
 {/* ----------------------------------------------------< Delete System >--------------------------------------------------- */} 
@@ -301,8 +365,8 @@ const addElement = (category, systemId) =>{
               <Pressable onPress={() => handleViewElement(navigation, element, "font")} style={globalStyles.screenStyles.viewBtn}>
                 <Text style={{color: 'white'}}>View</Text>
               </Pressable>
-              <Pressable onPress={() => deleteElement(element, "fonts", currentSystem.id, fontIndex)} style={[globalStyles.screenStyles.viewBtn, { backgroundColor: 'red' }]}>
-                <Text>Delete</Text>
+              <Pressable onPress={() => deleteElement(element, "fonts", currentSystem.id, fontIndex)} style={[globalStyles.screenStyles.viewBtn, { backgroundColor: 'red',   }]}>
+                <Text style={{color: 'white'}}>Delete</Text>
               </Pressable>
             </View>
           </View>
@@ -343,7 +407,7 @@ const addElement = (category, systemId) =>{
                     <Text style={{color: 'white'}}>View</Text>
                     </Pressable>
                     <Pressable onPress={() => deleteElement(element, "gradients", currentSystem.id, gradientIndex)} style={[globalStyles.screenStyles.viewBtn, { backgroundColor: 'red' }]}>
-                      <Text>Delete</Text>
+                      <Text style={{color: 'white'}}>Delete</Text>
                     </Pressable>
                   </View>
                 </View>
@@ -385,7 +449,7 @@ const addElement = (category, systemId) =>{
               onPress={() => deleteElement(null, "typography", currentSystem.id)}
               style={[globalStyles.screenStyles.viewBtn, { backgroundColor: 'red' }]}
             >
-              <Text>Delete</Text>
+              <Text style={{color: 'white'}}>Delete</Text>
             </Pressable> 
           </View>
         </View>
@@ -423,9 +487,9 @@ const addElement = (category, systemId) =>{
                     </Pressable>
                     <Pressable
                       onPress={() => deleteElement(icon, 'icons', currentSystem.id, index)}
-                      style={[globalStyles.screenStyles.viewBtn, { backgroundColor: 'red' }]}
+                      style={[globalStyles.screenStyles.viewBtn, { backgroundColor: 'red'}]}
                     >
-                      <Text>Delete</Text>
+                      <Text style={{color: 'white'}}>Delete</Text>
                     </Pressable>
                   </View>
                 </View>
@@ -466,9 +530,9 @@ const addElement = (category, systemId) =>{
                     </Pressable>
                     <Pressable
                       onPress={() => deleteElement(element, "comp", currentSystem.id, index)}
-                      style={[globalStyles.screenStyles.viewBtn, { backgroundColor: 'red' }]}
+                      style={[globalStyles.screenStyles.viewBtn, { backgroundColor: 'red'}]}
                     >
-                      <Text>Delete</Text>
+                      <Text style={{color: 'white'}}>Delete</Text>
                     </Pressable>
                   </View>
                 </View>
@@ -485,13 +549,22 @@ const addElement = (category, systemId) =>{
           </ScrollView>
           
     {/* ----------------------------------------------------< OPTIONS >---------------------------------------------------  */} 
+
+
+          <Pressable onPress={() => exportSystem(currentSystem.id)} style={[globalStyles.screenStyles.btnShadow, {backgroundColor: 'royalblue', borderRadius: 10,  height: 70, alignItems: 'center', justifyContent: 'center', marginVertical: 20 }]}>
+            <Text style={globalStyles.screenStyles.text}>
+              Export 
+            </Text>
+         </Pressable>
+
           
 
        <Pressable onPress={() => deleteSystem(currentSystem.id)} style={[globalStyles.screenStyles.btnShadow, {backgroundColor: 'red', borderRadius: 10,  height: 70, alignItems: 'center', justifyContent: 'center' }]}>
             <Text style={globalStyles.screenStyles.text}>
-              Delete Design System
+              Delete 
             </Text>
        </Pressable>
+       
 
           
           

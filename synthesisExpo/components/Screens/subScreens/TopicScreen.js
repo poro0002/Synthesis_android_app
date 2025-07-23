@@ -102,9 +102,9 @@ const TopicScreen = ({route}) => {
   // console.log('topic screen username: ', username)
   // console.log('topic screen data', JSON.stringify(data, null, 2))
 
-//  useEffect(() => {
-//   console.log("Selected Elements on topic screen(logContext):\n", JSON.stringify(selectedElements, null, 2));
-//  }, [selectedElements])
+ useEffect(() => {
+  console.log("Selected Elements on topic screen(logContext):\n", JSON.stringify(selectedElements, null, 2));
+ }, [selectedElements])
 
 
 
@@ -134,7 +134,7 @@ const handleCreate = async () => {
    };
 
   //  console.log('topic screen typo data:', data?.typography)
-   console.log('topic screen comp data:', data)
+  //  console.log('topic screen comp data:', data)
 
 
    

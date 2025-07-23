@@ -1,8 +1,12 @@
 import React, { createContext, useContext, useState, useEffect, useMemo } from 'react';
+import { Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Constants from 'expo-constants';
 import * as SecureStore from 'expo-secure-store';
-import jwtDecode from 'jwt-decode';
+
+
+
+const apiUrl = Constants.expoConfig.extra.API_URL; 
 
 
 // ------------------------------------------< REACT CONTEXT PATTERN API >-----------------------------------------------
@@ -11,6 +15,9 @@ import jwtDecode from 'jwt-decode';
 export const LogContext = createContext();
 
 export const LogProvider = ({ children }) => {
+
+
+
 
   
   // global use states as the log provider is wrapped around the app 
@@ -42,7 +49,118 @@ const [selectedElements, setSelectedElements] = useState({
   about: [],
 });
 
+
+// ------------------------------< Format Token Studio JSON Structure >------------------------------------------
+
+const formatAndSaveTokens = async (selectedElements, systemId, username) => {
+
+  const tokenData = { global: {} }
+
+  console.log('formatAndSaveTokens called with:', {
+      systemId,
+      username,
+      selectedElements
+});
+
+  // ── COLORS  ──
+  if (selectedElements.gradients.length) {
+    tokenData.global.colors = {}
+    selectedElements.gradients.forEach(grad => {
+      const key = grad.name.replace(/\s+/g, '')
+      tokenData.global.colors[`${key}Primary`] = {
+        value: grad.primary,
+        type: 'color',
+        description: grad.description || ''
+      }
+      tokenData.global.colors[`${key}Secondary`] = {
+        value: grad.secondary,
+        type: 'color'
+      }
+    })
+  }
+
+  // ── TYPOGRAPHY SCALES ──
+  if (selectedElements.typography.length && selectedElements.fonts.length) {
+    tokenData.global.typography = {}
+    const fontName = selectedElements.fonts[0].name
+
+    selectedElements.typography[0].styles.forEach(style => {
+      tokenData.global.typography[style.label] = {
+        value: {
+          fontSize:   `${style.size}px`,
+          fontFamily: fontName,
+          lineHeight: '130%'
+        },
+        type: 'typography'
+      }
+    })
+
+    // ── FONT FAMILY TOKENS ──
+    tokenData.global.fontFamilies = {
+      [fontName]: {
+        value: fontName,
+        type: 'font',
+        description: selectedElements.fonts[0].description || ''
+      }
+    }
+  }
+
+
+  try {
+    const response = await fetch(`${apiUrl}/saveTokenJson`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+       body: JSON.stringify({ tokenData, systemId, username })
+    })
+
+    const result = await response.json()
+    if (result.success) {
+      console.log('Tokens saved:', result.message)
+    } else {
+      console.error('Save failed:', result.message)
+    
+    }
+  } catch (err) {
+    console.error('Error sending tokens to server:', err)
+   
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
 // ------------------------------< JWT Authentication >------------------------------------------
+
+
+
+// ------------------< Decode  Token >--------------------
+// had get ai to write me a decode token function because the npm install jwtDecode package would just be undefined everytime smh 
+
+const decodeJwt = (token)=> {
+  try {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(
+      atob(base64)
+        .split('')
+        .map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+        .join('')
+    );
+    return JSON.parse(jsonPayload);
+  } catch (e) {
+    console.error('Failed to decode JWT:', e);
+    return null;
+  }
+}
+
+// ------------------< test Token >--------------------
 
 const testToken = async () => {
   const token = await SecureStore.getItemAsync('jwt');
@@ -53,7 +171,11 @@ const testToken = async () => {
 
   // Decode basically makes it so you can read the encrypted jwt code that you got from the server, on the client side and read it without having to fetch again
   try {
-    const decoded = jwtDecode(token);
+    const decoded = decodeJwt(token);  // <== capture decoded JWT here
+    if (!decoded) {
+      setIsLoggedIn(false);
+      return;
+    }
     const currentTime = Date.now() / 1000; 
 
     // decoded.exp = 1752784400 // means: "this token expires at this exact second"
@@ -96,6 +218,8 @@ const testToken = async () => {
     } else {
       console.log(data.message);
       setIsLoggedIn(false);
+      Alert.alert('Session expired', 'Please log in again.')
+
     }
   } catch (err) {
     console.log('There was an error with the test token fetch:', err);
@@ -103,7 +227,7 @@ const testToken = async () => {
   }
 };
 
-
+// ------------------< Get Token >--------------------
 
 const getToken = async () => {
 
@@ -146,7 +270,6 @@ const getToken = async () => {
 
 // ------------------------------< Check Login Status >------------------------------------------
 
-const apiUrl = Constants.expoConfig.extra.API_URL; 
 
 const checkLogin = async () => {
   try {
@@ -382,6 +505,14 @@ const handleCompElement = (navigation, type, data) => {
   
       if (data.success) {
         setErrorMessage(data.message); // success feedback
+
+        console.log('About to call formatAndSaveTokens with:', {
+             systemId: data.systemId,
+             username,
+             selectedElements
+          });
+
+        await formatAndSaveTokens(selectedElements, data.systemId, username);
         setLoading(false)
   
         setSelectedElements({

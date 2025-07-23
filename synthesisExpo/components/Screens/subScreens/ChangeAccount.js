@@ -104,7 +104,7 @@ const navigation = useNavigation();
 
 
     const handleInputChange = (property, value) => {
-      console.log("Updated screenData:", screenData);
+      // console.log("Updated screenData:", screenData);
         setScreenData(prev => ({ ...prev, [property]: value })); // matches the coro property and updates the value on change 
       };
 

@@ -250,7 +250,7 @@ const PickElementScreen = ({route}) => {
 
             {category === "typography" ? (
                 corroData && corroData.map((element, index) => {
-                    console.log('element :', element)
+                    // console.log('element :', element)
                     return(
                      <View key={index} style={{ marginRight: 20, marginBottom: 20 }}>
                
@@ -427,9 +427,6 @@ const PickElementScreen = ({route}) => {
             ) : category === "comp" && (
               <Text style={{ color: 'white' }}>Loading components...</Text>
             )}
-
-      
-            
 
 
             </View>

@@ -4,7 +4,7 @@ import React, { useState, useEffect, useCallback, useLayoutEffect, useRef } from
 import { useFocusEffect } from '@react-navigation/native';
 import { useHeaderHeight } from '@react-navigation/elements';
 import * as Battery from 'expo-battery';
-import { AppState } from 'react-native';
+import { AppState, Linking } from 'react-native';
 
 
 import {
@@ -119,6 +119,11 @@ const HomeScreen = () => {
 
     return () => subscription.remove();
   }, []);
+
+
+  useEffect(()=>{
+       testToken(); 
+  })
 
 
 
@@ -455,6 +460,67 @@ useLayoutEffect(() => {
                     ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
                 </Text>
 
+      <View style={{ flexDirection: 'column',  marginBottom: 20, marginTop: 30 }}>
+
+           <Text
+            style={[
+              globalStyles.screenStyles.h4,
+              globalStyles.screenStyles.textShadow,
+              { marginLeft: 8, },
+            ]}
+          >
+           Integration
+          </Text>
+        
+        <Pressable
+           onPress={() => Linking.openURL('https://tokens.studio/plugin')}
+            >
+              <View
+                style={{
+                  width: 350,
+                  height: 200,
+                  borderRadius: 10,
+                  overflow: 'hidden',
+                  alignSelf: 'center',
+                  shadowColor: 'rgba(0, 0, 0, 0.8)',
+                  shadowOffset: { width: 2, height: 2 },
+                  shadowOpacity: 0.5,
+                  shadowRadius: 6,
+                  elevation: 5,
+                  borderWidth: 1,
+                  borderColor: 'white',
+                  marginTop: 30,
+                }}
+              >
+                <Image
+                  source={require('../../assets/token_studios_logo2.png')}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    resizeMode: 'cover',
+                  }}
+                />
+               
+              </View>
+             
+          </Pressable>
+
+
+          <View style={{ flexDirection: 'column',  marginTop: 20 }}>
+            <Text style={{color: 'white', fontSize: 12, fontWeight: 'bold', marginLeft: 10}}>
+             Token Studio Figma plugin lets you import and sync your Synthesis design tokens into Figma, keeping your colors and typography consistent across your projects.
+            </Text>
+            <Text style={{color: 'white', fontSize: 12, marginLeft: 10, marginTop: 20}}>
+                Click the photo above to visit their website
+            </Text>
+          </View>
+        
+      </View>
+
+                  <Text style={{color: 'white', textAlign: 'center', fontWeight: 'bold'}}>
+                    ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+                </Text>
+
    
         <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 30, marginBottom: 10 }}>
     
@@ -489,8 +555,8 @@ useLayoutEffect(() => {
               color="white"
               style={globalStyles.screenStyles.iconShadow}
             />
-            <Text style={{color: 'white', fontSize: 12, fontWeight: 'bold', marginLeft: 10}}>
-              Export it as a Figma JSON config file instantly.
+            <Text style={{color: 'white', fontSize: 12, fontWeight: 'bold', marginLeft: 10, }}>
+              Export it as a JSON styles file to your email
             </Text>
           </View>
           
@@ -502,7 +568,7 @@ useLayoutEffect(() => {
               style={globalStyles.screenStyles.iconShadow}
             />
             <Text style={{color: 'white', fontSize: 12, fontWeight: 'bold', marginLeft: 10}}>
-              Import into Figma & design with your system live.
+              Import into the Token Studios Figma plugin and start using you're custom styles !
             </Text>
           </View>
         </View>
