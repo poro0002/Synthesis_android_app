@@ -13,6 +13,7 @@
 - **Design System Creation:** Create and manage reusable typography scales, color palettes, and UI element libraries.
 - **Persistent Local Storage:** Stores user design systems locally/firebase using context-based state management and AsyncStorage.
 - **JWT Authentication:** Secure login and session management using JSON Web Tokens with automatic token validation and expiration handling.
+- **JSON nodemailed Export:** Exports design tokens as JSON and securely emails them using Nodemailer, with user authentication managed via JWTs for safe, validated sessions.
 - **Responsive Design:** Fully optimized for Android devices with consistent scaling.
 - **Project-Oriented:** Track and manage design system elements by project.
 - **Planned Firebase Integration:** Future support for cloud backup, syncing, and cross-device use.
@@ -53,7 +54,7 @@
 ## 🛣️ Roadmap
 
 - **Firebase Integration:** Enable cloud sync and backup.
-- **Export/Import:** Share design systems between teammates or export as a Figma config file
+- **Export/Import:** Share design systems between teammates or export as a JSON styles file.
 - **Advanced Sorting/Filtering:** Enhanced element management.
 - **Launching to Google Play Store:** Coming Soon.
 

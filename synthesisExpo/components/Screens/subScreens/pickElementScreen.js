@@ -51,13 +51,14 @@ const PickElementScreen = ({route}) => {
     // console.log('category:', category, 'username:', username, 'system ID:', systemId)
 
     const [corroData, setCorroData] = useState();
-    const { getDesignSystem, username } = useAuth();
+    const { getDesignSystem, designSystemData, username, formatAndSaveTokens } = useAuth();
     const [localLoading, setLocalLoading] = useState(false);
 
 
      const navigation = useNavigation();
      const headerHeight = useHeaderHeight();
     
+
 
 
     // so basically we have to run a fetch to the backend and depending on the type we choose before the fetch even
@@ -91,6 +92,7 @@ const PickElementScreen = ({route}) => {
    } 
 
    const addNewElement = async (element, category) => {
+
       
      // element + category + username + system id to /updateSystem endpoint 
 
@@ -98,7 +100,7 @@ const PickElementScreen = ({route}) => {
      const fetchHeaders = new Headers({'Content-Type': 'application/json'});
 
 
-  // ✅ Wrap the element ONLY if category is 'icons'
+  // Wrap the element ONLY if category is 'icons'
   const formattedElement = category === "icons" ? { name: element } : element; // ternary operator that assigns { name: element } if category is "icons", otherwise assigns element as-is 
 
      const fetchOptions = {
@@ -122,11 +124,25 @@ const PickElementScreen = ({route}) => {
 
          if(data.success == true){
 
-           // the code below is running but when the design screen returns,  the new "added element" is a no show
+// Builds an updated selectedElements object based on the current designSystemData from context.
+// It adds the newly selected element to the appropriate category while preserving existing elements in other categories.
+// This updated data is then sent to the tokenJson endpoint to overwrite the corresponding token document.
 
-         await getDesignSystem(); 
+          const selectedElements = {
+              fonts: category === "fonts" ? [...(designSystemData?.fonts || []), formattedElement] : (designSystemData?.fonts || []),
+              gradients: category === "gradients" ? [...(designSystemData?.gradients || []), formattedElement] : (designSystemData?.gradients || []),
+              typography: category === "typography" ? [...(designSystemData?.typography || []), formattedElement] : (designSystemData?.typography || []),
+              icons: category === "icons" ? [...(designSystemData?.icons || []), formattedElement] : (designSystemData?.icons || []),
+              comp: category === "comp" ? [...(designSystemData?.comp || []), formattedElement] : (designSystemData?.comp || []),
+            };
+
+          // Save to backend (tokenJson) using fresh data
+          await formatAndSaveTokens(selectedElements, systemId, username);
+
+            await getDesignSystem(); 
             navigation.goBack();
             return;
+
          }else {
             console.log("Update failed:", data.message);
           }

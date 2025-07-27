@@ -19,7 +19,7 @@ dotenv.config();
 
 const app = express();
 const jwt_key = process.env.JWT_KEY;
-const port = process.env.PORT;
+const port = process.env.PORT || 4500;
 
 const __filename = fileURLToPath(import.meta.url); // This line is used to get the absolute file path of the current module (the current JavaScript file) when using ES Modules (ESM) in Node.js.
 const __dirname = path.dirname(__filename); // You can use this to reference the directory where the script is located, which can be useful when you need to resolve relative paths to files in the same directory or in subdirectories.
@@ -40,7 +40,6 @@ const transporter = nodemailer.createTransport({
     pass: process.env.EMAIL_PASS, // Your Gmail App Password, NOT your normal Gmail password
   },
 });
-
 
 
 app.use(express.json());
@@ -163,8 +162,7 @@ app.get('/testToken', async (req, res) => {
 
 })
 
-
-
+// ---------------------------------------------------------< Token Studios JSON >------------------------------------------------------------
 
 app.post('/getTokenJson', async (req, res) => {
 
@@ -177,9 +175,9 @@ app.post('/getTokenJson', async (req, res) => {
 
     const { username, email, id } = req.body;
 
-    console.log('tokenJson username:', username);
-    console.log('tokenJson email:', email);
-    console.log('tokenJson id:', id);
+    console.log('getTokenJson  username:', username);
+    console.log('getTokenJson email:', email);
+    console.log('getTokenJson id:', id);
 
     try {
 
@@ -197,7 +195,9 @@ app.post('/getTokenJson', async (req, res) => {
             return res.status(404).json({ message: 'No token JSON data found for this system ID.', success: false });
         }
 
-        // Extract the tokenData in the correct structure for Token Studio
+        // Firestore’s .where() queries always return a QuerySnapshot — even if only one document matches (or none at all). So the only way to access the matched docs is to iterate over them with .forEach() or access docs[0].
+         // its looping over an array with one index [0] basically
+       
         let tokenJsonData = null;
         tokenJsonSnapshot.forEach(doc => {
             const data = doc.data();
@@ -250,50 +250,98 @@ app.post('/getTokenJson', async (req, res) => {
 
 
 
-// ---------------------------------------------------------< Token Studios JSON >------------------------------------------------------------
 
 
 app.post('/saveTokenJson', async (req, res) => {
-
   const { tokenData, username, systemId } = req.body;
 
-    console.log('tokenData:', tokenData)
-    console.log('sysetmId:', systemId)
+  console.log('saveTokenJson tokenData:', tokenData);
+  console.log('saveTokenJson systemId:', systemId);
 
-   if (!username || !systemId) {
-    return res
-      .status(400)
-      .json({ success: false, message: 'username and systemId are required' })
+  if (!username || !systemId) {
+    return res.status(400).json({ success: false, message: 'username and systemId are required' });
   }
-   
-   try{
 
+  try {
     const userRef = await firestore.collection('users').where('username', '==', username).get();
 
-     if(userRef.empty){
-      return res.status(400).json({ message: "no user found with that username", success: false })
-     }    
+    if (userRef.empty) {
+      return res.status(400).json({ message: 'No user found with that username', success: false });
+    }
 
+    const userDocRef = userRef.docs[0].ref;
+    const tokenJsonRef = userDocRef.collection('tokenJson');
+    
+    // Check if there's already a token JSON with the same ID (systemId)
+    const existingTokenQuery = await tokenJsonRef.where('id', '==', systemId).get();
 
-     const userDoc = userRef.docs[0].ref;
+    if (!existingTokenQuery.empty) {
+      // Update the existing document
+      const existingDocRef = existingTokenQuery.docs[0].ref;
+      console.log('Checking existing token docs for systemId:', systemId);
 
-      await userDoc.collection('tokenJson').add({
-              id: systemId,
-              username,
-              tokenData,
-              createdAt: new Date().toISOString()
+      await existingDocRef.update({
+        tokenData,
+        updatedAt: new Date().toISOString()
       });
 
-     console.log('token json data stored')
-     console.log('User Document ID:', userDoc.id);
-     res.status(200).json({message: `token json data stored`, success: true})
+      console.log('Token JSON updated');
+      return res.status(200).json({ message: 'Token JSON updated', success: true });
+
+    } else {
+      //  Add a new document
+      await tokenJsonRef.add({
+        id: systemId,
+        username,
+        tokenData,
+        createdAt: new Date().toISOString()
+      });
+
+      console.log('Token JSON data stored');
+      return res.status(200).json({ message: 'Token JSON data stored', success: true });
+    }
+  } catch (err) {
+    console.error('Error saving token JSON data:', err);
+    return res.status(500).json({ message: 'Issue with saving token JSON data', success: false });
+  }
+});
 
 
-   }catch(err){
-       res.status(500).json({message: 'issue with saving token json data', success: false})
-       console.log('issue with saving token json data') 
-   }
+app.post('/deleteTokenJson', async (req, res)=>{
+    
+  const { username, systemId } = req.body;
 
+    console.log('deleteTokenJson Username:', username)
+    console.log('deleteTokenJson systemId:', systemId)
+
+
+  try{
+    
+    const userRef = await firestore.collection('users').where('username', '==', username).get();
+
+    if(userRef.empty){
+      return res.status(401).json({message: 'could not find an account associated with that username', success: false})
+    }
+
+    const userDoc = userRef.docs[0].ref;
+
+    const systemToDelete = await userDoc.collection('tokenJson').where('id', '==', systemId).get();
+
+     if (systemToDelete.empty) {
+      return res.status(404).json({ message: 'No matching system found to delete', success: false });
+    }
+     
+    const deletePromises = systemToDelete.docs.map((doc) => doc.ref.delete()); // loops through the one index match array
+    await Promise.all(deletePromises); // waits for every promise to finish (even tho there is only one)
+
+    return res.status(200).json({ message: 'Token system deleted successfully', success: true });
+    
+  
+  }catch(err){
+     console.error('Error saving token JSON data:', err);
+    return res.status(500).json({ message: 'Issue with deleting token JSON data', success: false });
+    
+  }
 
 })
 
@@ -2914,7 +2962,7 @@ app.get('/saved', async (req, res) => {
 app.delete('/deleteElement', async (req, res) => {
 
     let {type, id, username, index} = req.body;
-    console.log(id)
+    // console.log(id)
 
     try{
       const userRef = await firestore.collection('users').where('username', '==', username).get(); 

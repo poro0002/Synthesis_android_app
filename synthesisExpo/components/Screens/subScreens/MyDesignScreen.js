@@ -97,8 +97,11 @@ useEffect(() => {
   // Find the current system by ID in the updated designSystemData
   const updatedSystem = designSystemData.find(system => system.id === currentSystem?.id);
 
+  // console.log('updatedSystem:', updatedSystem)
+
   if (updatedSystem) {
    setCurrentSystem({ ...updatedSystem });
+ 
   }
 }, [designSystemData]);
 
@@ -117,6 +120,45 @@ const addElement = (category, systemId) =>{
 
 }
 
+{/* ----------------------------------------------------< Delete Corro TokenJSON  >--------------------------------------------------- */} 
+
+ const deleteTokenJson = async (systemId) => {
+  
+
+    const fetchURL = `${apiUrl}/deleteTokenJson`;
+    const fetchHeaders = new Headers({'Content-Type': 'application/json'});
+
+    const fetchOptions = {
+        method: "POST",
+        headers: fetchHeaders,
+        mode: 'cors',
+        body: JSON.stringify({
+          username: currentSystem.username,
+          systemId: systemId,
+       
+        })
+    }
+
+
+   try{
+        let response = await fetch(fetchURL, fetchOptions);
+
+        let data = await response.json();
+
+        if(data.success){
+          console.log(data.message)
+        }else{
+          console.log(data.message)
+        }
+
+     
+
+       
+    }catch(err){
+        console.log("there was an error with the deleteTokenJson fetch", err)
+    } 
+
+  }
 
 {/* ----------------------------------------------------< Delete Element  >--------------------------------------------------- */} 
 
@@ -141,6 +183,7 @@ const addElement = (category, systemId) =>{
     }
     setLocalLoading(true);
     try{
+     
         let response = await fetch(fetchURL, fetchOptions);
 
         let data = await response.json();
@@ -172,52 +215,52 @@ const addElement = (category, systemId) =>{
  const exportSystem = async (id) =>{
 
    // send the username, email and current system id to the backend via body 
-setLocalLoading(true)
-  const fetchURL = `${apiUrl}/getTokenJson`;
-  const fetchHeaders = new Headers({'Content-Type': 'application/json'});
-  const email = await AsyncStorage.getItem('email');
+    setLocalLoading(true)
+      const fetchURL = `${apiUrl}/getTokenJson`;
+      const fetchHeaders = new Headers({'Content-Type': 'application/json'});
+      const email = await AsyncStorage.getItem('email');
 
-  const fetchOptions = {
-      method: "POST",
-      headers: fetchHeaders,
-      mode: 'cors',
-      body: JSON.stringify({
-        username,
-        email,
-        id
-      })
-  }
-
-  try{
-     console.log("export system btn pressed")
-    let response = await fetch(fetchURL, fetchOptions);
-
-    let data = await response.json();
-
-    if(data.success){
-  
-       console.log(data.message)
-      Alert.alert(
-        "Success",
-        "JSON data has been sent to your email.",
-        [{ text: "OK" }]
-      );
-    }else{
-     
-       console.log(data.message)
-        Alert.alert(
-        "Failed",
-        "Please Try Again Later",
-        [{ text: "OK" }]
-      );
-    }
-
-  }catch(err){
-     console.log("there was an error with the fetch", err)
-  }
-   finally {
-    setLocalLoading(false);
-  }
+      const fetchOptions = {
+          method: "POST",
+          headers: fetchHeaders,
+          mode: 'cors',
+          body: JSON.stringify({
+            username,
+            email,
+            id
+          })
+      }
+    
+      try{
+         console.log("export system btn pressed")
+        let response = await fetch(fetchURL, fetchOptions);
+      
+        let data = await response.json();
+      
+        if(data.success){
+        
+           console.log(data.message)
+          Alert.alert(
+            "Success",
+            "JSON data has been sent to your email.",
+            [{ text: "OK" }]
+          );
+        }else{
+        
+           console.log(data.message)
+            Alert.alert(
+            "Failed",
+            "Please Try Again Later",
+            [{ text: "OK" }]
+          );
+        }
+      
+      }catch(err){
+         console.log("there was an error with the fetch", err)
+      }
+       finally {
+        setLocalLoading(false);
+      }
  }
 
 {/* ----------------------------------------------------< Delete System >--------------------------------------------------- */} 
@@ -246,20 +289,23 @@ setLocalLoading(true)
     { text: "OK", onPress: async () =>  {
 
         try{
-      let response = await fetch(fetchURL, fetchOptions);
+          console.log('Calling deleteTokenJson with:', id);
 
-      let data = await response.json();
+           await deleteTokenJson(id);
+          let response = await fetch(fetchURL, fetchOptions);
 
-      if(data.message === 'Design system successfully deleted'){
-        console.log('Deletion confirmed, updating local state...');
+          let data = await response.json();
 
-        // prevdata is the systems with the one we want to delete. we match the id and remove it updating the designsystemdata
-        setDesignSystemData(prevData => prevData.filter(system => system.id !== id));
-
-        navigation.navigate('Tabs', {
-          screen: 'Project',
-        });
-
+          if(data.message === 'Design system successfully deleted'){
+            console.log('Deletion confirmed, updating local state...');
+          
+            // prevdata is the systems with the one we want to delete. we match the id and remove it updating the designsystemdata
+            setDesignSystemData(prevData => prevData.filter(system => system.id !== id));
+          
+            navigation.navigate('Tabs', {
+              screen: 'Project',
+            });
+          
 
         // Refresh in the background
         getDesignSystem().catch((err) => console.log('Error refreshing design systems:', err));
@@ -549,9 +595,15 @@ setLocalLoading(true)
           </ScrollView>
           
     {/* ----------------------------------------------------< OPTIONS >---------------------------------------------------  */} 
+       <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 10 }}>
+        <MaterialIcons name="warning" size={24} color="white" style={{ marginRight: 8 }} />
+          <Text style={{color: 'white', fontSize: 12, fontWeight: 'bold', marginLeft: 10, marginRight: 10,  flexShrink: 1,  flexWrap: 'wrap'}}>  
+    
+            If you have made changes to your pre-existing design system, you will need to rebuild it in order for the export to ship the updated styles.
+         </Text>
+        </View>
 
-
-          <Pressable onPress={() => exportSystem(currentSystem.id)} style={[globalStyles.screenStyles.btnShadow, {backgroundColor: 'royalblue', borderRadius: 10,  height: 70, alignItems: 'center', justifyContent: 'center', marginVertical: 20 }]}>
+        <Pressable onPress={() => exportSystem(currentSystem.id)} style={[globalStyles.screenStyles.btnShadow, {backgroundColor: 'royalblue', borderRadius: 10,  height: 70, alignItems: 'center', justifyContent: 'center', marginVertical: 20 }]}>
             <Text style={globalStyles.screenStyles.text}>
               Export 
             </Text>

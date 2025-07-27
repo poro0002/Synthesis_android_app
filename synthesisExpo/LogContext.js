@@ -17,8 +17,6 @@ export const LogContext = createContext();
 export const LogProvider = ({ children }) => {
 
 
-
-
   
   // global use states as the log provider is wrapped around the app 
   const [designSystemData, setDesignSystemData] = useState([]);
@@ -54,9 +52,11 @@ const [selectedElements, setSelectedElements] = useState({
 
 const formatAndSaveTokens = async (selectedElements, systemId, username) => {
 
+
+
   const tokenData = { global: {} }
 
-  console.log('formatAndSaveTokens called with:', {
+  console.log('formatAndSaveTokens (logContext) called with:', {
       systemId,
       username,
       selectedElements
@@ -214,7 +214,7 @@ const testToken = async () => {
     const data = await response.json();
 
     if (data.success) {
-      console.log(data.message);
+      // console.log(data.message);
     } else {
       console.log(data.message);
       setIsLoggedIn(false);
@@ -670,6 +670,7 @@ const handleCompElement = (navigation, type, data) => {
     loading,
     testToken,
     getToken,
+    formatAndSaveTokens
    
   };
 

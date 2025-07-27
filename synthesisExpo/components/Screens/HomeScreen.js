@@ -40,7 +40,7 @@ const apiUrl = Constants.expoConfig.extra.API_URL;
 const HomeScreen = () => {
 
   const renderCount = useRef(0);
-  console.log(`🔁 HomeScreen rendered ${renderCount.current++} times`);
+  // console.log(`🔁 HomeScreen rendered ${renderCount.current++} times`);
   
 
      const [topic, setTopic] = useState("home");
@@ -515,7 +515,7 @@ useLayoutEffect(() => {
             </Text>
           </View>
         
-      </View>
+        </View>
 
                   <Text style={{color: 'white', textAlign: 'center', fontWeight: 'bold'}}>
                     ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
