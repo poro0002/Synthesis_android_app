@@ -50,7 +50,7 @@ import { useNavigation } from '@react-navigation/native'
 const TopicScreen = ({route}) => {
 
   const {topic} = route.params;
-  
+
   const { 
     username, 
     getUpdatedUsername, 
@@ -70,12 +70,32 @@ const TopicScreen = ({route}) => {
   } = useAuth();
 
    const headerHeight = useHeaderHeight();
-    const navigation = useNavigation();
+   const navigation = useNavigation();
    
 
   const [data, setData] = useState(null);
   const [serverFonts, setServerFonts] = useState([]);
   const [isChecked, setIsChecked] = useState(false);
+  const [corroIcon, setCorroIcon] = useState('')
+
+
+const iconMap = {
+  entertainment: 'movie',
+  tech: 'memory',
+  health: 'favorite',
+  food: 'restaurant',
+  finance: 'attach-money',
+  sport: 'sports-soccer',
+  travel: 'flight',
+  music: 'music-note',
+  education: 'school',
+};
+
+useEffect(() => {
+  if (!topic) return;
+  setCorroIcon(iconMap[topic] || 'help-outline'); // sets the corro value ('movie') from whatever the matching key is to topic 
+}, [topic]);
+
 
   
   // You cannot update state during the rendering phase of a different component. has to be in a useEffect
@@ -233,17 +253,19 @@ const cancelSystem = () => {
         showsHorizontalScrollIndicator={false} // hide horizontal scrollbar
       >
 
-        <View>
-          <Text style={[globalStyles.screenStyles.h2, globalStyles.screenStyles.textShadow, {textTransform: 'uppercase'}]}>{topic}</Text>
+        <View style={{flexDirection: 'row', alignItems: 'center', }}>
+          <MaterialIcons name={corroIcon} size={30} color="white" style={globalStyles.screenStyles.iconShadow} />
+          <Text style={[globalStyles.screenStyles.h2, globalStyles.screenStyles.textShadow, { paddingLeft: 10}]}> {topic.charAt(0).toUpperCase() + topic.slice(1)}</Text>
         </View>
-        <Text style={globalStyles.screenStyles.h3}>Recommended Element Styles:</Text>
+        <Text style={[globalStyles.screenStyles.h4, ]}>Recommended Element Styles:</Text>
+         <Text style={[{marginTop: 30, marginBottom: 30, color: 'white', fontStyle: "italic"}]}>Tap To Select</Text>
         <View>
 
   {/* ----------------------------------------------------< FONTS >---------------------------------------------------  */}
        
       {data && data.fonts && data.fonts.length > 0 && (
-      <>
-        <Text style={[globalStyles.screenStyles.h4, {color: 'white'}]}>Fonts ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯</Text>
+       <View style={globalStyles.screenStyles.container}>
+        <Text style={[globalStyles.screenStyles.h4, globalStyles.screenStyles.textShadow, {color: 'white'}]}>Fonts</Text>
           <ScrollView 
                 horizontal // Enables horizontal scrolling
                 showsHorizontalScrollIndicator={false} // Hides the scroll indicator
@@ -283,7 +305,7 @@ const cancelSystem = () => {
                 }  
 
             </ScrollView>
-            </>
+            </View>
           )}
        
          
@@ -293,8 +315,8 @@ const cancelSystem = () => {
   {/* ---------------------------------------------------< COLORS >---------------------------------------------------  */}
 
   {data && data.gradients && data.gradients.length > 0 && (
-      <>
-        <Text style={[globalStyles.screenStyles.h4, {color: 'white'}]}>Color Gradients ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯</Text>
+      <View style={globalStyles.screenStyles.container}>
+        <Text style={[globalStyles.screenStyles.h4, globalStyles.screenStyles.textShadow, {color: 'white'}]}>Color Gradients </Text>
           <ScrollView 
                horizontal // Enables horizontal scrolling
                 showsHorizontalScrollIndicator={false} // Hides the scroll indicator
@@ -333,7 +355,7 @@ const cancelSystem = () => {
                 }  
 
              </ScrollView>
-            </>
+            </View>
           )}
 
 
@@ -341,8 +363,8 @@ const cancelSystem = () => {
 
    {data && data.typography && data.typography.styles && data.typography.styles.length > 0 && (
          
-      <>
-        <Text style={[globalStyles.screenStyles.h4, {color: 'white'}]}>Typography ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯</Text>
+      <View style={globalStyles.screenStyles.container}>
+        <Text style={[globalStyles.screenStyles.h4, globalStyles.screenStyles.textShadow, {color: 'white'}]}>Typography </Text>
           <ScrollView 
                horizontal // Enables horizontal scrolling
                 showsHorizontalScrollIndicator={false} // Hides the scroll indicator
@@ -370,12 +392,12 @@ const cancelSystem = () => {
                </View>  
                
              </ScrollView>
-            </>
+            </View>
            )}
 
 {/* -----------------------------------------------< ICONS >-----------------------------------------------  */}
-       <>
-        <Text style={[globalStyles.screenStyles.h4, {color: 'white'}]}>Icons ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯</Text>
+       <View style={globalStyles.screenStyles.container}>
+        <Text style={[globalStyles.screenStyles.h4, globalStyles.screenStyles.textShadow, {color: 'white'}]}>Icons</Text>
           <ScrollView 
                horizontal // Enables horizontal scrolling
                 showsHorizontalScrollIndicator={false} // Hides the scroll indicator
@@ -518,14 +540,14 @@ const cancelSystem = () => {
                </View>
                
              </ScrollView>
-            </>
+            </View>
 
    {/* -----------------------------------------------< COMPONENTS >-----------------------------------------------  */}         
        
         {data && data.styledComponents && (
-                 <>
-                   <Text style={[globalStyles.screenStyles.h4, { color: 'white' }]}>
-                     Styled Components ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+                <View style={globalStyles.screenStyles.container}>
+                   <Text style={[globalStyles.screenStyles.h4, globalStyles.screenStyles.textShadow,{ color: 'white' }]}>
+                     Styled Components 
                    </Text>
                    <ScrollView
                      horizontal
@@ -561,13 +583,13 @@ const cancelSystem = () => {
                        </Pressable >
                      </View>
                    </ScrollView>
-                 </>
+                 </View>
               )}
 
   {/* -----------------------------------------------< NAMING THE SYSTEM >-----------------------------------------------  */} 
 
-          <View style={[{ justifyContent: 'center', alignItems:'flex-start', margin: 20}]}>
-             <Text style={[globalStyles.screenStyles.h4, {color: 'white', marginTop: 20}]}>Name Your Design System</Text>
+         <View style={globalStyles.screenStyles.container}>
+             <Text style={[globalStyles.screenStyles.h4, globalStyles.screenStyles.textShadow, {color: 'white', marginTop: 20}]}>Name Your Design System</Text>
             <TextInput
                 onChangeText={(value) => toggleSelection('name', value)}
                 value={selectedElements.name}
@@ -579,7 +601,7 @@ const cancelSystem = () => {
 
             </TextInput>
 
-            <Text style={[globalStyles.screenStyles.h4, {color: 'white', marginTop: 20}]}>Describe Your Design System</Text>
+            <Text style={[globalStyles.screenStyles.h4, globalStyles.screenStyles.textShadow, {color: 'white', marginTop: 20}]}>Describe Your Design System</Text>
 
             <TextInput
               onChangeText={(value) => toggleSelection('about', value)}
@@ -603,7 +625,7 @@ const cancelSystem = () => {
 
   {/* -----------------------------------------------< CREATE && CANCEL BTNS >-----------------------------------------------  */} 
 
-          <View style={[{flexDirection: 'row', justifyContent: 'center', alignItems:'center', marginTop: 30}]}>
+          <View style={[{flexDirection: 'row', justifyContent: 'center', alignItems:'center', marginTop: 10}]}>
 
                  <Pressable onPress={cancelSystem}  style={[globalStyles.screenStyles.btn1, globalStyles.screenStyles.btnShadow, {backgroundColor: 'white', color: 'black', marginRight: 20}]}>
                     <Text>Cancel</Text>

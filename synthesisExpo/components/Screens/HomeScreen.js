@@ -280,7 +280,7 @@ useLayoutEffect(() => {
                  contentContainerStyle={{  flexDirection: 'column', paddingTop: headerHeight, paddingBottom: headerHeight, paddingHorizontal: 20,}}
                  keyboardShouldPersistTaps="handled"
                  >
-        
+         <View style={[globalStyles.screenStyles.container, {marginTop: 20}]}>
                <Text style={[globalStyles.screenStyles.h1, globalStyles.screenStyles.textShadow, {textAlign: 'center', }]}>Welcome, {username}</Text>
                <LottieView
                   source={require('../../assets/animation1.json')}
@@ -288,11 +288,8 @@ useLayoutEffect(() => {
                   loop
                   style={{ width: 80, height: 80, alignSelf: 'center'}}
                 />
-
-                
-                <Text style={{color: 'white', textAlign: 'center', fontWeight: 'bold'}}>
-                    ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
-                </Text>
+           
+           
                <Text style={[globalStyles.screenStyles.text, {marginBottom: 10, marginTop: 10}]}>
                     Today &#8226;{' '}
                     <Text style={{ fontWeight: 'bold' }}>
@@ -314,12 +311,10 @@ useLayoutEffect(() => {
                   <Text style={{color: 'white', textAlign: 'center', fontWeight: 'bold', marginTop: 10,}}>
                       {currentTime || 'Loading...'}
                    </Text>
-          
+          </View>
 
-                  <Text style={{color: 'white', textAlign: 'center', fontWeight: 'bold'}}>
-                ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
-                </Text>
 
+<View style={globalStyles.screenStyles.container}>
 
         <Text style={[globalStyles.screenStyles.text, {marginBottom: 20, marginTop: 20}]}>What are you Looking For ?</Text>
 
@@ -327,7 +322,7 @@ useLayoutEffect(() => {
               
             <Pressable onPress={() => handleTopic('entertainment')} style={globalStyles.screenStyles.topicComp}>
               <MaterialIcons name="movie" size={24} color="white" style={globalStyles.screenStyles.iconShadow} />
-              <Text style={globalStyles.screenStyles.topicText}>Entertainment</Text>
+              <Text style={[globalStyles.screenStyles.topicText, { fontSize: 10,}]}>Entertainment</Text>
             </Pressable>
 
             <Pressable onPress={() => handleTopic('tech')} style={globalStyles.screenStyles.topicComp}>
@@ -379,11 +374,10 @@ useLayoutEffect(() => {
               </Pressable>
 
           </View>
+     </View>
+     
 
-        <Text style={{color: 'white', textAlign: 'center', fontWeight: 'bold'}}>
-                    ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
-                </Text>
-
+<View style={globalStyles.screenStyles.container}>
          <Text style={[globalStyles.screenStyles.h4, globalStyles.screenStyles.textShadow, {marginTop: 20}]}>Tip Of The Day</Text>
 
     {tipsData ? ( 
@@ -407,10 +401,11 @@ useLayoutEffect(() => {
               </Text>
       )}
 
+      </View>
 
-        <Text style={{color: 'white', textAlign: 'center', fontWeight: 'bold'}}>
-                    ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
-                </Text>
+
+
+<View style={globalStyles.screenStyles.container}>
 
            <Text style={[globalStyles.screenStyles.h4, globalStyles.screenStyles.textShadow, {marginTop: 20, marginBottom: 20}]}>Inspiration Board</Text>
 
@@ -425,8 +420,8 @@ useLayoutEffect(() => {
           </Text>
     
             <View style={{
-              width: 350,
-              height: 200,
+              width: 300,
+              height: 180,
               borderRadius: 10,
               overflow: 'hidden',
               alignSelf: 'center', 
@@ -454,12 +449,10 @@ useLayoutEffect(() => {
            {photoArr[randomPhotoIndex].artist}
         </Text>
        </View>
+   </View>
 
 
-          <Text style={{color: 'white', textAlign: 'center', fontWeight: 'bold'}}>
-                    ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
-                </Text>
-
+<View style={globalStyles.screenStyles.container}>
       <View style={{ flexDirection: 'column',  marginBottom: 20, marginTop: 30 }}>
 
            <Text
@@ -477,8 +470,8 @@ useLayoutEffect(() => {
             >
               <View
                 style={{
-                  width: 350,
-                  height: 200,
+                  width: 300,
+                  height: 180,
                   borderRadius: 10,
                   overflow: 'hidden',
                   alignSelf: 'center',
@@ -508,7 +501,7 @@ useLayoutEffect(() => {
 
           <View style={{ flexDirection: 'column',  marginTop: 20 }}>
             <Text style={{color: 'white', fontSize: 12, fontWeight: 'bold', marginLeft: 10}}>
-             Token Studio Figma plugin lets you import and sync your Synthesis design tokens into Figma, keeping your colors and typography consistent across your projects.
+             Token Studio Figma plugin lets you import and sync your Synthesis designSystem into figma via Token Studios keeping your fonts, colors and typography consistent across your projects.
             </Text>
             <Text style={{color: 'white', fontSize: 12, marginLeft: 10, marginTop: 20}}>
                 Click the photo above to visit their website
@@ -516,12 +509,9 @@ useLayoutEffect(() => {
           </View>
         
         </View>
-
-                  <Text style={{color: 'white', textAlign: 'center', fontWeight: 'bold'}}>
-                    ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
-                </Text>
-
-   
+      </View>
+        
+   <View style={globalStyles.screenStyles.container}>
         <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 30, marginBottom: 10 }}>
     
           <Text
@@ -572,7 +562,7 @@ useLayoutEffect(() => {
             </Text>
           </View>
         </View>
-          
+      </View>    
         <View style={{ alignItems: 'center', marginBottom: 40 }}>
           <Pressable
             onPress={() => navigation.navigate('CustomDesignScreen')}

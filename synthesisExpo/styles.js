@@ -69,7 +69,7 @@ const globalStyles = StyleSheet.create({
         },
         centerContainer: {
           flex: 1,
-          alignItems: 'center',
+          // alignItems: 'center',
           justifyContent: 'flex-start',
           backgroundColor: 'black',
         
@@ -145,7 +145,7 @@ const globalStyles = StyleSheet.create({
           row: {
              flexDirection: 'row', // Align children in a row
              justifyContent: 'space-between', // Space evenly between items
-             marginBottom: 30, // Space between rows
+             marginBottom: 25, // Space between rows
              flexWrap: 'wrap', 
            },
          column: {
@@ -351,6 +351,17 @@ const globalStyles = StyleSheet.create({
           // Android Shadow
           elevation: 6,
         },
+        
+          container: {
+           backgroundColor: 'rgba(22, 33, 62, 0.7)',  
+            padding: 12,
+            borderRadius: 8,
+            marginBottom: 20,
+            padding: 20,  
+           
+          
+          },
+        
 
 
     }, // screen styles end

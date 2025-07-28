@@ -114,7 +114,7 @@ const CustomDesignScreen = ({ route }) => {
 
     return(
 
-     <View style={{flex: 1, position: 'relative', alignItems: 'center', zIndex: 0}}>
+     <View style={{flex: 1, position: 'relative', padding: 20, zIndex: 0}}>
          
          <LinearGradient
             colors={gradientColors}
@@ -154,10 +154,10 @@ const CustomDesignScreen = ({ route }) => {
                      Choose Your Elements
                 </Text>
            
-           <View>
+           <View style={globalStyles.screenStyles.container}>
                 <Pressable onPress={() => handleViewCategory("fonts")} style={globalStyles.screenStyles.row}>
                     <View>
-                         <Text style={[globalStyles.screenStyles.h3, globalStyles.screenStyles.textShadow]}>
+                         <Text style={[globalStyles.screenStyles.h3, globalStyles.screenStyles.textShadow, ]}>
                             Fonts
                          </Text>
                         
@@ -175,7 +175,7 @@ const CustomDesignScreen = ({ route }) => {
                
             </View> 
                 
-            <View>
+            <View style={globalStyles.screenStyles.container}>
         
                 <Pressable onPress={() => handleViewCategory("color")} style={globalStyles.screenStyles.row}>
                         <View>
@@ -192,9 +192,9 @@ const CustomDesignScreen = ({ route }) => {
                    <MaterialIcons name='arrow-forward'size={32} color="white"/>
                 </Pressable>
             
-               <View>
-  
             </View>
+  
+           <View style={globalStyles.screenStyles.container}>
                 <Pressable onPress={() => handleViewCategory("typography")} style={globalStyles.screenStyles.row}>
                          <View>
                             <Text style={[globalStyles.screenStyles.h3, globalStyles.screenStyles.textShadow]}>
@@ -211,7 +211,7 @@ const CustomDesignScreen = ({ route }) => {
                 </Pressable>
             </View>  
            
-            <View>
+            <View style={globalStyles.screenStyles.container}>
               
                 <Pressable onPress={() => handleViewCategory("icon")} style={globalStyles.screenStyles.row}>
                 <View>
@@ -228,7 +228,7 @@ const CustomDesignScreen = ({ route }) => {
                 </Pressable>
            </View>  
            
-           <View>
+           <View style={globalStyles.screenStyles.container}>
                 <Pressable onPress={() => handleViewCategory("component")} style={globalStyles.screenStyles.row}>
                         <View>
                              <Text style={[globalStyles.screenStyles.h3, globalStyles.screenStyles.textShadow]}>

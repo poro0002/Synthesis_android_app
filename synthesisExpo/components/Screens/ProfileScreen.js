@@ -124,10 +124,10 @@ const handleUsernameChange = (type) =>{
                     <Text style={globalStyles.screenStyles.topicText}>Change Username</Text>
                 </Pressable>
 
-                <Pressable style={globalStyles.screenStyles.settingsComp}>
+                {/* <Pressable style={globalStyles.screenStyles.settingsComp}>
                     <MaterialIcons name="link" size={24} color="white" style={{ marginRight: 10 }} />
                     <Text style={globalStyles.screenStyles.topicText}>Connect</Text>
-                </Pressable>
+                </Pressable> */}
             </View>
        </View>
       </View>

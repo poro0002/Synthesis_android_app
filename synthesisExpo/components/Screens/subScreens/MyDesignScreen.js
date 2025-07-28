@@ -391,7 +391,8 @@ const addElement = (category, systemId) =>{
 
     {/* ----------------------------------------------------< FONTS >--------------------------------------------------- */} 
 
-    <Text style={[globalStyles.screenStyles.h4, {color: 'white'}]}>Fonts ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯</Text>
+ <View style={globalStyles.screenStyles.container}>
+    <Text style={[globalStyles.screenStyles.h4, globalStyles.screenStyles.textShadow, {color: 'white'}]}>Fonts</Text>
 
     <ScrollView   
       contentContainerStyle={{ flexDirection: 'row', marginBottom: 40 }} // horizontal scroll
@@ -426,10 +427,11 @@ const addElement = (category, systemId) =>{
         </Pressable>
       )}
     </ScrollView>
+    </View>
     
     {/* ----------------------------------------------------< COLORS >---------------------------------------------------  */}  
-    
-    <Text style={[globalStyles.screenStyles.h4, {color: 'white'}]}>Color Gradients ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯</Text>
+    <View style={globalStyles.screenStyles.container}>
+       <Text style={[globalStyles.screenStyles.h4, globalStyles.screenStyles.textShadow, {color: 'white'}]}>Color Gradients</Text>
     
           <ScrollView   
             contentContainerStyle={{ flexDirection: 'row', marginBottom: 40  }} // row for horizontal scroll
@@ -467,15 +469,18 @@ const addElement = (category, systemId) =>{
               </Pressable>
             )}
           </ScrollView>
+
+      </View>
+
     {/* ----------------------------------------------------< TYPOGRAPHY >---------------------------------------------------  */}           
-          
-    <Text style={[globalStyles.screenStyles.h4, { color: 'white' }]}>Typography ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯</Text>
-          
-    <ScrollView
-      contentContainerStyle={{ flexDirection: 'row', marginBottom: 40 }}
-      keyboardShouldPersistTaps="handled"
-      horizontal
-    >
+    <View style={globalStyles.screenStyles.container}>     
+      <Text style={[globalStyles.screenStyles.h4, globalStyles.screenStyles.textShadow, { color: 'white' }]}>Typography</Text>
+            
+      <ScrollView
+        contentContainerStyle={{ flexDirection: 'row', marginBottom: 40 }}
+        keyboardShouldPersistTaps="handled"
+        horizontal
+      >
       {currentSystem?.typography?.length > 0 ? (
         <View key={`${currentSystem.id}-typography`} style={{ marginRight: 20 }}>
           <View style={globalStyles.screenStyles.box}>
@@ -507,11 +512,12 @@ const addElement = (category, systemId) =>{
                   </Text>
               </Pressable>
       )}
-    </ScrollView>
+     </ScrollView>
+    </View>
     
     {/* ----------------------------------------------------< ICONS >---------------------------------------------------  */} 
-    
-    <Text style={[globalStyles.screenStyles.h4, { color: 'white' }]}>Icons ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯</Text>
+   <View style={globalStyles.screenStyles.container}>  
+    <Text style={[globalStyles.screenStyles.h4, globalStyles.screenStyles.textShadow, { color: 'white' }]}>Icons </Text>
           <ScrollView
             contentContainerStyle={{ flexDirection: 'row', marginBottom: 40 }}
             keyboardShouldPersistTaps="handled"
@@ -549,12 +555,14 @@ const addElement = (category, systemId) =>{
                  </Pressable>
             )}
           </ScrollView>
-          
+       </View>    
     {/* ----------------------------------------------------< COMPONENTS >---------------------------------------------------  */} 
-    <Text style={[globalStyles.screenStyles.h4, { color: 'white' }]}>Styled Components ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯</Text>
+
+  <View style={globalStyles.screenStyles.container}> 
+    <Text style={[globalStyles.screenStyles.h4, globalStyles.screenStyles.textShadow, { color: 'white' }]}>Styled Components</Text>
           
           <ScrollView   
-            contentContainerStyle={{ flexDirection: 'column', marginBottom: 40 }} 
+            contentContainerStyle={{ flexDirection: 'row', marginBottom: 40 }} 
             keyboardShouldPersistTaps="handled"
             horizontal
           >
@@ -593,14 +601,13 @@ const addElement = (category, systemId) =>{
                </Pressable>
             )}
           </ScrollView>
-          
+      </View>     
     {/* ----------------------------------------------------< OPTIONS >---------------------------------------------------  */} 
        <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 10 }}>
         <MaterialIcons name="warning" size={24} color="white" style={{ marginRight: 8 }} />
           <Text style={{color: 'white', fontSize: 12, fontWeight: 'bold', marginLeft: 10, marginRight: 10,  flexShrink: 1,  flexWrap: 'wrap'}}>  
-    
-            If you have made changes to your pre-existing design system, you will need to rebuild it in order for the export to ship the updated styles.
-         </Text>
+                If you want to add multiple styles to category a after the system has been initialized, it may require rebuilding the design system
+           </Text>
         </View>
 
         <Pressable onPress={() => exportSystem(currentSystem.id)} style={[globalStyles.screenStyles.btnShadow, {backgroundColor: 'royalblue', borderRadius: 10,  height: 70, alignItems: 'center', justifyContent: 'center', marginVertical: 20 }]}>

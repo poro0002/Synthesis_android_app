@@ -132,7 +132,7 @@ const ProjectScreen = () => {
                  </ImageBackground>
       
         
-      <View style={[globalStyles.screenStyles.mainView, {marginBottom: 50}]}>
+  <View style={[globalStyles.screenStyles.mainView, {marginBottom: 50}]}>
      <ScrollView   
         contentContainerStyle={{  flexDirection: 'column', paddingTop: headerHeight, paddingBottom: headerHeight, paddingHorizontal: 20}}
         keyboardShouldPersistTaps="handled"
@@ -208,7 +208,7 @@ const ProjectScreen = () => {
  {/* -------------------------------------------------------------------------------------------------------------------------------  */}
      
 
-      <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'left', marginTop: 35 }}>
+      <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'left' }}>
           <Text style={[globalStyles.screenStyles.h2]}> Favorites</Text>
           <LottieView
                 source={require('../../assets/animation4.json')}
@@ -220,15 +220,15 @@ const ProjectScreen = () => {
       </View>
 
 
-<View style={[globalStyles.screenStyles.column, {marginTop: 20} ]}>
+<View style={[globalStyles.screenStyles.column, {marginTop: 10} ]}>
 
      
      {/* ----------------------------------------------------< FONTS >---------------------------------------------------  */}
        
        
   {favoriteFonts && favoriteFonts.length > 0 && (
-      <>
-        <Text style={[globalStyles.screenStyles.h4, {color: 'white'}]}>Fonts ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯</Text>
+     <View style={globalStyles.screenStyles.container}>
+        <Text style={[globalStyles.screenStyles.h4, {color: 'white'}]}>Fonts </Text>
           <ScrollView 
                 horizontal // Enables horizontal scrolling
                 showsHorizontalScrollIndicator={false} // Hides the scroll indicator
@@ -262,14 +262,14 @@ const ProjectScreen = () => {
                 }  
 
             </ScrollView>
-            </>
+            </View>
           )}
 
   {/* ---------------------------------------------------< COLORS >---------------------------------------------------  */}
 
   {favoriteColors && favoriteColors.length > 0 && (
-      <>
-        <Text style={[globalStyles.screenStyles.h4, {color: 'white'}]}>Color Gradients ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯</Text>
+     <View style={globalStyles.screenStyles.container}>
+        <Text style={[globalStyles.screenStyles.h4, {color: 'white'}]}>Color Gradients</Text>
           <ScrollView 
                horizontal // Enables horizontal scrolling
                 showsHorizontalScrollIndicator={false} // Hides the scroll indicator
@@ -300,15 +300,15 @@ const ProjectScreen = () => {
                 }  
 
              </ScrollView>
-            </>
+            </View>
           )}
 
             {/* -----------------------------------------------< TYPOGRAPHY >-----------------------------------------------  */}
 
    {favoriteTypo && favoriteTypo.length > 0 && (
          
-         <>
-           <Text style={[globalStyles.screenStyles.h4, {color: 'white'}]}>Typography ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯</Text>
+        <View style={globalStyles.screenStyles.container}>
+           <Text style={[globalStyles.screenStyles.h4, {color: 'white'}]}>Typography </Text>
              <ScrollView 
                   horizontal // Enables horizontal scrolling
                    showsHorizontalScrollIndicator={false} // Hides the scroll indicator
@@ -328,14 +328,14 @@ const ProjectScreen = () => {
                            </View>  
                           )})}
                 </ScrollView>
-               </>
+               </View>
               )}
 
 {/* -----------------------------------------------< ICONS  >-----------------------------------------------  */}
 
 {favoriteIcons && favoriteIcons.length > 0 && (
-  <>
-    <Text style={[globalStyles.screenStyles.h4, { color: 'white' }]}>Icons ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯</Text>
+  <View style={globalStyles.screenStyles.container}>
+    <Text style={[globalStyles.screenStyles.h4, { color: 'white' }]}>Icons </Text>
     <ScrollView
       horizontal
       showsHorizontalScrollIndicator={false}
@@ -356,15 +356,15 @@ const ProjectScreen = () => {
         </View>
       ))}
     </ScrollView>
-  </>
+  </View>
 )}
 
 
 {/* -----------------------------------------------< COMPONENT  >-----------------------------------------------  */}
 
 {favoriteComp && favoriteComp.length > 0 && (
-  <>
-    <Text style={[globalStyles.screenStyles.h4, { color: 'white' }]}>Components ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯</Text>
+  <View style={globalStyles.screenStyles.container}>
+    <Text style={[globalStyles.screenStyles.h4, { color: 'white' }]}>Components</Text>
     <ScrollView
       horizontal
       showsHorizontalScrollIndicator={false}
@@ -388,7 +388,7 @@ const ProjectScreen = () => {
       ))}
     </ScrollView>
 
- </>
+ </View>
 )}
   {
     (!favData || favData.length === 0) &&  (
