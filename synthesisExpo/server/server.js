@@ -46,9 +46,9 @@ app.use(express.json());
 
 // -------------------------------------------------------< Database Connection >-----------------------------------------------------------
 
-const serviceAccount = await import(path.resolve(__dirname, '../synthesis-4c237-firebase-adminsdk-r8ea9-98574971f1.json'), {
+const serviceAccount = await import(`./synthesis-4c237-firebase-adminsdk-r8ea9-98574971f1.json`, {
   assert: { type: 'json' }
-}); // used for path issues and import issues 
+});
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount.default),
@@ -107,19 +107,10 @@ app.get('/token', async (req, res) => {
 // 3) .substring(2, 8) removes the "0." and keeps the next 6 characters for a short ID.
 // The final result is a 6-character random alphanumeric string (not cryptographically secure).
 
-  let id = Math.random().toString(36).substring(2, 8); 
-  let limit = 60 * 60 * 4; // 4 hour limit before the user ahs to re-authenticate 
-  let expires = Math.floor(Date.now() / 1000) + limit; // adds the limitstarts the clock on that token from right the second till the limit expires
-
-  // stores the info needed for the token
-  let payload = {
-    _id: id, 
-    exp: expires,
-
-  }
-
-  let token = jwt.sign(payload, jwt_key); // Signing ensures the integrity of the token (you can verify it hasn’t been tampered with).
-  res.status(200).json({token: token, message: 'token successfully created for user', success: true})
+    let id = Math.random().toString(36).substring(2, 8);
+    let token = jwt.sign({ _id: id }, jwt_key, { expiresIn: '4h' }); // let jwt handle exp
+    
+    return res.status(200).json({ token, message: 'token successfully created for user', success: true });
 
 
 
@@ -148,7 +139,7 @@ app.get('/testToken', async (req, res) => {
       // }
 
        let current = Math.floor(Date.now() / 1000)
-       let diff = current - payload.exp;
+       let diff = payload.exp - current;
        res.status(200).json({message: `token verified ${diff} remaining`, success: true})
 
       }catch(err){
@@ -158,7 +149,6 @@ app.get('/testToken', async (req, res) => {
     }else{
       res.status(402).json({message: 'Invalid token', success: false})
     }
-
 
 })
 

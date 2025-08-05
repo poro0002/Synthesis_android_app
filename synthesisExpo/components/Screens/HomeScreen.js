@@ -316,7 +316,7 @@ useLayoutEffect(() => {
 
 <View style={globalStyles.screenStyles.container}>
 
-        <Text style={[globalStyles.screenStyles.text, {marginBottom: 20, marginTop: 20}]}>What are you Looking For ?</Text>
+        <Text style={[globalStyles.screenStyles.h4, globalStyles.screenStyles.textShadow, {marginTop: 20, marginBottom: 20, textAlign: 'center'}]}>What are you Looking For ?</Text>
 
       <View style={globalStyles.screenStyles.row}>
               

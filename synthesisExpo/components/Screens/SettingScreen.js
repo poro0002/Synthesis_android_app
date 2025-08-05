@@ -199,11 +199,6 @@ useEffect(() => {
                   <Text style={globalStyles.screenStyles.topicText}>Notifications</Text>
               </Pressable>
 
-              <Pressable onPress={() => setSelectedSetting('privacy')} style={globalStyles.screenStyles.settingsComp}>
-                  <MaterialIcons name="lock" size={24} color="white"  style={[globalStyles.screenStyles.iconShadow, { marginRight: 15, }]} />
-                  <Text style={globalStyles.screenStyles.topicText}>Privacy & Security</Text>
-              </Pressable>
-
               <Pressable onPress={() => setSelectedSetting('help')} style={globalStyles.screenStyles.settingsComp}>
                   <MaterialIcons name="help-outline" size={24} color="white"  style={[globalStyles.screenStyles.iconShadow, { marginRight: 15, }]}/>
                   <Text style={globalStyles.screenStyles.topicText}>Help & Support</Text>
@@ -245,19 +240,6 @@ useEffect(() => {
         
               />
              </View>
-            </View>
-          )}
-          {selectedSetting === 'privacy' && (
-            <View style={globalStyles.screenStyles.column}>
-              <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center',}}>
-                <Text style={[globalStyles.screenStyles.text, { marginRight: 10 }]}>Allow Synthesis to use your data for research purposes</Text>
-                  <Switch
-                    trackColor={{ false: 'white', true: 'royalblue' }}
-                    thumbColor={isAB ? 'white' : 'white'}
-                    onValueChange={toggleSwitch}
-                    value={isAB}
-                  />       
-                </View>
             </View>
           )}
           {selectedSetting === 'help' && (

@@ -1,6 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View,  KeyboardAvoidingView, Platform,} from 'react-native';
 import globalStyles from '../../../styles';
+import * as SystemUI from 'expo-system-ui';
 
 import React, { useState, useEffect } from 'react';
 import {
@@ -49,6 +50,12 @@ const LoginRegScreen = () =>  {
    } = useAuth();
 
    const [localLoading, setLocalLoading] = useState(false);
+
+   useEffect(() => {
+  if (Platform.OS === 'android') {
+    SystemUI.setBackgroundColorAsync('transparent');
+  }
+}, []);
 
    
   // Separate state objects for login and register form data
@@ -350,12 +357,17 @@ return(
     
     <StackNavigator />
   ) : (
- 
+<KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 0}
+    >
+ <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
    <View style={{flex: 1, position: 'relative', alignItems: 'center', zIndex: 0}}>
       
       <VideoBackground source={require('../../../assets/fluid1.mp4')} />
       
-      <View style={{ flex: 1, zIndex: 1, alignItems: 'center', justifyContent: 'center'  }}>
+      <View style={{ flex: 1, zIndex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'transparent'  }}>
         
             <Image
                 source={require('../../../assets/logo2.png')}  
@@ -376,10 +388,7 @@ return(
   ) : null}
 
   {logClicked && (
-  <KeyboardAvoidingView
-    behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-    style={{ width: '100%', alignItems: 'center' }}
-  >
+
    <View style={styles.container}>
       <Text style={styles.header}>Login</Text>
       <Text style={[globalStyles.screenStyles.textShadow, { color: 'orange', textAlign: 'center', marginVertical: 10 }]}>{errorMessage}</Text>
@@ -410,14 +419,11 @@ return(
         <Text style={[styles.buttonText, {marginTop: 50, textDecorationLine: 'underline'}]}>Don't have an Account?  Register Here</Text>
       </Pressable>
     </View>
-    </KeyboardAvoidingView>
+   
   )}
 
   {regClicked && (
-    <KeyboardAvoidingView
-    behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-    style={{ width: '100%', alignItems: 'center' }}
-  >
+  
     <View style={styles.container}>
       <Text style={styles.header}>Register</Text>
       <Text style={[globalStyles.screenStyles.textShadow, { color: 'orange', textAlign: 'center', marginVertical: 10 }]}>{errorMessage}</Text>
@@ -453,10 +459,13 @@ return(
         <Text style={[styles.buttonText, {marginTop: 50, textDecorationLine: 'underline'}]}>Already have an Account? Login</Text>
       </Pressable>
     </View>
-  </KeyboardAvoidingView>
+ 
   )}
  </View>
-</View>
+ </View>
+ </TouchableWithoutFeedback>
+ </KeyboardAvoidingView>
+
  )
 )
 

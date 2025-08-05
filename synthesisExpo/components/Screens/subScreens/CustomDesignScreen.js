@@ -154,13 +154,15 @@ const CustomDesignScreen = ({ route }) => {
                      Choose Your Elements
                 </Text>
            
-           <View style={globalStyles.screenStyles.container}>
+           <View style={[globalStyles.screenStyles.container,{ borderColor: 'white', borderWidth: 0.5 }]}>
                 <Pressable onPress={() => handleViewCategory("fonts")} style={globalStyles.screenStyles.row}>
                     <View>
+                      <View style={{flexDirection: 'row', alignItems: 'center', }}>
+                         <MaterialIcons name="font-download" size={24} color="white" style={{ marginRight: 8 }} />
                          <Text style={[globalStyles.screenStyles.h3, globalStyles.screenStyles.textShadow, ]}>
                             Fonts
                          </Text>
-                        
+                     </View>  
                          {selectedElements.fonts.length > 0 && (
                              <Text style={[globalStyles.screenStyles.h5, {color: 'lightskyblue'}]}>
                                 {selectedElements.fonts.length} Selected Items
@@ -175,14 +177,16 @@ const CustomDesignScreen = ({ route }) => {
                
             </View> 
                 
-            <View style={globalStyles.screenStyles.container}>
+            <View style={[globalStyles.screenStyles.container,{ borderColor: 'white', borderWidth: 0.5 }]}>
         
                 <Pressable onPress={() => handleViewCategory("color")} style={globalStyles.screenStyles.row}>
                         <View>
-                            <Text style={[globalStyles.screenStyles.h3, globalStyles.screenStyles.textShadow]}>
-                              Color Gradients
-                            </Text>
-
+                           <View style={{flexDirection: 'row', alignItems: 'center', }}>
+                              <MaterialIcons name="gradient" size={24} color="white" style={{ marginRight: 8 }} />
+                              <Text style={[globalStyles.screenStyles.h3, globalStyles.screenStyles.textShadow]}>
+                                 Color Gradients
+                              </Text>
+                            </View>
                             {selectedElements.gradients.length > 0 && (
                              <Text style={[globalStyles.screenStyles.h5, {color: 'lightskyblue'}]}>
                                 {selectedElements.gradients.length} Selected Items
@@ -194,12 +198,15 @@ const CustomDesignScreen = ({ route }) => {
             
             </View>
   
-           <View style={globalStyles.screenStyles.container}>
+           <View style={[globalStyles.screenStyles.container,{ borderColor: 'white', borderWidth: 0.5 }]}>
                 <Pressable onPress={() => handleViewCategory("typography")} style={globalStyles.screenStyles.row}>
                          <View>
-                            <Text style={[globalStyles.screenStyles.h3, globalStyles.screenStyles.textShadow]}>
-                                Typography Scales
-                            </Text>
+                            <View style={{flexDirection: 'row', alignItems: 'center', }}>
+                               <MaterialIcons name="format-size" size={24} color="white" style={{ marginRight: 8 }} />
+                               <Text style={[globalStyles.screenStyles.h3, globalStyles.screenStyles.textShadow]}>
+                                  Typography Scales
+                               </Text>
+                             </View>
 
                           {selectedElements.typography.length > 0 && (
                              <Text style={[globalStyles.screenStyles.h5, {color: 'lightskyblue'}]}>
@@ -211,13 +218,16 @@ const CustomDesignScreen = ({ route }) => {
                 </Pressable>
             </View>  
            
-            <View style={globalStyles.screenStyles.container}>
+            <View style={[globalStyles.screenStyles.container,{ borderColor: 'white', borderWidth: 0.5 }]}>
               
                 <Pressable onPress={() => handleViewCategory("icon")} style={globalStyles.screenStyles.row}>
-                <View>
-                      <Text style={[globalStyles.screenStyles.h3, globalStyles.screenStyles.textShadow]}>
-                          Icons
-                      </Text>   
+                  <View>
+                    <View style={{flexDirection: 'row', alignItems: 'center', }}>
+                           <MaterialIcons name="apps" size={24} color="white" style={{ marginRight: 8 }} />
+                           <Text style={[globalStyles.screenStyles.h3, globalStyles.screenStyles.textShadow]}>
+                               Icons
+                           </Text>
+                      </View>   
                          {selectedElements.icons.length > 0 && (
                              <Text style={[globalStyles.screenStyles.h5, {color: 'lightskyblue'}]}>
                                 {selectedElements.icons.length} Selected Items
@@ -226,14 +236,17 @@ const CustomDesignScreen = ({ route }) => {
                     </View>  
                    <MaterialIcons name='arrow-forward'size={32} color="white"/>
                 </Pressable>
-           </View>  
+            </View>  
            
-           <View style={globalStyles.screenStyles.container}>
+           <View style={[globalStyles.screenStyles.container,{ borderColor: 'white', borderWidth: 0.5 }]}>
                 <Pressable onPress={() => handleViewCategory("component")} style={globalStyles.screenStyles.row}>
                         <View>
+                           <View style={{flexDirection: 'row', alignItems: 'center', }}>
+                             <MaterialIcons name="widgets" size={24} color="white" style={{ marginRight: 8 }} />
                              <Text style={[globalStyles.screenStyles.h3, globalStyles.screenStyles.textShadow]}>
                                 Components
                              </Text>
+                          </View>
                           {selectedElements.comp.length > 0 && (
                              <Text style={[globalStyles.screenStyles.h5, {color: 'lightskyblue'}]}>
                                 {selectedElements.comp.length} Selected Items

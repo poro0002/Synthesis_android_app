@@ -162,7 +162,7 @@ const ProjectScreen = () => {
                   shadowRadius: 3, // Shadow radius
                   elevation: 5, // Android shadow
                   borderColor: 'white',
-                  borderWidth: 1,
+                  borderWidth: 0.5,
                 }}
               >
                 <LinearGradient

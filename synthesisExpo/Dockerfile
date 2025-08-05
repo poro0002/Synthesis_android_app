@@ -8,16 +8,14 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install app dependencies
-RUN npm install
+RUN npm install --production
 
-# Install nodemon globally for live reload
-RUN npm install -g nodemon
 
 # Copy the rest of your project files
 COPY . .
 
 # Expose the backend port
-EXPOSE 4500
+EXPOSE 8080
 
 # Start the server with nodemon
-CMD ["nodemon", "server/server.js"]
+CMD ["node", "server/server.js"]

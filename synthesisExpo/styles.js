@@ -353,7 +353,7 @@ const globalStyles = StyleSheet.create({
         },
         
           container: {
-           backgroundColor: 'rgba(22, 33, 62, 0.7)',  
+           backgroundColor: 'rgba(22, 33, 62, 0.4)',  
             padding: 12,
             borderRadius: 8,
             marginBottom: 20,
