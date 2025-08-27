@@ -8,6 +8,8 @@ import fetch from 'node-fetch';
 import dotenv from 'dotenv';
 import nodemailer from 'nodemailer';
 import fs from 'fs-extra';
+import sgMail from "@sendgrid/mail";
+
 
 import admin from 'firebase-admin'; // admin from firebase admin is a essential part of connecting to the db because it certifies your service account with your firebase project 
 import { initializeApp } from 'firebase/app';
@@ -20,6 +22,7 @@ dotenv.config();
 const app = express();
 const jwt_key = process.env.JWT_KEY;
 const port = process.env.PORT || 4500;
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 const __filename = fileURLToPath(import.meta.url); // This line is used to get the absolute file path of the current module (the current JavaScript file) when using ES Modules (ESM) in Node.js.
 const __dirname = path.dirname(__filename); // You can use this to reference the directory where the script is located, which can be useful when you need to resolve relative paths to files in the same directory or in subdirectories.
@@ -32,14 +35,6 @@ app.use(cors({
   credentials: true,
 }));
 
-
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS, // Your Gmail App Password, NOT your normal Gmail password
-  },
-});
 
 
 app.use(express.json());
@@ -205,32 +200,38 @@ app.post('/getTokenJson', async (req, res) => {
 
         const jsonString = JSON.stringify(tokenJsonData, null, 2);
 
-        const mailOptions = {
-            from: process.env.EMAIL_USER,
-            to: email,
-            subject: 'Your Design Token JSON Export',
-            text: 'Attached is your exported design token JSON, ready for import into Token Studio or Figma.',
-            attachments: [
-                {
-                    filename: 'design-tokens.json',
-                    content: jsonString,
-                    contentType: 'application/json'
-                }
-            ]
-        };
+    const msg = {
+      to: email,
+      from: process.env.EMAIL_USER, // must be verified in SendGrid
+      subject: "Your Design Token JSON Export",
+      text: "Attached is your exported design token JSON, ready for import into Token Studio or Figma.",
+      attachments: [
+        {
+          content: Buffer.from(jsonString).toString("base64"),
+          filename: "design-tokens.json",
+          type: "application/json",
+          disposition: "attachment",
+        },
+      ],
+    };
 
-        // Send the email
-        await transporter.sendMail(mailOptions); // use the transporter information above that has the email and pass from .env
+    await sgMail.send(msg);
 
-        console.log(`Token JSON data sent to ${email}`);
-
-        return res.status(200).json({
-            message: 'Token JSON data found and sent to their email',
-            success: true
-        });
+    console.log(`✅ Token JSON data sent to ${email}`);
+    
+    return res.status(200).json({
+      message: "Token JSON data found and sent to their email",
+      success: true,
+    });
 
     } catch (err) {
-        console.log('There was a problem accessing or sending the token JSON data for that user', err);
+       console.error('🔥 Detailed error in /getTokenJson:', err);
+
+        if (err.response && err.response.body) {
+          console.error("📨 SendGrid response body:", err.response.body);
+        }
+
+      
         res.status(500).json({
             message: 'There was a problem accessing or sending the token JSON data for that user',
             success: false
@@ -346,7 +347,6 @@ app.post('/deleteTokenJson', async (req, res)=>{
 
    
    const gradients = [
-    // 🔴 REDS / PINKS / ORANGES
     {
       name: 'Bloody Sunset',
       colors: ['#ff512f', '#dd2476'],

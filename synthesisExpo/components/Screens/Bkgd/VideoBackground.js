@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { BlurView } from 'expo-blur';
 
-const localVideo = require('../../../assets/jelly4.mp4');
+const localVideo = require('../../../assets/fluid1.mp4');
 
 export default function VideoBackground({ source = localVideo }) {
   const [videoUri, setVideoUri] = useState(null);

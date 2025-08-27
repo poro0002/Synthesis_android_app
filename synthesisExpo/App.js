@@ -89,13 +89,8 @@ function App() {
 
     setLocalLoading(true)
     try {
-      await Asset.loadAsync([
-        require('./assets/gradient1.mp4'),
+      await Asset.loadAsync([ 
         require('./assets/gradient2.mp4'),
-        require('./assets/gradient3.mp4'),
-        require('./assets/gradient4.mp4'),
-        require('./assets/gradient5.mp4'),
-        require('./assets/jelly4.mp4'),
         require('./assets/fluid1.mp4'),
       ]);
       console.log('Videos preloaded successfully');
@@ -211,7 +206,7 @@ useEffect(() => {
 
 return (
  <>
-
+<StatusBar style="light" backgroundColor="transparent" translucent={true} />
 <LogProvider>
  <ErrorBoundary>
     {localLoading && fontsLoaded && (

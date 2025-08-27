@@ -606,7 +606,7 @@ const addElement = (category, systemId) =>{
        <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 10 }}>
         <MaterialIcons name="warning" size={24} color="white" style={{ marginRight: 8 }} />
           <Text style={{color: 'white', fontSize: 12, fontWeight: 'bold', marginLeft: 10, marginRight: 10,  flexShrink: 1,  flexWrap: 'wrap'}}>  
-                If you want to add multiple styles to category a after the system has been initialized, it may require rebuilding the design system
+                If you want to add multiple styles to category after the system has been initialized, it may require rebuilding the design system
            </Text>
         </View>
 

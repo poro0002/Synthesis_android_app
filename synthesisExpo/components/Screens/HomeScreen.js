@@ -35,6 +35,8 @@ import { ImageBackground } from 'react-native';
 import LottieView from 'lottie-react-native';
 import Constants from 'expo-constants';
 const apiUrl = Constants.expoConfig.extra.API_URL; 
+ const version = Constants.expoConfig.version;
+const versionCode = Constants.expoConfig.android.versionCode;
 
 
 const HomeScreen = () => {
@@ -310,6 +312,10 @@ useLayoutEffect(() => {
 
                   <Text style={{color: 'white', textAlign: 'center', fontWeight: 'bold', marginTop: 10,}}>
                       {currentTime || 'Loading...'}
+                   </Text>
+
+                    <Text style={{ color: 'white', textAlign: 'center', marginTop: 20, fontSize: 12, opacity: 0.7 }}>
+                      Version: {Constants.expoConfig.version} ({Constants.expoConfig.android.versionCode})
                    </Text>
           </View>
 
